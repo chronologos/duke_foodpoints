@@ -53,15 +53,16 @@ app.use(function(req, res, next) {
     auth_url = req.protocol + '://' + req.get('host') + "/home/auth";
     next();
 })
-app.use(function(req, res, next) {
-    if((process.env.REQUIRE_HTTPS) && (!req.secure) && (req.protocol !== 'https')) {
-        console.log(req.protocol, req.secure)
-        res.redirect('https://' + req.get('host') + req.url);
-    }
-    else{
+if(process.env.REQUIRE_HTTPS) {
+    app.use(forceSsl);
+}
+var forceSsl = function(req, res, next) {
+    if(req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    } else {
         next();
     }
-})
+}
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url
@@ -152,13 +153,13 @@ function getBalance(refresh_token, cb) {
         })
     })
 }
-
 //setInterval(updateBalances, 5000)
-function updateBalances(){
+
+function updateBalances() {
     //todo function to continuously update balances
     //only insert in db if number has changed
     //loop through all users in db
-    getBalance(user.refresh_token, function(err, bal){
+    getBalance(user.refresh_token, function(err, bal) {
         console.log(bal)
     })
 }
