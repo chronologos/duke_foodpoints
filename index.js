@@ -57,12 +57,14 @@ app.use(function(req, res, next) {
     if((process.env.REQUIRE_HTTPS) && (!req.secure) && (req.protocol !== 'https')) {
         res.redirect('https://' + req.get('host') + req.url);
     }
-}
+    else{
+        next();
+    }
+})
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url
     })
-    //todo require https in production
 })
 app.get('/login', function(req, res) {
     //todo
