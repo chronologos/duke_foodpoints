@@ -57,7 +57,7 @@ var forceSsl = function(req, res, next) {
         next();
     }
 }
-if(process.env.REQUIRE_HTTPS) {
+if(process.env.NODE_ENV=="production") {
     app.use(forceSsl);
     protocol="https";
 }
