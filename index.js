@@ -10,6 +10,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var port = process.env.PORT || 3000
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php"
 var duke_card_host = "https://dukecard-proxy.oit.duke.edu"
+var protocol = "http"
 app.use(express.static(__dirname + '/public'))
 app.use(session({
     secret: process.env.COOKIE_SECRET,
@@ -58,9 +59,10 @@ var forceSsl = function(req, res, next) {
 }
 if(process.env.REQUIRE_HTTPS) {
     app.use(forceSsl);
+    protocol="https";
 }
 app.use(function(req, res, next) {
-    auth_url = req.protocol + '://' + req.get('host') + "/home/auth";
+    auth_url = protocol + '://' + req.get('host') + "/home/auth";
     console.log(auth_url)
     next();
 })
