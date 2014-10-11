@@ -58,7 +58,9 @@ app.use(function(req, res, next) {
         console.log(req.protocol, req.secure)
         res.redirect('https://' + req.get('host') + req.url);
     }
-    next();
+    else{
+        next();
+    }
 })
 app.get('/', function(req, res) {
     res.render('index.jade', {
