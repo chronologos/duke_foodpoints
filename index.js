@@ -53,15 +53,15 @@ app.use(function(req, res, next) {
     auth_url = req.protocol + '://' + req.get('host') + "/home/auth";
     next();
 })
-if(process.env.REQUIRE_HTTPS) {
-    app.use(forceSsl);
-}
 var forceSsl = function(req, res, next) {
     if(req.headers['x-forwarded-proto'] !== 'https') {
         return res.redirect(['https://', req.get('Host'), req.url].join(''));
     } else {
         next();
     }
+}
+if(process.env.REQUIRE_HTTPS) {
+    app.use(forceSsl);
 }
 app.get('/', function(req, res) {
     res.render('index.jade', {
