@@ -7,7 +7,7 @@ Sample Data
 * Create: psql CREATE.sql
 * Run: psql dbname -af TEST-SAMPLE.SQL > TEST-SAMPLE.OUT
 
-Application
+Deployment
 ====
 * Fill .env with required values
 * npm install && npm install -g foreman
