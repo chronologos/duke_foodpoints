@@ -55,11 +55,10 @@ app.use(function(req, res, next) {
 })
 app.use(function(req, res, next) {
     if((process.env.REQUIRE_HTTPS) && (!req.secure) && (req.protocol !== 'https')) {
+        console.log(req.protocol, req.secure)
         res.redirect('https://' + req.get('host') + req.url);
     }
-    else{
-        next();
-    }
+    next();
 })
 app.get('/', function(req, res) {
     res.render('index.jade', {
