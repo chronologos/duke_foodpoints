@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+        <title>FoodPoints+</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+        <link data-turbolinks-track="true" href="/assets/application-27fc57308d4ce798da2b90e9a09dad4f.css" media="all" rel="stylesheet" />
+        <script data-turbolinks-track="true" src="/assets/application-feae7967eedc737ac0735baa1e1e8f28.js"></script>
+        <meta content="authenticity_token" name="csrf-param" />
+<meta content="Opq4+mVEs1T5v5u2Vz2oqWupRdw1iFcsIvEgEl56zys=" name="csrf-token" />
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-45337794-1', 'foodpoints.herokuapp.com');
+            ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+        <div class="container">
+            <h3>FoodPoints+</h3>
+            <a class="btn btn-default" href="/sessions/new">Log in</a>
+<a class="btn btn-default" target="_blank" href="https://dco3.auxserv.duke.edu/onlineoffice">Check your current food points here</a>
+<a class="btn btn-default" href="/home/whatsopen">What's Open?</a>
+
+<div class="row">
+    <div class="col-xs-6">
+        <p class="lead">
+            How many points does your plan have?
+        </p>
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="text" class="form-control " id="plan">
+        </div>
+
+        <hr>
+
+        <p class="lead">
+            You should have this many food points:
+        </p>
+        <div class="progress progress-striped active" style="height: 30px">
+            <div id="progbar" class="progress-bar progress-bar-warning" style="width: 100%">
+                <div id="result" class="lead"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //TODO scrape duke site for plan point value?
+    function setCookie(c_name,value,exdays)
+    {
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+        document.cookie=c_name + "=" + c_value;
+    }
+
+    function getCookie(c_name)
+    {
+        var c_value = document.cookie;
+        var c_start = c_value.indexOf(" " + c_name + "=");
+        if (c_start == -1)
+        {
+            c_start = c_value.indexOf(c_name + "=");
+        }
+        if (c_start == -1)
+        {
+            c_value = null;
+        }
+        else
+        {
+            c_start = c_value.indexOf("=", c_start) + 1;
+            var c_end = c_value.indexOf(";", c_start);
+            if (c_end == -1)
+            {
+                c_end = c_value.length;
+            }
+            c_value = unescape(c_value.substring(c_start,c_end));
+        }
+        return c_value;
+    }
+
+    //sets field to cookie value or default value
+    function checkCookie(defaultval)
+    {
+        var numfoodpoints=getCookie("numfoodpoints");
+        if (numfoodpoints!=null && numfoodpoints!="")
+        {
+            //set value of text field
+            $("#plan").val(numfoodpoints);
+        }
+        else 
+        {
+            $("#plan").val(defaultval)
+        }
+    }
+
+    var start;
+    var end;
+    var currdate=new Date();
+    var DEFAULT_FOOD_POINTS=2152;
+    var UPDATE_INTERVAL=100;
+    var FALL_LENGTH = 16 * 7;
+    var SPRING_LENGTH = 16 * 7 + 3;
+    var numfoodpoints=parseInt($("#plan").val());
+
+    //var currdate=new Date("8/1/2013"); //debug date
+
+    $("#plan").on("change", function(){
+        numfoodpoints=parseInt($("#plan").val());
+        setCookie("numfoodpoints",numfoodpoints,365);
+    });
+
+    $(document).ready(function() {
+
+        checkCookie(DEFAULT_FOOD_POINTS);
+        numfoodpoints=parseInt($("#plan").val());
+
+        var fallstart=getNthDay(3, 1, 7, currdate.getFullYear()); //fourth monday august
+        var fallend=addDays(fallstart, FALL_LENGTH);
+        var springstart=getNthDay(1, 3, 0, currdate.getFullYear()); //second wednesday january
+        var springend=addDays(springstart, SPRING_LENGTH);
+
+        //if between, set to these
+        if (currdate>fallstart && currdate<fallend){
+            start=fallstart;
+            end=fallend;
+            setInterval(calculatePercentSemester, UPDATE_INTERVAL);
+        }
+        else if (currdate>springstart && currdate<springend){
+            start=springstart;
+            end=springend;
+            setInterval(calculatePercentSemester, UPDATE_INTERVAL);
+        }
+        //else not in session
+        else {
+            $("#result").html("Not currently in semester");
+        }
+
+        console.log(fallstart);
+        console.log(fallend);
+        console.log(springstart);
+        console.log(springend);
+        console.log(start);
+        console.log(end);
+        console.log(currdate);
+        console.log(numfoodpoints);
+
+        //calculates and updates the percentage of the semester elapsed
+        function calculatePercentSemester(){
+            var currtime=new Date();
+            //var currtime=new Date("12/1/2013"); //debug time
+            var percent=(1-(currtime-start)/(end-start));
+            $("#result").html((numfoodpoints*percent).toFixed(4));
+            $("#progbar").width(percent*100+"%");
+
+        }
+    });
+
+    function addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(date.getDate() + days);
+        return result;
+    }
+
+    //gets the nth (zero-indexed) instance of a specific day of the week in a month, year
+    function getNthDay(n, dayOfWeek, month, year){
+        var myDate = new Date();
+        myDate.setHours(0, 0, 0, 0);
+        myDate.setYear(year);
+        // get first day of month
+        myDate.setDate(1);
+        myDate.setMonth(month);
+
+        // Find day of week.
+        while(myDate.getDay() != dayOfWeek) {
+            myDate.setDate(myDate.getDate() + 1);
+        }
+
+        // Add 7*n days (n weeks)
+        myDate.setDate(myDate.getDate() + 7*n);
+        return myDate;
+    }
+</script>
+        </div>
+
+
+
+    </body>
+</html>
