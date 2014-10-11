@@ -148,6 +148,7 @@ function getBalance(refresh_token, cb) {
 //setInterval(updateBalances, 5000)
 function updateBalances(){
     //todo function to continuously update balances
+    //only insert in db if number has changed
     //loop through all users in db
     getBalance(user.refresh_token, function(err, bal){
         console.log(bal)
