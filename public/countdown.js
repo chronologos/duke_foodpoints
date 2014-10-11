@@ -1,75 +1,4 @@
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-
-        <title>FoodPoints+</title>
-
-        <!-- Bootstrap core CSS -->
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-
-        <link data-turbolinks-track="true" href="/assets/application-27fc57308d4ce798da2b90e9a09dad4f.css" media="all" rel="stylesheet" />
-        <script data-turbolinks-track="true" src="/assets/application-feae7967eedc737ac0735baa1e1e8f28.js"></script>
-        <meta content="authenticity_token" name="csrf-param" />
-<meta content="Opq4+mVEs1T5v5u2Vz2oqWupRdw1iFcsIvEgEl56zys=" name="csrf-token" />
-
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-
-        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-45337794-1', 'foodpoints.herokuapp.com');
-            ga('send', 'pageview');
-        </script>
-    </head>
-
-    <body>
-        <div class="container">
-            <h3>FoodPoints+</h3>
-            <a class="btn btn-default" href="/sessions/new">Log in</a>
-<a class="btn btn-default" target="_blank" href="https://dco3.auxserv.duke.edu/onlineoffice">Check your current food points here</a>
-<a class="btn btn-default" href="/home/whatsopen">What's Open?</a>
-
-<div class="row">
-    <div class="col-xs-6">
-        <p class="lead">
-            How many points does your plan have?
-        </p>
-        <div class="input-group">
-            <span class="input-group-addon">$</span>
-            <input type="text" class="form-control " id="plan">
-        </div>
-
-        <hr>
-
-        <p class="lead">
-            You should have this many food points:
-        </p>
-        <div class="progress progress-striped active" style="height: 30px">
-            <div id="progbar" class="progress-bar progress-bar-warning" style="width: 100%">
-                <div id="result" class="lead"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    //TODO scrape duke site for plan point value?
-    function setCookie(c_name,value,exdays)
+function setCookie(c_name,value,exdays)
     {
         var exdate=new Date();
         exdate.setDate(exdate.getDate() + exdays);
@@ -203,10 +132,3 @@
         myDate.setDate(myDate.getDate() + 7*n);
         return myDate;
     }
-</script>
-        </div>
-
-
-
-    </body>
-</html>
