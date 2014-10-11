@@ -4,11 +4,10 @@ An application for tracking food points.
 
 Sample Data
 ====
-* Create: psql CREATE.sql
-* Run: psql dbname -af TEST-SAMPLE.SQL > TEST-SAMPLE.OUT
+* `psql CREATE.sql && psql dbname -af TEST-SAMPLE.SQL > TEST-SAMPLE.OUT`
 
-Application
+Deployment
 ====
 * Fill .env with required values
-* npm install && npm install -g foreman
-* nf start
+* `npm install && npm install -g foreman`
+* `nf start`
