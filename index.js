@@ -49,10 +49,6 @@ passport.deserializeUser(function(id, done) {
         done(err, user);
     });
 });
-app.use(function(req, res, next) {
-    auth_url = req.protocol + '://' + req.get('host') + "/home/auth";
-    next();
-})
 var forceSsl = function(req, res, next) {
     if(req.headers['x-forwarded-proto'] !== 'https') {
         return res.redirect(['https://', req.get('Host'), req.url].join(''));
@@ -63,6 +59,10 @@ var forceSsl = function(req, res, next) {
 if(process.env.REQUIRE_HTTPS) {
     app.use(forceSsl);
 }
+app.use(function(req, res, next) {
+    auth_url = req.protocol + '://' + req.get('host') + "/home/auth";
+    next();
+})
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url
