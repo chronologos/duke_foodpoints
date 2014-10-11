@@ -13,7 +13,7 @@ var duke_card_host = "https://dukecard-proxy.oit.duke.edu"
 var protocol = "http"
 app.use(express.static(__dirname + '/public'))
 app.use(session({
-    secret: process.env.COOKIE_SECRET,
+    secret: process.env.SESSION_SECRET || "secret",
     saveUninitialized: true,
     resave: true
 }))
