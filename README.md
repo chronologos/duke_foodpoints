@@ -4,7 +4,7 @@ An application for tracking food points.
 
 Sample Data
 ====
-* `psql CREATE.sql && psql dbname -af TEST-SAMPLE.SQL > TEST-SAMPLE.OUT`
+* `psql dbname -af TEST-SAMPLE.sql > TEST-SAMPLE.out`
 
 Deployment
 ====

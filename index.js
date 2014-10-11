@@ -160,8 +160,10 @@ function getBalance(refresh_token, cb) {
 
 function updateBalances() {
     //todo function to continuously update balances
-    //only insert in db if number has changed
     //loop through all users in db
+    //for each user get their most recent balance
+    //get a new balance for that user
+    //only insert in db if number has changed
     getBalance(user.refresh_token, function(err, bal) {
         console.log(bal)
     })
