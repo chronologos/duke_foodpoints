@@ -1,3 +1,5 @@
+var dotenv = require('dotenv');
+dotenv.load();
 var express = require('express')
 var session = require('express-session')
 var app = express();
@@ -167,6 +169,7 @@ function updateBalances() {
     getBalance(user.refresh_token, function(err, bal) {
         console.log(bal)
     })
+    //todo power alerts with sendgrid
 }
 app.get('/whatsopen', function(req, res) {
     request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
