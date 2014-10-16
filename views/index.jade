@@ -17,7 +17,9 @@ html(lang='en')
   body
     .container
       h1 FoodPoints+
-      a.btn.btn-default(href="/login") Login
+      form(action='/login', method="POST")
+        input(name='user', type='text')
+        input(type='submit', value='Login')
       a.btn.btn-info(href="https://dco3.auxserv.duke.edu/onlineoffice", target="_blank") DukeCard Office
       a.btn.btn-primary(href=auth_link) Link DukeCard
       a.btn.btn-success(href="/whatsopen") What's Open?
