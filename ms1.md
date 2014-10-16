@@ -11,6 +11,8 @@ The production data will come from users signing up on the website.
 The application will retrieve and store their balances, which will be stored in the database.
 Users can also specify particular budgets, which will also be stored in the database.
 Sample data will be made up by the developers.
+We are choosing to use MongoDB as our database system due to the ability to treat database entities as documents, and easily convert to/from Javascript objects.
+This is a benefit as our development is entirely in Javascript, as a Node.js project.
 
 Assumptions
 ====

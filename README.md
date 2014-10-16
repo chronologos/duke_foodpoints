@@ -2,9 +2,13 @@ Food Points
 ====
 An application for tracking food points.
 
+Assignment
+====
+Milestone 1 sections are in ms1.md.
+
 Sample Data
 ====
-* `psql foodpoints -af TEST-SAMPLE.sql > TEST-SAMPLE.out`
+* `mongo sample.js > sample.out`
 
 Deployment
 ====
