@@ -8,8 +8,8 @@ Milestone 1 sections are in ms1.md.
 
 Dependencies
 ====
-Node.js
-MongoDB
+* Node.js
+* MongoDB
 
 Sample Data
 ====
