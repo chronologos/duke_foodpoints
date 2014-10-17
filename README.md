@@ -1,6 +1,8 @@
 Food Points
 ====
-An application for tracking food points.  MS1 files in ms1 directory.
+Howard Chung, Will Shelburne, Wenjun Mao  
+An application for tracking food points.  
+MS1 files in ms1 directory.
 
 Dependencies
 ====
