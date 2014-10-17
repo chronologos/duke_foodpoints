@@ -4,8 +4,8 @@ An application for tracking food points.  MS1 files in ms1 directory.
 
 Dependencies
 ====
-Node.js
-MongoDB
+* Node.js
+* MongoDB
 
 Sample Data
 ====
