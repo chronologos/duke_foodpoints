@@ -19,9 +19,13 @@ var auth_url = process.env.ROOT_URL + "/home/auth";
 var db = require('monk')(process.env.MONGOHQ_URL)
 var users = db.get("users");
 var balances = db.get("balances");
+var budgets = db.get("budgets");
 users.index('email', {
     unique: true
 });
+balances.index('email balance', {
+    unique: true
+})
 passwordless.init(new MongoStore(process.env.MONGOHQ_URL));
 // Set up a delivery service
 passwordless.addDelivery(function(tokenToSend, uidToSend, recipient, callback) {
@@ -196,31 +200,18 @@ function updateBalances() {
             throw err
         }
         async.mapSeries(res, function(user, cb) {
-            //get most recent balance
-            balances.findOne({
-                email: user.email
-            }, {
-                sort: {
-                    date: -1
-                }
-            }, function(err, bal) {
-                var mostRecent = 0
-                if(bal) {
-                    mostRecent = bal.balance
-                }
-                getCurrentBalance(user.refresh_token, function(err, bal) {
-                    //compare new balance to most recent balance
-                    console.log(mostRecent, bal)
-                    if(mostRecent != bal) {
+            getCurrentBalance(user.refresh_token, function(err, bal) {
+                balances.insert({
+                    email: user.email,
+                    balance: bal,
+                    date: +new Date()
+                }, function(err) {
+                    if(err) {
+                        console.log("this email and balance already exists")
+                    } else {
                         console.log("inserting new balance")
-                        balances.insert({
-                            email: user.email,
-                            balance: bal,
-                            date: +new Date()
-                        })
                     }
                     cb(null)
-                    //detect alert triggers
                 })
             })
         }, function(err) {
