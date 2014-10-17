@@ -1,10 +1,8 @@
 var dotenv = require('dotenv');
 dotenv.load();
 var express = require('express')
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
-var SessionStore = require('connect-mongo')(session);
+var session = require('cookie-session')
 var app = express();
 var request = require('request')
 var async = require('async')
@@ -43,15 +41,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(express.static(__dirname + '/public'))
-app.use(cookieParser());
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    store: new SessionStore({
-        url: process.env.MONGOHQ_URL
-    }),
-    saveUninitialized: true,
-    resave: true
-}));
+    secret: process.env.SESSION_SECRET
+}))
 app.use(passwordless.sessionSupport());
 app.use(passwordless.acceptToken({
     successRedirect: '/'
@@ -78,12 +70,15 @@ app.use(function(req, res, next) {
                 }, function(err, bals) {
                     user.balances = bals
                     //compute expenditures
-                    exps=[]
-                    for (var i =0;i<bals.length;i++){
-                        if (bals[i+1]){
-                            exps.push({amount:bals[i+1].balance-bals[i].balance, date:bals[i].date})
+                    exps = []
+                    for(var i = 0; i < bals.length; i++) {
+                        if(bals[i + 1]) {
+                            exps.push({
+                                amount: bals[i + 1].balance - bals[i].balance,
+                                date: bals[i].date
+                            })
                         }
-                        user.exps=exps
+                        user.exps = exps
                     }
                     res.locals.user = user
                     next();
@@ -171,7 +166,7 @@ function getCurrentBalance(refresh_token, cb) {
                 access_token: access_token
             }
         }, function(err, resp, body) {
-            if (err){
+            if(err) {
                 return cb(err)
             }
             food_points = Number(JSON.parse(body).food_points)
@@ -193,7 +188,7 @@ function updateBalances() {
             $exists: true
         }
     }, function(err, res) {
-        if (err){
+        if(err) {
             throw err
         }
         async.mapSeries(res, function(user, cb) {
