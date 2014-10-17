@@ -67,6 +67,10 @@ app.use(function(req, res, next) {
                 console.log(user)
                 balances.find({
                     email: user.email
+                }, {
+                    sort: {
+                        date: -1
+                    }
                 }, function(err, bals) {
                     user.balances = bals
                     //compute expenditures
