@@ -30,7 +30,7 @@ passwordless.addDelivery(function(tokenToSend, uidToSend, recipient, callback) {
     var host = process.env.ROOT_URL
     var payload = {
         text: 'Hello!\nAccess your account here: ' + host + '?token=' + tokenToSend + '&uid=' + encodeURIComponent(uidToSend),
-        from: "login@foodpointsplus.com",
+        from: "foodpoints@foodpointsplus.com",
         to: recipient,
         subject: 'Login for FoodPoints+'
     }
@@ -183,6 +183,9 @@ function updateBalances() {
             $exists: true
         }
     }, function(err, res) {
+        if (err){
+            throw err
+        }
         async.mapSeries(res, function(user, cb) {
             //get most recent balance
             balances.findOne({
@@ -204,7 +207,7 @@ function updateBalances() {
                         balances.insert({
                             email: user.email,
                             balance: bal,
-                            date: Math.round(+new Date() / 1000)
+                            date: +new Date()
                         })
                     }
                     cb(null)
@@ -212,7 +215,7 @@ function updateBalances() {
                 })
             })
         }, function(err) {
-            setTimeout(updateBalances, 10000)
+            updateBalances()
         })
     })
 }

@@ -7,8 +7,10 @@ html(lang='en')
     link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css", rel="stylesheet")
     script(src="https://code.jquery.com/jquery-1.10.2.min.js")
     script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
-    script(src='/ga.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js')
+    script(src='ga.js')
     script(src="countdown.js")
+    script(src='utility.js')
 
   body
     .container
@@ -16,7 +18,7 @@ html(lang='en')
       if (user)
         a.btn.btn-primary(href=auth_link) Link DukeCard
       else
-        h2 Enter your email and login using the link sent.
+        h3 Enter your email.  A login link will be sent.
         form(action='/sendtoken', method="POST")
           input(name='user', class="form-control", type='email')
           input(type='submit', class='btn btn-default', value="Login")
@@ -24,12 +26,23 @@ html(lang='en')
       a.btn.btn-success(href="/whatsopen") What's Open?
       hr
       div.row
-        p You started at:
-        input.form-control#plan(type="text")
-        hr
-        p You should have:
-        div.progress
-          div#progbar.progress-bar.progress-bar-success.progress-bar-striped.active
-            div#result
-      if (user)
-        =JSON.stringify(user.balances)
+        .col-md-6
+          h3 Countdown
+          p You started at:
+          input.form-control#plan(type="text")
+          hr
+          p You should have:
+          div.progress
+            div#progbar.progress-bar.progress-bar-success.progress-bar-striped.active
+              div#result
+        if (user)
+        .col-md-6
+          h3 Balances
+          table.table
+            tr
+              th Date
+              th Balance
+            each b in user.balances
+              tr
+                td.format=b.date
+                td=b.balance
