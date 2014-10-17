@@ -1,5 +1,5 @@
 conn = new Mongo();
-db = conn.getDB("foodpoints");
+db = conn.getDB("test");
 
 //clear db
 db.dropDatabase()

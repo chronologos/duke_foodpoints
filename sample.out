@@ -1,13 +1,13 @@
 MongoDB shell version: 2.6.1
 connecting to: test
 {
-	"_id" : ObjectId("543fdd03a5d3323659dbef1a"),
+	"_id" : ObjectId("54405d4601be85d2394d1b11"),
 	"email" : "howardc93@gmail.com",
 	"refresh_token" : ""
 }
 {
-	"_id" : ObjectId("543fdfb8a45ce4015ffd03ba"),
-	"user_id" : "543fdd03a5d3323659dbef1a",
+	"_id" : ObjectId("54405d4601be85d2394d1b12"),
+	"email" : "howardc93@gmail.com",
 	"balance" : 1490.95,
 	"date" : 123456
 }

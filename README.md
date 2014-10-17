@@ -6,6 +6,11 @@ Assignment
 ====
 Milestone 1 sections are in ms1.md.
 
+Dependencies
+====
+Node.js
+MongoDB
+
 Sample Data
 ====
 * `mongo sample.js > sample.out`
