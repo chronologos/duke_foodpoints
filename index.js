@@ -59,11 +59,16 @@ app.use(passwordless.acceptToken({
 app.use(function(req, res, next) {
     console.log(req.user)
     if(req.user) {
-        users.update({
+        var promise = users.update({
             email: req.user
         }, {
+            $set: {
+                email: req.user
+            }
+        }, {
             upsert: true
-        }, function(err) {
+        })
+        promise.on('success', function() {
             users.findOne({
                 email: req.user
             }, function(err, user) {
@@ -168,7 +173,7 @@ updateBalances()
 
 function updateBalances() {
     console.log("updating balances")
-    //todo function to continuously update balances
+    //function to continuously update balances
     //loop through all users in db with refresh tokens
     //for each user get their most recent balance
     //get a new balance for that user

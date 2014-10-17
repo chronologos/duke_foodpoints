@@ -1,10 +1,6 @@
 Food Points
 ====
-An application for tracking food points.
-
-Assignment
-====
-Milestone 1 sections are in ms1.md.
+An application for tracking food points.  MS1 files in ms1 directory.
 
 Dependencies
 ====
