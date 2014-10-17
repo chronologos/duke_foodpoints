@@ -77,6 +77,14 @@ app.use(function(req, res, next) {
                     email: user.email
                 }, function(err, bals) {
                     user.balances = bals
+                    //compute expenditures
+                    exps=[]
+                    for (var i =0;i<bals.length;i++){
+                        if (bals[i+1]){
+                            exps.push({amount:bals[i+1].balance-bals[i].balance, date:bals[i].date})
+                        }
+                        user.exps=exps
+                    }
                     res.locals.user = user
                     next();
                 })
@@ -163,9 +171,11 @@ function getCurrentBalance(refresh_token, cb) {
                 access_token: access_token
             }
         }, function(err, resp, body) {
-            console.log(body)
-            body = JSON.parse(body)
-            cb(null, Number(body.food_points))
+            if (err){
+                return cb(err)
+            }
+            food_points = Number(JSON.parse(body).food_points)
+            cb(err, food_points)
         })
     })
 }

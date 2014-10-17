@@ -36,7 +36,7 @@ html(lang='en')
             div#progbar.progress-bar.progress-bar-success.progress-bar-striped.active
               div#result
         if (user)
-          .col-md-6
+          .col-md-3
             h3 Balances
             table.table
               tr
@@ -46,3 +46,13 @@ html(lang='en')
                 tr
                   td.format=b.date
                   td=b.balance
+           .col-md-3
+             h3 Log
+             table.table
+              tr
+                th Date
+                th Amount
+              each b in user.exps
+                tr
+                  td.format=b.date
+                  td=b.amount
