@@ -149,7 +149,6 @@ app.get('/home/auth', function(req, res) {
 })
 
 function getCurrentBalance(refresh_token, cb) {
-    //TODO handle error gracefully when the refresh token has expired
     request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
@@ -160,6 +159,10 @@ function getCurrentBalance(refresh_token, cb) {
             refresh_token: refresh_token
         }
     }, function(err, resp, body) {
+        if (err){
+            //may just be 200 response with a error in body message
+            //TODO handle error gracefully when the refresh token has expired
+        }
         console.log(body)
         body = JSON.parse(body)
         //use the new access token
@@ -170,17 +173,16 @@ function getCurrentBalance(refresh_token, cb) {
             }
         }, function(err, resp, body) {
             if(err) {
-                return cb(err)
+                //retry
+                return getCurrentBalance(refresh_token, cb)
             }
-            food_points = Number(JSON.parse(body).food_points)
-            cb(err, food_points)
+            cb(err, Number(JSON.parse(body).food_points))
         })
     })
 }
 updateBalances()
 
 function updateBalances() {
-    console.log("updating balances")
     //function to continuously update balances
     //loop through all users in db with refresh tokens
     //for each user get their most recent balance
@@ -196,9 +198,7 @@ function updateBalances() {
         }
         async.mapSeries(res, function(user, cb) {
             getCurrentBalance(user.refresh_token, function(err, bal) {
-                if(err) {
-                    return cb(err)
-                }
+                console.log("current balance: %s", bal)
                 //get db balance
                 balances.findOne({
                     user_id: user._id
