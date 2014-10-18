@@ -79,6 +79,7 @@ app.use(function(req, res, next) {
                         }
                     }
                 }
+                req.user= user
                 res.locals.user = user
                 next();
             })
@@ -121,7 +122,6 @@ app.get('/', function(req, res) {
 })
 app.get('/home/auth', function(req, res) {
     var code = req.query.code
-    console.log(code)
     request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
