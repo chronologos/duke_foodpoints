@@ -7,10 +7,7 @@ var app = express();
 var request = require('request')
 var async = require('async')
 var cheerio = require('cheerio')
-var passwordless = require('passwordless');
-var MongoStore = require('passwordless-mongostore');
 var sendgrid = require("sendgrid")(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
-var router = express.Router();
 var port = process.env.PORT || 3000
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php"
 var duke_card_host = "https://dukecard-proxy.oit.duke.edu"
@@ -20,23 +17,10 @@ var db = require('monk')(process.env.MONGOHQ_URL)
 var users = db.get("users");
 var balances = db.get("balances");
 var budgets = db.get("budgets");
-users.index('email', {
+users.index('id', {
     unique: true
 });
-passwordless.init(new MongoStore(process.env.MONGOHQ_URL));
-// Set up a delivery service
-passwordless.addDelivery(function(tokenToSend, uidToSend, recipient, callback) {
-    var host = process.env.ROOT_URL
-    var payload = {
-        text: 'Hello!\nAccess your account here: ' + host + '?token=' + tokenToSend + '&uid=' + encodeURIComponent(uidToSend),
-        from: "foodpoints@foodpointsplus.com",
-        to: recipient,
-        subject: 'Login for FoodPoints+'
-    }
-    sendEmail(payload, function(err) {
-        callback(err)
-    })
-})
+var passport = require('passport')
 app.set('view engine', 'jade')
 app.use(bodyParser.urlencoded({
     extended: true
@@ -45,52 +29,58 @@ app.use(express.static(__dirname + '/public'))
 app.use(session({
     secret: process.env.SESSION_SECRET
 }))
-app.use(passwordless.sessionSupport());
-app.use(passwordless.acceptToken({
-    successRedirect: '/'
+app.use(passport.initialize())
+app.use(passport.session()) // persistent login
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.ROOT_URL + "/auth/google/return"
+}, function(token, tokenSecret, profile, done) {
+    profile = profile._json
+    console.log(profile)
+    done(null, profile)
 }));
 app.use(function(req, res, next) {
     console.log(req.user)
     if(req.user) {
-        var promise = users.update({
-            email: req.user
+        users.findAndModify({
+            id: req.user.id
         }, {
-            $set: {
-                email: req.user
-            }
+            $set: req.user
         }, {
-            upsert: true
-        })
-        promise.on('success', function() {
-            users.findOne({
-                email: req.user
-            }, function(err, user) {
-                console.log(user)
-                balances.find({
-                    email: user.email
-                }, {
-                    sort: {
-                        date: -1
-                    }
-                }, function(err, bals) {
-                    user.balances = bals
-                    //compute transactions
-                    exps = []
-                    for(var i = 0; i < bals.length; i++) {
-                        if(bals[i + 1]) {
-                            var diff = bals[i + 1].balance - bals[i].balance
-                            if (diff>0){
-                                exps.push({
-                                    amount: diff,
-                                    date: bals[i].date
-                                })
-                            }
+            upsert: true,
+            new: true
+        }, function(err, user) {
+            balances.find({
+                user_id: user._id
+            }, {
+                sort: {
+                    date: -1
+                }
+            }, function(err, bals) {
+                user.balances = bals
+                //compute transactions
+                user.exps = []
+                for(var i = 0; i < bals.length; i++) {
+                    if(bals[i + 1]) {
+                        var diff = bals[i + 1].balance - bals[i].balance
+                        if(Math.abs(diff) > 0) {
+                            user.exps.push({
+                                amount: diff*-1,
+                                date: bals[i].date
+                            })
                         }
-                        user.exps = exps
                     }
-                    res.locals.user = user
-                    next();
-                })
+                }
+                res.locals.user = user
+                next();
             })
         })
     } else {
@@ -111,19 +101,24 @@ if(process.env.NODE_ENV == "production") {
     app.use(forceSsl);
     protocol = "https";
 }
+// Redirect the user to Google for authentication.  When complete, Google
+// will redirect the user back to the application at
+//     /auth/google/return
+app.get('/auth/google', passport.authenticate('google', {
+    scope: 'openid email'
+}));
+// Google will redirect the user to this URL after authentication.  Finish
+// the process by verifying the assertion.  If valid, the user will be
+// logged in.  Otherwise, authentication has failed.
+app.get('/auth/google/return', passport.authenticate('google', {
+    successRedirect: '/',
+    failureRedirect: '/'
+}));
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url
     })
 })
-app.post('/sendtoken', passwordless.requestToken(
-    // Simply accept every user
-
-    function(user, delivery, callback) {
-        callback(null, user);
-    }), function(req, res) {
-    res.redirect("/")
-});
 app.get('/home/auth', function(req, res) {
     var code = req.query.code
     console.log(code)
@@ -143,7 +138,7 @@ app.get('/home/auth', function(req, res) {
         //we only really care about the refresh token, which is valid for 6 months
         //persist it in db and use to retrieve balances automatically
         users.update({
-            email: req.user
+            _id: req.user._id
         }, {
             $set: {
                 refresh_token: body.refresh_token
@@ -201,28 +196,27 @@ function updateBalances() {
         }
         async.mapSeries(res, function(user, cb) {
             getCurrentBalance(user.refresh_token, function(err, bal) {
-                if (err){
+                if(err) {
                     return cb(err)
                 }
                 //get db balance
                 balances.findOne({
-                    email: user.email
+                    user_id: user._id
                 }, {
                     sort: {
                         date: -1
                     }
                 }, function(err, curr) {
-                    if (!curr || Math.abs(curr.balance-bal)>=0.01){
+                    if(!curr || Math.abs(curr.balance - bal) >= 0.01) {
                         balances.insert({
-                            email: user.email,
+                            user_id: user._id,
                             balance: bal,
                             date: +new Date()
                         }, function(err) {
                             //check if alert threshold exceeded
                             cb(null)
-                        }) 
-                    }
-                    else{
+                        })
+                    } else {
                         cb(null)
                     }
                 })
@@ -232,6 +226,10 @@ function updateBalances() {
         })
     })
 }
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
 function sendEmail(payload, cb) {
     console.log(payload)

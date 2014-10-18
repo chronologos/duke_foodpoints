@@ -7,6 +7,7 @@ user.exps.forEach(function(exp){
 console.log(data)
 
 cal.init({
+    itemSelector: "#days",
     start: new Date(moment().subtract(5,'month')),
     range: 6,
     domain: "month",
@@ -22,7 +23,7 @@ cal.init({
 
 var cal2 = new CalHeatMap();
 cal2.init({
-    itemSelector: "#hourmap",
+    itemSelector: "#hours",
     start: new Date(moment().subtract(13,'day')),
     range: 14,
     domain: "day",

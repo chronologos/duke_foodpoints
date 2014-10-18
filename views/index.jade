@@ -30,17 +30,19 @@ html(lang='en')
     .container
       h1 FoodPoints+
       if (user)
+        a.btn.btn-default(href="/logout") Logout
         a.btn.btn-primary(href=auth_link) Link DukeCard
       else
-        h3 Using FoodPoints+ is easy!  Just enter your email and click the link sent.
-        form(action='/sendtoken', method="POST")
-          input(name='user', class="form-control", type='email')
-          input(type='submit', class='btn btn-default', value="Login")
+        h3 Using FoodPoints+ is easy!  Login with Google:
+        a.btn.btn-default(href="/auth/google") Sign In with Google
       a.btn.btn-info(href="https://dco3.auxserv.duke.edu/onlineoffice", target="_blank") DukeCard Office
       a.btn.btn-success(href="/whatsopen") What's Open?
       hr
+      if (user)
+        =JSON.stringify(user, null, 4)
+        p You must re-link your DukeCard every six months.
       .row
-        .col-md-6
+        .col-md-4
           h3 Countdown
           p You started at:
           input.form-control#plan(type="text")
@@ -50,7 +52,7 @@ html(lang='en')
             div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
               div#result
         if (user)
-          .col-md-3
+          .col-md-4
             h3 Balances
             table.table
               tr
@@ -60,7 +62,7 @@ html(lang='en')
                 tr
                   td.format=b.date
                   td=b.balance.toFixed(2)
-           .col-md-3
+           .col-md-4
              h3 Transactions
              table.table
               tr
@@ -70,14 +72,16 @@ html(lang='en')
                 tr
                   td.format=b.date
                   td=b.amount.toFixed(2)
+      if user
+        .row
            .col-md-6
              h3 Chart
              div#chart
            .col-md-6
              h3 Heatmap
-             div#cal-heatmap
+             div#days
              h3 Hours
-             div#hourmap
+             div#hours
              script(src='cal-heatmap.js')
            .col-md-12
              h3 Budgets
