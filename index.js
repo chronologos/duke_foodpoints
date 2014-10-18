@@ -201,6 +201,9 @@ function updateBalances() {
         }
         async.mapSeries(res, function(user, cb) {
             getCurrentBalance(user.refresh_token, function(err, bal) {
+                if (err){
+                    return cb(err)
+                }
                 balances.insert({
                     email: user.email,
                     balance: bal,
