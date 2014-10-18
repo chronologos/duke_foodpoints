@@ -162,6 +162,7 @@ function getCurrentBalance(refresh_token, cb) {
         if (err){
             //may just be 200 response with a error in body message
             //TODO handle error gracefully when the refresh token has expired
+            //todo invalidate all refresh tokens and delete all balances at semester end?
         }
         console.log(body)
         body = JSON.parse(body)

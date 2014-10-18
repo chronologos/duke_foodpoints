@@ -38,8 +38,10 @@ html(lang='en')
       a.btn.btn-info(href="https://dco3.auxserv.duke.edu/onlineoffice", target="_blank") DukeCard Office
       a.btn.btn-success(href="/whatsopen") What's Open?
       hr
-      if (user)
-        =JSON.stringify(user, null, 4)
+      if (process.env.NODE_ENV !="production")
+        =JSON.stringify(user)
+      if (user.refresh_token)
+        p Congratulations!  FoodPoints+ is now tracking your balances.
         p You must re-link your DukeCard every six months.
       .row
         .col-md-4
