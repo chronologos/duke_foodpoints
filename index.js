@@ -207,6 +207,7 @@ function updateBalances() {
                         date: -1
                     }
                 }, function(err, curr) {
+                    console.log(curr)
                     //change in balance, or no balances
                     if(!curr || Math.abs(curr.balance - bal) >= 0.01) {
                         balances.insert({
