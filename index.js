@@ -23,9 +23,6 @@ var budgets = db.get("budgets");
 users.index('email', {
     unique: true
 });
-balances.index('email balance', {
-    unique: true
-})
 passwordless.init(new MongoStore(process.env.MONGOHQ_URL));
 // Set up a delivery service
 passwordless.addDelivery(function(tokenToSend, uidToSend, recipient, callback) {
@@ -77,14 +74,17 @@ app.use(function(req, res, next) {
                     }
                 }, function(err, bals) {
                     user.balances = bals
-                    //compute expenditures
+                    //compute transactions
                     exps = []
                     for(var i = 0; i < bals.length; i++) {
                         if(bals[i + 1]) {
-                            exps.push({
-                                amount: bals[i + 1].balance - bals[i].balance,
-                                date: bals[i].date
-                            })
+                            var diff = bals[i + 1].balance - bals[i].balance
+                            if (diff>0){
+                                exps.push({
+                                    amount: diff,
+                                    date: bals[i].date
+                                })
+                            }
                         }
                         user.exps = exps
                     }
@@ -204,17 +204,27 @@ function updateBalances() {
                 if (err){
                     return cb(err)
                 }
-                balances.insert({
-                    email: user.email,
-                    balance: bal,
-                    date: +new Date()
-                }, function(err) {
-                    if(err) {
-                        console.log("this email and balance already exists")
-                    } else {
-                        console.log("inserting new balance")
+                //get db balance
+                balances.findOne({
+                    email: user.email
+                }, {
+                    sort: {
+                        date: -1
                     }
-                    cb(null)
+                }, function(err, curr) {
+                    if (!curr || Math.abs(curr.balance-bal)>=0.01){
+                        balances.insert({
+                            email: user.email,
+                            balance: bal,
+                            date: +new Date()
+                        }, function(err) {
+                            //check if alert threshold exceeded
+                            cb(null)
+                        }) 
+                    }
+                    else{
+                        cb(null)
+                    }
                 })
             })
         }, function(err) {

@@ -13,7 +13,8 @@ html(lang='en')
     script(src='ga.js')
     script(src="countdown.js")
     script(src='utility.js')
-    
+    script(src='chart.js')
+
     link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css", rel="stylesheet")
     //link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css", rel="stylesheet")
     link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css", rel="stylesheet")
@@ -72,8 +73,12 @@ html(lang='en')
            .col-md-6
              h3 Chart
              div#chart
-             script(src='chart.js')
            .col-md-6
              h3 Heatmap
              div#cal-heatmap
+             h3 Hours
+             div#hourmap
              script(src='cal-heatmap.js')
+           .col-md-12
+             h3 Budgets
+             p Send me email when I spend more than X in the last X
