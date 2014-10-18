@@ -135,16 +135,16 @@ app.get('/home/auth', function(req, res) {
     }, function(err, resp, body) {
         body = JSON.parse(body)
         console.log(body)
-        //we only really care about the refresh token, which is valid for 6 months
-        //persist it in db and use to retrieve balances automatically
+        //we only really care about the refresh token, which is valid for 6 months, persist it in db and use to retrieve balances automatically
         users.update({
             _id: req.user._id
         }, {
             $set: {
                 refresh_token: body.refresh_token
             }
+        }, function(err){
+            res.redirect('/')
         })
-        res.redirect('/')
     })
 })
 
@@ -207,6 +207,7 @@ function updateBalances() {
                         date: -1
                     }
                 }, function(err, curr) {
+                    //change in balance, or no balances
                     if(!curr || Math.abs(curr.balance - bal) >= 0.01) {
                         balances.insert({
                             user_id: user._id,
@@ -222,7 +223,7 @@ function updateBalances() {
                 })
             })
         }, function(err) {
-            updateBalances()
+            setTimeout(updateBalances, 1000)
         })
     })
 }
