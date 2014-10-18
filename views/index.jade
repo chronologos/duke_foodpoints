@@ -40,7 +40,7 @@ html(lang='en')
       hr
       if (process.env.NODE_ENV !="production")
         =JSON.stringify(user)
-      if (user.refresh_token)
+      if (user && user.refresh_token)
         p Congratulations!  FoodPoints+ is now tracking your balances.
         p You must re-link your DukeCard every six months.
       .row
