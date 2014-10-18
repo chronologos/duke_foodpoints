@@ -173,11 +173,12 @@ function getCurrentBalance(refresh_token, cb) {
                 access_token: access_token
             }
         }, function(err, resp, body) {
-            if(err) {
+            body = JSON.parse(body)
+            if(!body.food_points) {
                 //retry
                 return getCurrentBalance(refresh_token, cb)
             }
-            cb(err, Number(JSON.parse(body).food_points))
+            cb(err, Number(body.food_points))
         })
     })
 }
@@ -216,7 +217,7 @@ function updateBalances() {
                             balance: bal,
                             date: +new Date()
                         }, function(err) {
-                            //check if alert threshold exceeded
+                            //todo check if alert threshold exceeded
                             cb(null)
                         })
                     } else {
@@ -235,6 +236,12 @@ app.get('/logout', function(req, res) {
 });
 
 function sendEmail(payload, cb) {
+    var payload = {
+        text: 'Hello!  You have exceeded your budget of X food points.',
+        from: "no-reply@foodpointsplus.com",
+        to: recipient,
+        subject: 'FoodPoints+ Alert'
+    }
     console.log(payload)
     sendgrid.send(payload, function(err, json) {
         console.log(json)
