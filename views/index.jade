@@ -27,6 +27,7 @@ html(lang='en')
     style.
       .c3-tooltip { color:#000; }
       .pic {width:100px; float:right;}
+      .progress{height:30px;}
 
   body
     .container
@@ -41,10 +42,11 @@ html(lang='en')
       hr
       if user
         img.pic(src=user.picture, alt=user.name)
-        p.lead Welcome back, #{user.given_name}!
+        h3 Welcome back, #{user.given_name}!
         if (user.refresh_token)
           p Congratulations!  FoodPoints+ is now tracking your balances.
-          p You must re-link your DukeCard every six months: 
+          p You must re-link your DukeCard every six months.
+          p Current link good until: 
             span.format #{user.refresh_token_expire}
         else
           p Link your DukeCard to start tracking your balances.
@@ -53,11 +55,10 @@ html(lang='en')
           h3 Countdown
           p You started at:
           input.form-control#plan(type="text")
-          hr
           p You should have:
           div.progress
             div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-              div#result
+              div.lead#result
         if user
           .col-md-4
             h3 Balances
