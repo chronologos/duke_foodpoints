@@ -7,13 +7,14 @@ user.exps.forEach(function(exp){
 console.log(data)
 
 cal.init({
+    itemSelector: "#days",
     start: new Date(moment().subtract(5,'month')),
     range: 6,
     domain: "month",
     subDomain: "day",
     data: data,
     tooltip: true,
-    itemName: ["spent", "spent"],
+    itemName: ["",""],
     subDomainTextFormat: function(date, value) {
         return value ? value.toFixed() : "";
     },
@@ -22,9 +23,9 @@ cal.init({
 
 var cal2 = new CalHeatMap();
 cal2.init({
-    itemSelector: "#hourmap",
-    start: new Date(moment().subtract(13,'day')),
-    range: 14,
+    itemSelector: "#hours",
+    start: new Date(moment().subtract(6,'day')),
+    range: 7,
     domain: "day",
     subDomain: "hour",
     label:
@@ -36,8 +37,8 @@ cal2.init({
     colLimit: 24,
     tooltip: true,
     data: data,
-    itemName: ["spent", "spent"],
-    cellSize:10,
-    cellPadding: 0,
-    domainGutter: 2
+    itemName: ["",""],
+    cellSize:15,
+    cellPadding: 1,
+    domainGutter: 0
 });

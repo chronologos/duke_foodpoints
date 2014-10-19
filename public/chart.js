@@ -1,32 +1,36 @@
 $(document).on('ready', function(){
-    var x = ['x']
+    var x2 = ['x2']
     var bals = ['Food Points']
     var ideal = ['Ideal', numfoodpoints, 0]
-    var x2 = ['x2', start, end]
+    var x = ['x', start, end]
     user.balances.forEach(function(bal) {
-        x.push(bal.date)
+        x2.push(bal.date)
         bals.push(bal.balance)
     })
     var chart = c3.generate({
         data: {
             xs: {
-                'Ideal': 'x2',
-                'Food Points': 'x'  
+                'Ideal': 'x',
+                'Food Points': 'x2'  
             },
             columns: [
-                x, x2, bals, ideal
+                x, x2, ideal, bals
             ]
         },
         axis: {
             x: {
                 type: 'timeseries',
                 tick: {
-                    format: '%Y-%m-%d'
+                    fit: true,
+                    format: '%m-%d'
                 }
             },
             y: {
-                padding: {top:0, bottom:0}
+                padding: {top:0, bottom:1}
             }
+        },
+        zoom: {
+            enabled: true
         }
 
     });
