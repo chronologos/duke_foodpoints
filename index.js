@@ -7,6 +7,7 @@ var app = express();
 var request = require('request')
 var async = require('async')
 var cheerio = require('cheerio')
+var moment = require('moment')
 var sendgrid = require("sendgrid")(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 var port = process.env.PORT || 3000
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php"
@@ -140,7 +141,8 @@ app.get('/home/auth', function(req, res) {
             _id: req.user._id
         }, {
             $set: {
-                refresh_token: body.refresh_token
+                refresh_token: body.refresh_token,
+                refresh_token_expire: +new Date(moment().add(6, 'months'))
             }
         }, function(err){
             res.redirect('/')
@@ -160,21 +162,22 @@ function getCurrentBalance(refresh_token, cb) {
         }
     }, function(err, resp, body) {
         if (err){
-            //may just be 200 response with a error in body message
-            //TODO handle error gracefully when the refresh token has expired
-            //todo invalidate all refresh tokens and delete all balances at semester end?
+            console.log(err)
+            return cb(err)
         }
-        console.log(body)
         body = JSON.parse(body)
-        //use the new access token
         var access_token = body.access_token
         request.post(duke_card_host + "/food_points", {
             form: {
                 access_token: access_token
             }
         }, function(err, resp, body) {
+            if (err){
+                console.log(err)
+                return cb(err)
+            }
             body = JSON.parse(body)
-            if(!body.food_points) {
+            if(!body || !body.food_points) {
                 //retry
                 return getCurrentBalance(refresh_token, cb)
             }
@@ -199,6 +202,11 @@ function updateBalances() {
             throw err
         }
         async.mapSeries(res, function(user, cb) {
+            if (moment() > user.refresh_token_expire){
+                users.update({_id:user._id}, {$unset:{refresh_token:1}}, function(err){
+                    return cb(null)
+                })
+            }
             getCurrentBalance(user.refresh_token, function(err, bal) {
                 console.log("current balance: %s", bal)
                 //get db balance
