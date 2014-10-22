@@ -9,9 +9,9 @@ Dependencies
 * Node.js
 * MongoDB
 
-Sample Data
+Sample Data (runs on test db)
 ====
-* `mongo sample.js > sample.out`
+* `mongo test sample.js > sample.out`
 
 Deployment
 ====

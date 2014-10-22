@@ -74,13 +74,13 @@ app.use(function(req, res, next) {
                         var diff = bals[i + 1].balance - bals[i].balance
                         if(Math.abs(diff) > 0) {
                             user.exps.push({
-                                amount: diff*-1,
+                                amount: diff * -1,
                                 date: bals[i].date
                             })
                         }
                     }
                 }
-                req.user= user
+                req.user = user
                 res.locals.user = user
                 next();
             })
@@ -136,7 +136,8 @@ app.get('/home/auth', function(req, res) {
     }, function(err, resp, body) {
         body = JSON.parse(body)
         console.log(body)
-        //we only really care about the refresh token, which is valid for 6 months, persist it in db and use to retrieve balances automatically
+        //we only really care about the refresh token, which is valid for 6 months
+        //persist it in db and use to retrieve balances automatically
         users.update({
             _id: req.user._id
         }, {
@@ -144,7 +145,7 @@ app.get('/home/auth', function(req, res) {
                 refresh_token: body.refresh_token,
                 refresh_token_expire: +new Date(moment().add(6, 'months'))
             }
-        }, function(err){
+        }, function(err) {
             res.redirect('/')
         })
     })
@@ -161,7 +162,7 @@ function getCurrentBalance(refresh_token, cb) {
             refresh_token: refresh_token
         }
     }, function(err, resp, body) {
-        if (err){
+        if(err) {
             console.log(err)
             return cb(err)
         }
@@ -172,10 +173,15 @@ function getCurrentBalance(refresh_token, cb) {
                 access_token: access_token
             }
         }, function(err, resp, body) {
-            if (err){
+            if(err) {
                 console.log(err)
                 return cb(err)
             }
+            if(body == "error validating token  - Bad Token") {
+                console.log(body)
+                return cb(body)
+            }
+            console.log(body)
             body = JSON.parse(body)
             if(!body || !body.food_points) {
                 //retry
@@ -202,12 +208,21 @@ function updateBalances() {
             throw err
         }
         async.mapSeries(res, function(user, cb) {
-            if (moment() > user.refresh_token_expire){
-                users.update({_id:user._id}, {$unset:{refresh_token:1}}, function(err){
+            if(moment() > user.refresh_token_expire) {
+                users.update({
+                    _id: user._id
+                }, {
+                    $unset: {
+                        refresh_token: 1
+                    }
+                }, function(err) {
                     return cb(null)
                 })
             }
             getCurrentBalance(user.refresh_token, function(err, bal) {
+                if(err) {
+                    return cb(err)
+                }
                 console.log("current balance: %s", bal)
                 //get db balance
                 balances.findOne({
@@ -216,10 +231,10 @@ function updateBalances() {
                     sort: {
                         date: -1
                     }
-                }, function(err, curr) {
-                    console.log(curr)
+                }, function(err, dbbal) {
+                    console.log(dbbal)
                     //change in balance, or no balances
-                    if(!curr || Math.abs(curr.balance - bal) >= 0.01) {
+                    if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
                         balances.insert({
                             user_id: user._id,
                             balance: bal,
