@@ -4,7 +4,7 @@ var data2 = {}
 user.exps.forEach(function(exp){
     var timestamp = ~~(exp.date/1000)
     var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X')
-    var amount = parseFloat(exp.amount.toFixed(2))*-1
+    var amount = Number(exp.amount.toFixed(2))*-1
     data[timestamp]=amount
     if (!data2[timestamp2]){
         data2[timestamp2]=0
@@ -38,7 +38,7 @@ cal2.init({
     subDomain: "hour",
     domainLabelFormat: "",
     subDomainDateFormat: function(date) {
-        return moment(date).format("H")+"h"; // Use the moment library to format the Date
+        return moment(date).format("ha"); // Use the moment library to format the Date
     },
     verticalOrientation: true,
     colLimit: 24,
