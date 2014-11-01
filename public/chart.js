@@ -18,6 +18,7 @@ $(document).on('ready', function() {
             if (i>=numBuckets || (amt>i*bucketSize && amt<=(i+1)*bucketSize)){
                 console.log(i, amt)
                 buckets[i*bucketSize] ? buckets[i*bucketSize]+=amt : buckets[i*bucketSize]=amt
+                break;
             }
         }
     })
