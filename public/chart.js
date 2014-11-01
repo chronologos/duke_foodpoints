@@ -10,13 +10,6 @@ $(document).on('ready', function() {
     var cal = new CalHeatMap();
     var data = {}
     var data2 = {}
-    //round results to 2 digits
-    for(var key in data) {
-        data[key] = Math.round(data[key] * 100) / 100
-    }
-    for(var key in data2) {
-        data2[key] = Math.round(data2[key] * 100) / 100
-    }
     user.balances.forEach(function(bal) {
         x2.push(bal.date)
         bals.push(bal.balance)
@@ -39,7 +32,13 @@ $(document).on('ready', function() {
             }
         }
     })
-    console.log(buckets)
+    //round results to 2 digits
+    for(var key in data) {
+        data[key] = Math.round(data[key] * 100) / 100
+    }
+    for(var key in data2) {
+        data2[key] = Math.round(data2[key] * 100) / 100
+    }
     chart = c3.generate({
         bindto: "#chart",
         data: {
