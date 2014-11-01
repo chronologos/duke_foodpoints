@@ -1,23 +1,29 @@
-var cal = new CalHeatMap();
+$(document).on('ready', function(){
+    var cal = new CalHeatMap();
 var data = {}
 var data2 = {}
 user.exps.forEach(function(exp){
     var timestamp = ~~(exp.date/1000)
     var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X')
-    var amount = Number(exp.amount.toFixed(2))*-1
+    var amount = exp.amount*-1
     data[timestamp]=amount
     if (!data2[timestamp2]){
         data2[timestamp2]=0
     }
     data2[timestamp2]+=amount
 })
-console.log(data)
-console.log(data2)
+//round results to 2 digits
+for (var key in data){
+    data[key]=Math.round(data[key]*100)/100
+}
+for(var key in data2){
+    data2[key]=Math.round(data2[key]*100)/100
+}
 
 cal.init({
     itemSelector: "#days",
-    start: new Date(moment().subtract(5,'month')),
-    range: 6,
+    start: start,
+    range: 5,
     domain: "month",
     subDomain: "day",
     data: data,
@@ -52,3 +58,4 @@ cal2.init({
     cellPadding: 1,
     domainGutter: 0
 });
+})

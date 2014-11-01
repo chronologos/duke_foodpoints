@@ -51,6 +51,7 @@ $(document).ready(function() {
     $("#plan").on("change", function() {
         numfoodpoints = parseInt($("#plan").val());
         setCookie("numfoodpoints", numfoodpoints, 365);
+        updateChart()
     });
     checkCookie(DEFAULT_FOOD_POINTS);
     numfoodpoints = parseInt($("#plan").val());

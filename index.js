@@ -205,9 +205,10 @@ function updateBalances() {
         }
     }, function(err, res) {
         if(err) {
-            throw err
+            return setTimeout(updateBalances, 1000)
         }
         async.mapSeries(res, function(user, cb) {
+            //user's token has expired, unset it
             if(moment() > user.refresh_token_expire) {
                 users.update({
                     _id: user._id
@@ -249,7 +250,7 @@ function updateBalances() {
                 })
             })
         }, function(err) {
-            setTimeout(updateBalances, 1000)
+            return setTimeout(updateBalances, 1000)
         })
     })
 }
@@ -274,6 +275,7 @@ function sendEmail(payload, cb) {
 app.get('/whatsopen', function(req, res) {
     request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
         var $ = cheerio.load(body)
+        //todo process the scraped data
         res.send($.html("#schedule_table"))
     })
 })
