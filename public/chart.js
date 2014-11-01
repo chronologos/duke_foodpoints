@@ -18,11 +18,11 @@ $(document).on('ready', function() {
         var timestamp = ~~ (exp.date / 1000)
         var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X')
         var amt = exp.amount * -1
-        data[timestamp] = amt
+        data[timestamp] = ~~amt
         if(!data2[timestamp2]) {
             data2[timestamp2] = 0
         }
-        data2[timestamp2] += amt
+        data2[timestamp2] += ~~amt
         for(var i = 0; i <= numBuckets; i++) {
             //console.log(amt, i*bucketSize, (i+1)*bucketSize)
             if(i >= numBuckets || (amt > i * bucketSize && amt <= (i + 1) * bucketSize)) {
@@ -32,13 +32,6 @@ $(document).on('ready', function() {
             }
         }
     })
-    //round results to 2 digits
-    for(var key in data) {
-        data[key] = Math.round(data[key] * 100) / 100
-    }
-    for(var key in data2) {
-        data2[key] = Math.round(data2[key] * 100) / 100
-    }
     chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -66,7 +59,7 @@ $(document).on('ready', function() {
             }
         },
         zoom: {
-            enabled: true
+            enabled: false
         }
     });
     //bucket by total, or by number?

@@ -9,7 +9,8 @@ $( document ).ready(function() {
         {
             searching: false,
             lengthChange: false,
-            "order": [[ 0, "desc" ]],
+            ordering: false,
+            "pagingType": "simple"
 
         }
     );
