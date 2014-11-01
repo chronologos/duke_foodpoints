@@ -8,7 +8,8 @@ $( document ).ready(function() {
     $('#transactions').DataTable(
         {
             searching: false,
-            lengthChange: false
+            lengthChange: false,
+            "order": [[ 0, "desc" ]],
 
         }
     );
