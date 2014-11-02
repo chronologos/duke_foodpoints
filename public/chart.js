@@ -72,16 +72,7 @@ $(document).on('ready', function() {
         data: {
             // iris data from R
             columns: cols,
-            type: 'pie',
-            onclick: function(d, i) {
-                console.log("onclick", d, i);
-            },
-            onmouseover: function(d, i) {
-                console.log("onmouseover", d, i);
-            },
-            onmouseout: function(d, i) {
-                console.log("onmouseout", d, i);
-            }
+            type: 'pie'
         }
     });
     cal.init({
@@ -96,7 +87,7 @@ $(document).on('ready', function() {
         subDomainTextFormat: function(date, value) {
             return value ? value.toFixed() : "";
         },
-        cellSize: 15
+        cellSize: 12
     });
     var cal2 = new CalHeatMap();
     cal2.init({
