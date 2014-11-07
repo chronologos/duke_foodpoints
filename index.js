@@ -259,7 +259,7 @@ app.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
-function sendEmail(payload, cb) {
+function sendEmail(text, recipient, cb) {
     var payload = {
         text: 'Hello!  You have exceeded your budget of X food points.',
         from: "no-reply@foodpointsplus.com",
