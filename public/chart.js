@@ -87,7 +87,7 @@ $(document).on('ready', function() {
         subDomainTextFormat: function(date, value) {
             return value ? value.toFixed() : "";
         },
-        cellSize: 12
+        cellSize: 15
     });
     var cal2 = new CalHeatMap();
     cal2.init({

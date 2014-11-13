@@ -4,7 +4,6 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Howard Chung",
@@ -16,7 +15,7 @@
     "jade": "~1.7.0",
     "cheerio": "~0.17.0",
     "dotenv": "~0.4.0",
-    "sendgrid": "~1.2.1",
+    "sendgrid": "~1.2.4",
     "body-parser": "~1.9.0",
     "monk": "~0.9.0",
     "moment": "~2.8.3",

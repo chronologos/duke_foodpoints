@@ -25,13 +25,23 @@ Example Balance:
         "date": 1413649670105,
         "_id": ObjectId("544295060cae810b0056abaf")
     }
-    </pre>
+</pre>
 Budget(_id, user_id, amount, seconds)
 
 Reasons
 ====
 * Users now log in via Google, which populates many of the fields in User.  
-* The refresh token expiration allows us to alert the user when their token has expired.
+* The refresh token expiration allows the application to alert the user when their token has expired.
+
+Platform
+====
+This application is built with Node.js, a JavaScript server-side framework.  
+This allows development of both frontend and backend using JavaScript, and integrates well with our MongoDB database.  
+
+Indexes
+====
+We index the user table by user id (the identifier passed from Google), since we need to find/update users by this key when users authenticate.  
+MongoDB auto-indexes by the _id field in each document.
 
 Completed
 ====
