@@ -222,7 +222,7 @@ function updateBalances() {
             }
             getCurrentBalance(user.refresh_token, function(err, bal) {
                 if(err) {
-                    return cb(err)
+                    return setTimeout(cb, 60000, err)
                 }
                 console.log("current balance: %s", bal)
                 //get db balance
@@ -233,7 +233,7 @@ function updateBalances() {
                         date: -1
                     }
                 }, function(err, dbbal) {
-                    console.log(dbbal)
+                    //console.log(dbbal)
                     //change in balance, or no balances
                     if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
                         balances.insert({
@@ -242,15 +242,16 @@ function updateBalances() {
                             date: +new Date()
                         }, function(err) {
                             //todo check if alert threshold exceeded
-                            cb(null)
+                            setTimeout(cb, 60000, err)
                         })
                     } else {
-                        cb(null)
+                        setTimeout(cb, 60000, err)
                     }
                 })
             })
         }, function(err) {
-            return setTimeout(updateBalances, 1000)
+            console.log("completed loop")
+            updateBalances()
         })
     })
 }
