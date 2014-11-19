@@ -136,8 +136,6 @@ app.get('/home/auth', function(req, res) {
     }, function(err, resp, body) {
         body = JSON.parse(body)
         console.log(body)
-        //we only really care about the refresh token, which is valid for 6 months
-        //persist it in db and use to retrieve balances automatically
         users.update({
             _id: req.user._id
         }, {
@@ -151,7 +149,8 @@ app.get('/home/auth', function(req, res) {
     })
 })
 
-function getCurrentBalance(refresh_token, cb) {
+function getAccessToken(user, cb) {
+    var refresh_token = user.refresh_token
     request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
@@ -162,40 +161,88 @@ function getCurrentBalance(refresh_token, cb) {
             refresh_token: refresh_token
         }
     }, function(err, resp, body) {
-        if(err) {
-            console.log(err)
-            return cb(err)
-        }
-        body = JSON.parse(body)
-        var access_token = body.access_token
-        request.post(duke_card_host + "/food_points", {
-            form: {
-                access_token: access_token
-            }
-        }, function(err, resp, body) {
-            if(err) {
-                console.log(err)
-                return cb(err)
-            }
-            if(body == "error validating token  - Bad Token") {
-                console.log(body)
-                return cb(body)
-            }
-            console.log(body)
+        console.log(body)
+        try {
             body = JSON.parse(body)
-            if(!body || !body.food_points) {
-                //retry
-                return getCurrentBalance(refresh_token, cb)
-            }
-            cb(err, Number(body.food_points))
-        })
+            cb(err, body.access_token)
+        } catch(e) {
+            cb(e)
+        }
     })
+}
+
+function getCurrentBalance(user, cb) {
+    var access_token = user.access_token
+    request.post(duke_card_host + "/food_points", {
+        form: {
+            access_token: access_token
+        }
+    }, function(err, resp, body) {
+        if(body == "error validating token  - Bad Token") {
+            console.log(body)
+            return cb(body)
+        }
+        console.log(body)
+        try {
+            body = JSON.parse(body)
+            cb(err, Number(body.food_points))
+        } catch(e) {
+            cb(e)
+        }
+    })
+}
+
+function validateTokens(user, cb) {
+    //refresh token expired, unset it
+    if(moment() > user.refresh_token_expire) {
+        console.log("refresh token expired")
+        users.update({
+            _id: user._id
+        }, {
+            $unset: {
+                refresh_token: 1,
+                refresh_token_expire: 1
+            }
+        }, function(err) {
+            //can't update this user
+            return cb("refresh token expired")
+        })
+    }
+    //access token expired, get a new one
+    if(moment() > user.access_token_expire || !user.access_token) {
+        console.log("access token expired")
+        users.update({
+            _id: user._id
+        }, {
+            $unset: {
+                access_token: 1,
+                access_token_expire: 1
+            }
+        }, function(err) {
+            getAccessToken(user, function(err, access_token) {
+                users.update({
+                    _id: user._id
+                }, {
+                    $set: {
+                        access_token: access_token,
+                        access_token_expire: +new Date(moment().add(1, 'hour'))
+                    }
+                }, function(err) {
+                    console.log("got new access token")
+                    cb(err)
+                })
+            })
+        })
+    } else {
+        //valid token
+        console.log("tokens exist")
+        cb(null)
+    }
 }
 updateBalances()
 
 function updateBalances() {
     //function to continuously update balances
-    //loop through all users in db with refresh tokens
     //for each user get their most recent balance
     //get a new balance for that user
     //only insert in db if number has changed
@@ -205,52 +252,46 @@ function updateBalances() {
         }
     }, function(err, res) {
         if(err) {
-            return setTimeout(updateBalances, 1000)
+            return updateBalances()
         }
         async.mapSeries(res, function(user, cb) {
-            //user's token has expired, unset it
-            if(moment() > user.refresh_token_expire) {
-                users.update({
-                    _id: user._id
-                }, {
-                    $unset: {
-                        refresh_token: 1
-                    }
-                }, function(err) {
-                    return cb(null)
-                })
-            }
-            getCurrentBalance(user.refresh_token, function(err, bal) {
+            validateTokens(user, function(err) {
                 if(err) {
-                    return setTimeout(cb, 60000, err)
+                    console.log(err)
+                    return cb(null)
                 }
-                console.log("current balance: %s", bal)
-                //get db balance
-                balances.findOne({
-                    user_id: user._id
-                }, {
-                    sort: {
-                        date: -1
+                getCurrentBalance(user, function(err, bal) {
+                    if(err) {
+                        console.log(err)
+                        return cb(null)
                     }
-                }, function(err, dbbal) {
-                    //console.log(dbbal)
-                    //change in balance, or no balances
-                    if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
-                        balances.insert({
-                            user_id: user._id,
-                            balance: bal,
-                            date: +new Date()
-                        }, function(err) {
-                            //todo check if alert threshold exceeded
-                            setTimeout(cb, 60000, err)
-                        })
-                    } else {
-                        setTimeout(cb, 60000, err)
-                    }
+                    console.log("current balance: %s", bal)
+                    //get db balance
+                    balances.findOne({
+                        user_id: user._id
+                    }, {
+                        sort: {
+                            date: -1
+                        }
+                    }, function(err, dbbal) {
+                        console.log(dbbal)
+                        //change in balance, or no balances
+                        if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
+                            balances.insert({
+                                user_id: user._id,
+                                balance: bal,
+                                date: +new Date()
+                            }, function(err) {
+                                //todo check if alert threshold exceeded
+                                setTimeout(cb, 60000)
+                            })
+                        } else {
+                            setTimeout(cb, 60000)
+                        }
+                    })
                 })
             })
         }, function(err) {
-            console.log("completed loop")
             updateBalances()
         })
     })
