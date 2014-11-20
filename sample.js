@@ -1,7 +1,3 @@
-/*
-conn = new Mongo();
-db = conn.getDB("test");
-*/
 //clear db
 db.dropDatabase()
 var howard = {

@@ -161,34 +161,29 @@ function getAccessToken(user, cb) {
             refresh_token: refresh_token
         }
     }, function(err, resp, body) {
-        console.log(body)
-        try {
-            body = JSON.parse(body)
-            cb(err, body.access_token)
-        } catch(e) {
-            cb(e)
+        if(err || resp.statusCode != 200 || !body) {
+            return cb("error getting access token")
         }
+        body = JSON.parse(body)
+        cb(err, body.access_token)
     })
 }
 
 function getCurrentBalance(user, cb) {
     var access_token = user.access_token
+    console.log(access_token)
     request.post(duke_card_host + "/food_points", {
         form: {
             access_token: access_token
         }
     }, function(err, resp, body) {
-        if(body == "error validating token  - Bad Token") {
-            console.log(body)
-            return cb(body)
+        if(err || resp.statusCode != 200 || !body) {
+            console.log(err, body)
+            return cb("error getting balance")
         }
         console.log(body)
-        try {
-            body = JSON.parse(body)
-            cb(err, Number(body.food_points))
-        } catch(e) {
-            cb(e)
-        }
+        body = JSON.parse(body)
+        cb(err, Number(body.food_points))
     })
 }
 
