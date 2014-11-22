@@ -206,32 +206,24 @@ function validateTokens(user, cb) {
     //access token expired, get a new one
     if(moment() > user.access_token_expire || !user.access_token) {
         console.log("access token expired")
-        users.update({
-            _id: user._id
-        }, {
-            $unset: {
-                access_token: 1,
-                access_token_expire: 1
-            }
-        }, function(err) {
-            getAccessToken(user, function(err, access_token) {
-                users.update({
-                    _id: user._id
-                }, {
-                    $set: {
-                        access_token: access_token,
-                        access_token_expire: +new Date(moment().add(1, 'hour'))
-                    }
-                }, function(err) {
-                    console.log("got new access token")
-                    cb(err)
-                })
+        getAccessToken(user, function(err, access_token) {
+            users.update({
+                _id: user._id
+            }, {
+                $set: {
+                    access_token: access_token,
+                    access_token_expire: +new Date(moment().add(1, 'hour'))
+                }
+            }, function(err) {
+                console.log("got new access token %s", access_token)
+                user.access_token=access_token
+                return cb(err)
             })
         })
     } else {
         //valid token
         console.log("tokens exist")
-        cb(null)
+        return cb(null)
     }
 }
 updateBalances()
@@ -247,10 +239,12 @@ function updateBalances() {
         }
     }, function(err, res) {
         if(err) {
+            console.log(err)
             return updateBalances()
         }
         async.mapSeries(res, function(user, cb) {
-            validateTokens(user, function(err) {
+            //console.log(user)
+            validateTokens(user, function(err, access_token) {
                 if(err) {
                     console.log(err)
                     return cb(null)

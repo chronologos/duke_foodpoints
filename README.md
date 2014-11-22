@@ -17,7 +17,7 @@ Production Data
 ====
 * The production data consists of a dump of our current production database, which contains as of Nov 13, 4 users and ~300 balances.  
 * Load with:
-* `mongorestore --db foodpoints dump/app22682607/`
+* `mongorestore --drop --db foodpoints dump/app22682607/`
 * Run queries:
 * `mongo foodpoints production.js > production.out`
 
