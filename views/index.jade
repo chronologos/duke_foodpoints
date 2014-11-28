@@ -8,20 +8,19 @@ html(lang='en')
     script(src="//code.jquery.com/jquery-2.1.1.js")
     script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js')
     script(src='//cdn.datatables.net/plug-ins/380cb78f450/integration/bootstrap/3/dataTables.bootstrap.js')
-    script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
     script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js')
     script(src='//cdn.rawgit.com/masayuki0812/c3/master/c3.js') 
     script(src='//cdn.rawgit.com/kamisama/cal-heatmap/master/cal-heatmap.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.3/angular.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.3/angular-resource.js')
     script(src='ga.js')
-    script(src="countdown.js")
     script(src='utility.js')
     script(src='chart.js')
 
-    link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css", rel="stylesheet")
-    //link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css", rel="stylesheet")
+    link(href="//bootswatch.com/superhero/bootstrap.css", rel="stylesheet")
     link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css", rel="stylesheet")
-    link(rel="stylesheet", href='//cdn.jsdelivr.net/cal-heatmap/3.4.0/cal-heatmap.css')
+    link(rel="stylesheet", href='//cdn.rawgit.com/kamisama/cal-heatmap/master/cal-heatmap.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/masayuki0812/c3/master/c3.css')
     link(rel='stylesheet', href='//cdn.datatables.net/plug-ins/380cb78f450/integration/bootstrap/3/dataTables.bootstrap.css')
 
@@ -31,7 +30,7 @@ html(lang='en')
     style.
       .c3-tooltip { color:#000; }
       .pic {width:100px; float:right;}
-      .progress{height:30px;}
+      .progress-countdown{height:39px; margin-bottom:0px;}
   body
     .container
       h1 FoodPoints+
@@ -41,9 +40,8 @@ html(lang='en')
           a.btn.btn-primary(href=auth_link) Link DukeCard
         else
           a.btn.btn-default(href="/auth/google") Sign In with Google
-        a.btn.btn-info(href="https://dco3.auxserv.duke.edu/onlineoffice", target="_blank") DukeCard Office
-        a.btn.btn-success(href="/whatsopen") What's Open?
       hr
+      .row
       if user
         img.pic(src=user.picture, alt=user.name)
         h3 Welcome back, #{user.given_name}!
@@ -54,43 +52,64 @@ html(lang='en')
         else
           p Link your DukeCard to start tracking your balances.
       .row
-        .col-md-6
+        .col-md-4
           h3 Countdown
-          p You started at:
+          div Starting Food Points:
           input.form-control#plan(type="text")
-          p You should have:
-          div.progress
+          hr
+          div Target/Current:
+          div.progress.progress-countdown
             div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
               div.lead#result
-          if user
-            p You currently have:
-            div.lead=user.balances[0]? user.balances[0].balance : "N/A"
-        if user    
-           .col-md-6
-             h3 Transactions
-             table.table#transactions
-               thead
+          div.progress.progress-countdown
+            div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
+              div.lead#balance=user && user.balances[0]? user.balances[0].balance : "N/A"
+        if user 
+          .col-md-4
+            h3 Transactions
+            table.table#transactions
+              thead
+                tr
+                  th Date
+                  th Amount
+               each b in user.exps
                  tr
-                   th Date
-                   th Amount
-                each b in user.exps
-                  tr
-                    td.format=b.date
-                    td=b.amount.toFixed(2)
+                   td.format=b.date
+                   td=b.amount.toFixed(2)
+          .col-md-4(ng-app="foodpoints" ng-controller="BudgetController")
+            h3 Budgets
+            h4 Send me email when I spend more than:
+            form.form-inline(name="budgetform", ng-submit="save(budget)")
+              .row
+                .col-xs-10
+                  input.form-control(required, type='number', ng-init="budget.amount=150", ng-model="budget.amount")
+                  select.form-control(ng-init="budget.period = 'week'", ng-model="budget.period", ng-options="p for p in periods")
+                .col-xs-2
+                  button.btn.btn-success
+                    i.fa.fa-plus
+            h4 Active Budgets
+            .row.lead(ng-repeat="b in budgets")
+              .col-xs-10
+                div.progress.progress-countdown
+                  div#progbar3.progress-bar.progress-bar-warning(style="width:100%")
+                    div#usage.lead {{b.usage + "/" + b.amount + " per " + b.period}}
+              .col-xs-2
+                button.btn.btn-danger(ng-click="delete(b)")
+                  i.fa.fa-remove
+      .row
       if user
-        .row
-           .col-md-6
-             h3 Chart
-             div#chart
-           .col-md-6
-             h3 Breakdown
-             div#pie
-           .col-md-6
-             h3 Days
-             div#days
-           .col-md-6
-             h3 Hours
-             div#hours
-           .col-md-12
-             h3 Budgets
-             p Send me email when I spend more than X in the last X
+        .col-md-4
+          h3 Chart
+          div#chart
+        .col-md-4
+          h3 Breakdown
+          div#pie
+        .col-md-4
+          h3 Days
+          div#days
+          h3 Hours
+          div#hours
+      .row
+        .col-md-12
+          h3 What's Open?
+          div!=whatsopen

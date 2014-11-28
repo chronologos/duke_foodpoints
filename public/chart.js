@@ -7,7 +7,6 @@ $(document).on('ready', function() {
     var bucketSize = 5
     var numBuckets = 4
     var buckets = {}
-    var cal = new CalHeatMap();
     var data = {}
     var data2 = {}
     user.balances.forEach(function(bal) {
@@ -26,7 +25,7 @@ $(document).on('ready', function() {
         for(var i = 0; i <= numBuckets; i++) {
             //console.log(amt, i*bucketSize, (i+1)*bucketSize)
             if(i >= numBuckets || (amt > i * bucketSize && amt <= (i + 1) * bucketSize)) {
-                console.log(i, amt)
+                //console.log(i, amt)
                 buckets[i * bucketSize] ? buckets[i * bucketSize] += amt : buckets[i * bucketSize] = amt
                 break;
             }
@@ -75,6 +74,7 @@ $(document).on('ready', function() {
             type: 'pie'
         }
     });
+    var cal = new CalHeatMap();
     cal.init({
         itemSelector: "#days",
         start: start,
@@ -108,9 +108,7 @@ $(document).on('ready', function() {
         subDomainTextFormat: function(date, value) {
             return value ? value.toFixed() : "";
         },
-        cellSize: 15,
-        cellPadding: 1,
-        domainGutter: 0
+        cellSize: 15
     });
 })
 

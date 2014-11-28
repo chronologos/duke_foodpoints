@@ -23,9 +23,7 @@ users.index('id', {
 });
 var passport = require('passport')
 app.set('view engine', 'jade')
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
 app.use(session({
     secret: process.env.SESSION_SECRET
@@ -48,8 +46,19 @@ passport.use(new GoogleStrategy({
     console.log(profile)
     done(null, profile)
 }));
+/*
 app.use(function(req, res, next) {
-    console.log(req.user)
+        users.findOne({
+            _id: "54428cf327a1b318f9aaee7c"
+        }, function(err, doc) {
+            console.log(doc)
+            req.user = doc
+            next()
+        })
+    }
+})
+*/
+app.use(function(req, res, next) {
     if(req.user) {
         users.findAndModify({
             id: req.user.id
@@ -67,21 +76,8 @@ app.use(function(req, res, next) {
                 }
             }, function(err, bals) {
                 user.balances = bals
-                //compute transactions
-                user.exps = []
-                for(var i = 0; i < bals.length; i++) {
-                    if(bals[i + 1]) {
-                        var diff = bals[i + 1].balance - bals[i].balance
-                        if(Math.abs(diff) > 0) {
-                            user.exps.push({
-                                amount: diff * -1,
-                                date: bals[i].date
-                            })
-                        }
-                    }
-                }
+                user.exps = getTransactions(bals)
                 req.user = user
-                res.locals.user = user
                 next();
             })
         })
@@ -89,6 +85,33 @@ app.use(function(req, res, next) {
         next();
     }
 })
+app.use("/api", function(req, res, next) {
+    if(req.user) {
+        next()
+    } else {
+        res.statusCode = 403;
+        res.json({
+            error: "Not logged in"
+        })
+    }
+})
+
+function getTransactions(bals) {
+    //compute transactions
+    var arr = []
+    for(var i = 0; i < bals.length; i++) {
+        if(bals[i + 1]) {
+            var diff = bals[i].balance - bals[i + 1].balance
+            if(Math.abs(diff) > 0) {
+                arr.push({
+                    amount: diff,
+                    date: bals[i].date
+                })
+            }
+        }
+    }
+    return arr
+}
 app.listen(port, function() {
     console.log("Node app is running on port " + port)
 })
@@ -117,8 +140,15 @@ app.get('/auth/google/return', passport.authenticate('google', {
     failureRedirect: '/'
 }));
 app.get('/', function(req, res) {
-    res.render('index.jade', {
-        auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url
+    request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
+        var $ = cheerio.load(body)
+        var html = $.html("#schedule_table")
+        //todo process the scraped data
+        res.render('index.jade', {
+            auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
+            user: req.user,
+            whatsopen: html
+        })
     })
 })
 app.get('/home/auth', function(req, res) {
@@ -216,7 +246,7 @@ function validateTokens(user, cb) {
                 }
             }, function(err) {
                 console.log("got new access token %s", access_token)
-                user.access_token=access_token
+                user.access_token = access_token
                 return cb(err)
             })
         })
@@ -256,23 +286,53 @@ function updateBalances() {
                     }
                     console.log("current balance: %s", bal)
                     //get db balance
-                    balances.findOne({
+                    balances.find({
                         user_id: user._id
                     }, {
                         sort: {
                             date: -1
                         }
-                    }, function(err, dbbal) {
+                    }, function(err, bals) {
+                        var dbbal = bals[0]
                         console.log(dbbal)
                         //change in balance, or no balances
                         if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
-                            balances.insert({
+                            var newBal = {
                                 user_id: user._id,
                                 balance: bal,
                                 date: +new Date()
-                            }, function(err) {
-                                //todo check if alert threshold exceeded
-                                setTimeout(cb, 60000)
+                            }
+                            balances.insert(newBal, function(err) {
+                                bals.unshift(newBal)
+                                //loop through budgets
+                                budgets.find({
+                                    user_id: user._id
+                                }, function(err, docs) {
+                                    docs.forEach(function(budget) {
+                                        var cutoff = +new Date() - budget.seconds * 1000
+                                        console.log("cutoff: %s", cutoff)
+                                        var trans = getTransactions(bals)
+                                        console.log(trans)
+                                        var filtered = trans.filter(function(element) {
+                                            return element.date > cutoff
+                                        })
+                                        console.log(filtered)
+                                        var exp = 0
+                                        //sum negative transactions
+                                        filtered.forEach(function(tran) {
+                                            exp += tran.amount < 0 ? Math.abs(tran.amount) : 0
+                                        })
+                                        console.log("spent %s since %s", exp, cutoff)
+                                        //if greater than budget.amount, send email
+                                        if(exp >= budget.amount) {
+                                            var text = "<p>Hello " + user.given_name + ",</p>"
+                                            text += '<p>You spent ' + exp.toFixed(2) + ' against your budget of ' + budget.amount.toFixed(2) + '.</p>'
+                                            text += '<p>To stop receiving these emails, remove your budgeting alert.</p>'
+                                            sendEmail(text, user.email, function(err) {})
+                                        }
+                                        setTimeout(cb, 60000)
+                                    })
+                                })
                             })
                         } else {
                             setTimeout(cb, 60000)
@@ -287,12 +347,13 @@ function updateBalances() {
 }
 app.get('/logout', function(req, res) {
     req.logout();
+    req.session = null;
     res.redirect('/');
 });
 
 function sendEmail(text, recipient, cb) {
     var payload = {
-        text: 'Hello!  You have exceeded your budget of X food points.',
+        html: text,
         from: "no-reply@foodpointsplus.com",
         to: recipient,
         subject: 'FoodPoints+ Alert'
@@ -303,16 +364,45 @@ function sendEmail(text, recipient, cb) {
         cb(err)
     });
 }
-app.get('/whatsopen', function(req, res) {
-    request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
-        var $ = cheerio.load(body)
-        //todo process the scraped data
-        res.send($.html("#schedule_table"))
-    })
-})
-/// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+//create
+app.post('/api/budgets', function(req, res) {
+    req.body.user_id = req.user._id
+    console.log(req.body)
+    budgets.insert(req.body, function(err, doc) {
+        res.send(doc)
+    });
 });
+//query
+app.get('/api/budgets', function(req, res) {
+    budgets.find({
+        user_id: req.user._id
+    }, function(err, docs) {
+        res.send(docs)
+    })
+});
+//delete
+app.delete('/api/budgets/:id', function(req, res) {
+    budgets.remove({
+        _id: req.params.id,
+        user_id: req.user._id
+    }, function(err) {
+        res.json({
+            deleted: 1
+        })
+    })
+});
+app.get('api/cutoffs', function(req, res){
+    
+})
+function getCutoffs(){
+    
+}
+function checkBudgets(){
+    
+}
+//api for cutoffs/available periods
+//separate function to check budget status
+//api for budgets gives progress
+//budgets compute start-of date
+//on trigger, budgets set trigger value
+//only send email if trigger is older than start-of
