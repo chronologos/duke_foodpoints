@@ -18,7 +18,7 @@ html(lang='en')
     script(src='utility.js')
     script(src='chart.js')
 
-    link(href="//bootswatch.com/superhero/bootstrap.css", rel="stylesheet")
+    link(href="http://bootswatch.com/superhero/bootstrap.css", rel="stylesheet")
     link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css", rel="stylesheet")
     link(rel="stylesheet", href='//cdn.rawgit.com/kamisama/cal-heatmap/master/cal-heatmap.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/masayuki0812/c3/master/c3.css')
@@ -48,7 +48,7 @@ html(lang='en')
         if (user.refresh_token)
           p Congratulations!  FoodPoints+ is now tracking your balances.
           p Your DukeCard link expires: 
-            span.format #{user.refresh_token_expire}
+            span.format=user.refresh_token_expire
         else
           p Link your DukeCard to start tracking your balances.
       .row
@@ -74,7 +74,7 @@ html(lang='en')
                   th Amount
                each t in user.trans
                  tr
-                   td=moment(t.date).format("MMMM Do YYYY, h:mm:ss a")
+                   td.format=t.date
                    td=t.amount.toFixed(2)
           .col-md-4(ng-app="foodpoints" ng-controller="BudgetController")
             h3 Budgets

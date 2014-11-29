@@ -414,4 +414,3 @@ function getBudgetStatus(user, cb) {
         })
     })
 }
-//convert dates in production to date objects

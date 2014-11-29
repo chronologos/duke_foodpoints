@@ -23,8 +23,7 @@ Production Data
 
 Deployment (Application)
 ====
-* Fill .env with required values.  
-* The backend will not operate properly without the appropriate API keys.
+* The backend will not operate properly without the appropriate API keys in .env
 * `npm install`
 * `npm start`
 

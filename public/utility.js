@@ -114,7 +114,15 @@ function getNthDay(n, dayOfWeek, month, year) {
     myDate.setDate(myDate.getDate() + 7 * n);
     return myDate;
 }
+
+function format(input) {
+    var format = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
+    return format
+}
 $(document).ready(function() {
+    $('.format').each(function() {
+        $(this).text(format($(this).text()))
+    })
     $('#transactions').DataTable({
         searching: false,
         lengthChange: false,

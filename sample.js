@@ -11,7 +11,7 @@ var howard = {
     name: "Howard Chung",
     picture: "https://lh4.googleusercontent.com/-F7UIly5ftNw/AAAAAAAAAAI/AAAAAAABsOA/Vi1qC6AHVKY/photo.jpg",
     refresh_token: "c9d26d3267dd8f9ea39f10cddeb8180984774e8b",
-    refresh_token_expire: 1429403130365,
+    refresh_token_expire: new Date(1429403130365),
     verified_email: true
 }
 var balances = [{
