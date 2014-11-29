@@ -10,11 +10,11 @@ $(document).on('ready', function() {
     var data = {}
     var data2 = {}
     user.balances.forEach(function(bal) {
-        x2.push(bal.date)
+        x2.push(new Date(bal.date))
         bals.push(bal.balance)
     })
-    user.exps.forEach(function(exp) {
-        var timestamp = ~~ (exp.date / 1000)
+    user.trans.forEach(function(exp) {
+        var timestamp = moment(exp.date).format('X')
         var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X')
         var amt = exp.amount * -1
         data[timestamp] = ~~amt
@@ -31,6 +31,7 @@ $(document).on('ready', function() {
             }
         }
     })
+    console.log(x,x2, ideal, bals)
     chart = c3.generate({
         bindto: "#chart",
         data: {

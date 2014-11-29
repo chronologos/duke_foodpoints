@@ -30,6 +30,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session()) // persistent login
+app.locals.moment = moment;
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
@@ -76,9 +77,11 @@ app.use(function(req, res, next) {
                 }
             }, function(err, bals) {
                 user.balances = bals
-                user.exps = getTransactions(bals)
-                req.user = user
-                next();
+                getTransactions(user, function(err, trans) {
+                    user.trans = trans
+                    req.user = user
+                    next();
+                })
             })
         })
     } else {
@@ -96,21 +99,28 @@ app.use("/api", function(req, res, next) {
     }
 })
 
-function getTransactions(bals) {
-    //compute transactions
-    var arr = []
-    for(var i = 0; i < bals.length; i++) {
-        if(bals[i + 1]) {
-            var diff = bals[i].balance - bals[i + 1].balance
-            if(Math.abs(diff) > 0) {
+function getTransactions(user, cb) {
+    balances.find({
+        user_id: user._id
+    }, {
+        sort: {
+            date: -1
+        }
+    }, function(err, bals) {
+        //compute transactions
+        var arr = []
+        for(var i = 0; i < bals.length; i++) {
+            if(bals[i + 1]) {
+                //newer number subtract older number
+                var diff = bals[i].balance - bals[i + 1].balance
                 arr.push({
                     amount: diff,
                     date: bals[i].date
                 })
             }
         }
-    }
-    return arr
+        cb(err, arr)
+    })
 }
 app.listen(port, function() {
     console.log("Node app is running on port " + port)
@@ -171,7 +181,7 @@ app.get('/home/auth', function(req, res) {
         }, {
             $set: {
                 refresh_token: body.refresh_token,
-                refresh_token_expire: +new Date(moment().add(6, 'months'))
+                refresh_token_expire: new Date(moment().add(6, 'months'))
             }
         }, function(err) {
             res.redirect('/')
@@ -211,7 +221,7 @@ function getCurrentBalance(user, cb) {
             console.log(err, body)
             return cb("error getting balance")
         }
-        console.log(body)
+        //console.log(body)
         body = JSON.parse(body)
         cb(err, Number(body.food_points))
     })
@@ -219,7 +229,7 @@ function getCurrentBalance(user, cb) {
 
 function validateTokens(user, cb) {
     //refresh token expired, unset it
-    if(moment() > user.refresh_token_expire) {
+    if(new Date() > user.refresh_token_expire) {
         console.log("refresh token expired")
         users.update({
             _id: user._id
@@ -234,7 +244,7 @@ function validateTokens(user, cb) {
         })
     }
     //access token expired, get a new one
-    if(moment() > user.access_token_expire || !user.access_token) {
+    if(new Date() > user.access_token_expire || !user.access_token) {
         console.log("access token expired")
         getAccessToken(user, function(err, access_token) {
             users.update({
@@ -242,7 +252,7 @@ function validateTokens(user, cb) {
             }, {
                 $set: {
                     access_token: access_token,
-                    access_token_expire: +new Date(moment().add(1, 'hour'))
+                    access_token_expire: new Date(moment().add(1, 'hour'))
                 }
             }, function(err) {
                 console.log("got new access token %s", access_token)
@@ -284,7 +294,7 @@ function updateBalances() {
                         console.log(err)
                         return cb(null)
                     }
-                    console.log("current balance: %s", bal)
+                    console.log("api balance: %s", bal)
                     //get db balance
                     balances.find({
                         user_id: user._id
@@ -300,39 +310,23 @@ function updateBalances() {
                             var newBal = {
                                 user_id: user._id,
                                 balance: bal,
-                                date: +new Date()
+                                date: new Date()
                             }
                             balances.insert(newBal, function(err) {
-                                bals.unshift(newBal)
-                                //loop through budgets
-                                budgets.find({
-                                    user_id: user._id
-                                }, function(err, docs) {
+                                getBudgetStatus(user, function(err, docs) {
                                     docs.forEach(function(budget) {
-                                        var cutoff = +new Date() - budget.seconds * 1000
-                                        console.log("cutoff: %s", cutoff)
-                                        var trans = getTransactions(bals)
-                                        console.log(trans)
-                                        var filtered = trans.filter(function(element) {
-                                            return element.date > cutoff
-                                        })
-                                        console.log(filtered)
-                                        var exp = 0
-                                        //sum negative transactions
-                                        filtered.forEach(function(tran) {
-                                            exp += tran.amount < 0 ? Math.abs(tran.amount) : 0
-                                        })
-                                        console.log("spent %s since %s", exp, cutoff)
-                                        //if greater than budget.amount, send email
-                                        if(exp >= budget.amount) {
+                                        if(budget.spent >= budget.amount && budget.triggered < budget.cutoff) {
                                             var text = "<p>Hello " + user.given_name + ",</p>"
-                                            text += '<p>You spent ' + exp.toFixed(2) + ' against your budget of ' + budget.amount.toFixed(2) + '.</p>'
+                                            text += '<p>You spent ' + budget.spent.toFixed(2) + ' against your budget of ' + budget.amount.toFixed(2) + ' per ' + budget.period + '.</p>'
                                             text += '<p>To stop receiving these emails, remove your budgeting alert.</p>'
-                                            sendEmail(text, user.email, function(err) {})
+                                            sendEmail(text, user.email, function(err) {
+                                                budget.triggered = new Date()
+                                                budgets.update(budget)
+                                            })
                                         }
-                                        setTimeout(cb, 60000)
                                     })
                                 })
+                                setTimeout(cb, 60000)
                             })
                         } else {
                             setTimeout(cb, 60000)
@@ -354,7 +348,7 @@ app.get('/logout', function(req, res) {
 function sendEmail(text, recipient, cb) {
     var payload = {
         html: text,
-        from: "no-reply@foodpointsplus.com",
+        from: "no-reply",
         to: recipient,
         subject: 'FoodPoints+ Alert'
     }
@@ -367,16 +361,14 @@ function sendEmail(text, recipient, cb) {
 //create
 app.post('/api/budgets', function(req, res) {
     req.body.user_id = req.user._id
-    console.log(req.body)
+    req.body.triggered = -1
     budgets.insert(req.body, function(err, doc) {
         res.send(doc)
     });
 });
 //query
 app.get('/api/budgets', function(req, res) {
-    budgets.find({
-        user_id: req.user._id
-    }, function(err, docs) {
+    getBudgetStatus(req.user, function(err, docs) {
         res.send(docs)
     })
 });
@@ -391,18 +383,35 @@ app.delete('/api/budgets/:id', function(req, res) {
         })
     })
 });
-app.get('api/cutoffs', function(req, res){
-    
+app.get('/api/cutoffs', function(req, res) {
+    res.send(getCutoffs())
 })
-function getCutoffs(){
-    
+
+function getCutoffs() {
+    return {
+        'day': new Date(moment().startOf('day')),
+        'week': new Date(moment().startOf('week')),
+        'month': new Date(moment().startOf('month'))
+    }
 }
-function checkBudgets(){
-    
+
+function getBudgetStatus(user, cb) {
+    var cutoffs = getCutoffs()
+    getTransactions(user, function(err, trans) {
+        budgets.find({
+            user_id: user._id
+        }, function(err, docs) {
+            docs.forEach(function(budget) {
+                var cutoff = cutoffs[budget.period]
+                var exp = 0
+                trans.forEach(function(tran) {
+                    exp += tran.date > cutoff && tran.amount < 0 ? Math.abs(tran.amount) : 0
+                })
+                budget.spent = exp
+                budget.cutoff = cutoff
+            })
+            cb(err, docs)
+        })
+    })
 }
-//api for cutoffs/available periods
-//separate function to check budget status
-//api for budgets gives progress
-//budgets compute start-of date
-//on trigger, budgets set trigger value
-//only send email if trigger is older than start-of
+//convert dates in production to date objects

@@ -114,14 +114,7 @@ function getNthDay(n, dayOfWeek, month, year) {
     myDate.setDate(myDate.getDate() + 7 * n);
     return myDate;
 }
-
-function format(input) {
-    return moment(Number(input)).format("MMMM Do YYYY, h:mm:ss a");
-}
 $(document).ready(function() {
-    $('.format').each(function() {
-        $(this).text(format($(this).text()))
-    })
     $('#transactions').DataTable({
         searching: false,
         lengthChange: false,
@@ -130,11 +123,14 @@ $(document).ready(function() {
     });
 })
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
-    $scope.periods = [
-        'day',
-        'week',
-        'month'
-    ]
+    $http.get('/api/cutoffs/').
+    success(function(data, status, headers, config) {
+        $scope.periods = Object.keys(data)
+        $scope.budget = {
+            amount: 150,
+            period: 'week'
+        }
+    })
     getBudgets($scope, $http)
     $scope.save = function(budget) {
         console.log(budget)
@@ -156,6 +152,14 @@ angular.module('foodpoints', []).controller("BudgetController", function($scope,
 function getBudgets($scope, $http) {
     $http.get('/api/budgets/').
     success(function(data, status, headers, config) {
+        data.forEach(function(b) {
+            b.percent = Math.min(b.spent / b.amount * 100, 100)
+            var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"]
+            classes[0] = b.percent > 66 ? "progress-bar-warning" : classes[0]
+            classes[0] = b.percent > 90 ? "progress-bar-danger" : classes[0]
+            b.class = classes.join(" ")
+            b.display = b.spent.toFixed() + " of " + b.amount + " per " + b.period
+        })
         $scope.budgets = data
     })
 }

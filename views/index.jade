@@ -30,7 +30,7 @@ html(lang='en')
     style.
       .c3-tooltip { color:#000; }
       .pic {width:100px; float:right;}
-      .progress-countdown{height:39px; margin-bottom:0px;}
+      .progress-countdown{height:39px; margin-bottom:0px;white-space:nowrap;}
   body
     .container
       h1 FoodPoints+
@@ -72,18 +72,18 @@ html(lang='en')
                 tr
                   th Date
                   th Amount
-               each b in user.exps
+               each t in user.trans
                  tr
-                   td.format=b.date
-                   td=b.amount.toFixed(2)
+                   td=moment(t.date).format("MMMM Do YYYY, h:mm:ss a")
+                   td=t.amount.toFixed(2)
           .col-md-4(ng-app="foodpoints" ng-controller="BudgetController")
             h3 Budgets
             h4 Send me email when I spend more than:
             form.form-inline(name="budgetform", ng-submit="save(budget)")
               .row
                 .col-xs-10
-                  input.form-control(required, type='number', ng-init="budget.amount=150", ng-model="budget.amount")
-                  select.form-control(ng-init="budget.period = 'week'", ng-model="budget.period", ng-options="p for p in periods")
+                  input.form-control(required, type='number', ng-model="budget.amount")
+                  select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
                 .col-xs-2
                   button.btn.btn-success
                     i.fa.fa-plus
@@ -91,8 +91,8 @@ html(lang='en')
             .row.lead(ng-repeat="b in budgets")
               .col-xs-10
                 div.progress.progress-countdown
-                  div#progbar3.progress-bar.progress-bar-warning(style="width:100%")
-                    div#usage.lead {{b.usage + "/" + b.amount + " per " + b.period}}
+                  div#progbar3(class="{{b.class}}", style="width:{{b.percent}}%")
+                    div#usage.lead {{b.display}}
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
                   i.fa.fa-remove
