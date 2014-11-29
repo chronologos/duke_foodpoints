@@ -96,17 +96,20 @@ db.budgets.insert([{
     "user_id": ObjectId("54428cf327a1b318f9aaee7c"),
     amount: 1,
     period: 'day',
-    triggered: new Date(0)
+    triggered: new Date(0),
+    date: new Date()
 }, {
     "user_id": ObjectId("54428cf327a1b318f9aaee7c"),
     amount: 500,
     period: 'week',
-    triggered: new Date(0)
+    triggered: new Date(0),
+    date: new Date()
 }, {
     "user_id": ObjectId("54428cf327a1b318f9aaee7c"),
     amount: 610,
     period: 'month',
-    triggered: new Date(0)
+    triggered: new Date(0),
+    date: new Date()
 }], {
     multi: true
 })

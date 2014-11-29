@@ -48,7 +48,7 @@ var springstart = getNthDay(1, 3, 0, currdate.getFullYear()); //second wednesday
 var springend = addDays(springstart, SPRING_LENGTH);
 //var currdate=new Date("8/1/2013"); //debug date
 $(document).ready(function() {
-    $("#plan").on("keyup", function() {
+    $("#plan").on("change", function() {
         numfoodpoints = parseInt($("#plan").val());
         setCookie("numfoodpoints", numfoodpoints, 365);
         updateChart()
@@ -166,7 +166,7 @@ function getBudgets($scope, $http) {
             classes[0] = b.percent > 66 ? "progress-bar-warning" : classes[0]
             classes[0] = b.percent > 90 ? "progress-bar-danger" : classes[0]
             b.class = classes.join(" ")
-            b.display = b.spent.toFixed() + " of " + b.amount + " per " + b.period
+            b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period
         })
         $scope.budgets = data
     })

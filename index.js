@@ -150,15 +150,9 @@ app.get('/auth/google/return', passport.authenticate('google', {
     failureRedirect: '/'
 }));
 app.get('/', function(req, res) {
-    request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
-        var $ = cheerio.load(body)
-        var html = $.html("#schedule_table")
-        //todo process the scraped data
-        res.render('index.jade', {
-            auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
-            user: req.user,
-            whatsopen: html
-        })
+    res.render('index.jade', {
+        auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
+        user: req.user
     })
 })
 app.get('/home/auth', function(req, res) {
@@ -317,11 +311,13 @@ function updateBalances() {
                                     docs.forEach(function(budget) {
                                         if(budget.spent >= budget.amount && budget.triggered < budget.cutoff) {
                                             var text = "<p>Hello " + user.given_name + ",</p>"
-                                            text += '<p>You spent ' + budget.spent.toFixed(2) + ' against your budget of ' + budget.amount.toFixed(2) + ' per ' + budget.period + '.</p>'
-                                            text += '<p>To stop receiving these emails, remove your budgeting alert.</p>'
+                                            text += '<p>You spent ' + budget.spent.toFixed(2) + ' this ' + budget.period + ', exceeding your budget of ' + budget.amount.toFixed(2) + '.</p>'
+                                            text += '<p>To stop receiving these emails, remove your budgeting alert at ' + process.env.ROOT_URL + '</p>'
                                             sendEmail(text, user.email, function(err) {
                                                 budget.triggered = new Date()
-                                                budgets.update(budget)
+                                                budgets.update({
+                                                    _id: budget._id
+                                                }, budget)
                                             })
                                         }
                                     })
@@ -362,6 +358,7 @@ function sendEmail(text, recipient, cb) {
 app.post('/api/budgets', function(req, res) {
     req.body.user_id = req.user._id
     req.body.triggered = -1
+    req.body.date = new Date()
     budgets.insert(req.body, function(err, doc) {
         res.send(doc)
     });
@@ -386,6 +383,44 @@ app.delete('/api/budgets/:id', function(req, res) {
 app.get('/api/cutoffs', function(req, res) {
     res.send(getCutoffs())
 })
+app.get('/venues', function(req, res) {
+    request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
+        var $ = cheerio.load(body)
+        var venues = []
+        var dates = []
+        var rows = $("#schedule_table tr")
+        rows.each(function(i, r) {
+            if($(r).attr('id') === "schedule_header_row") {
+                //get dates
+                $(r).children().each(function(j, c) {
+                    var date = $(c).text().slice(3)
+                    dates.push(date)
+                })
+            } else {
+                var v = {
+                    name: null,
+                    open: null,
+                    close: null
+                }
+                $(r).children().each(function(j, c) {
+                    var content = $(c).text()
+                    if(j === 0) {
+                        v.name = content
+                    }
+                    if(j === 1) {
+                        if(content !== "Closed") {
+                            var split = content.split("-")
+                            v.open = dates[j] + " " + split[0]
+                            v.close = dates[j] + " " + split[1]
+                        }
+                        venues.push(v)
+                    }
+                })
+            }
+        })
+        res.json(venues)
+    })
+})
 
 function getCutoffs() {
     return {
@@ -400,6 +435,10 @@ function getBudgetStatus(user, cb) {
     getTransactions(user, function(err, trans) {
         budgets.find({
             user_id: user._id
+        }, {
+            sort: {
+                date: 1
+            }
         }, function(err, docs) {
             docs.forEach(function(budget) {
                 var cutoff = cutoffs[budget.period]

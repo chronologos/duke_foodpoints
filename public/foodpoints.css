@@ -1,0 +1,15 @@
+.vis.timeline .timeaxis .text {
+    color:#fff;
+}
+.c3-tooltip {
+    color:#000;
+}
+.pic {
+    width:100px;
+    float:right;
+}
+.progress-countdown {
+    height:39px;
+    margin-bottom:0px;
+    white-space:nowrap;
+}
