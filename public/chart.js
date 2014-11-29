@@ -134,7 +134,8 @@ $(document).on('ready', function() {
         var container = document.getElementById('timeline');
         // Configuration for the Timeline
         var options = {
-            start: new Date()
+            start: moment(new Date()).startOf('day'),
+            end: moment(new Date()).startOf('day').add(1, 'day')
         };
         // Create a Timeline
         var timeline = new vis.Timeline(container, processedVenues, options);
