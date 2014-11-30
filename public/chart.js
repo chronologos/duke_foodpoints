@@ -123,7 +123,7 @@ $(document).on('ready', function() {
                 v.content = v.name
                 v.start = moment(v.open, "MMMM-DD h:mma")
                 v.end = moment(v.close, "MMMM-DD h:mma")
-                if(v.start === v.end) {
+                if(v.end < v.start) {
                     v.end.add(1, 'day')
                 }
                 processedVenues.push(v)
