@@ -406,12 +406,13 @@ app.get('/venues', function(req, res) {
                     var content = $(c).text()
                     if(j === 0) {
                         v.name = content
+                        v.link = $($(c).children()[0]).attr('href')
                     }
                     if(j === 1) {
                         if(content !== "Closed") {
                             var split = content.split("-")
                             v.open = dates[j] + " " + split[0]
-                            v.close = dates[j] + " " + split[1]
+                            v.close = dates[j] + " " + split[split.length-1]
                         }
                         venues.push(v)
                     }

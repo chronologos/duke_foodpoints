@@ -120,10 +120,10 @@ $(document).on('ready', function() {
         var processedVenues = []
         data.forEach(function(v) {
             if(v.open && v.close) {
-                v.content = v.name
+                v.content = "<a href='"+v.link+"'>"+v.name+"</a>"
                 v.start = moment(v.open, "MMMM-DD h:mma")
                 v.end = moment(v.close, "MMMM-DD h:mma")
-                if(v.end < v.start) {
+                if(v.end <= v.start) {
                     v.end.add(1, 'day')
                 }
                 processedVenues.push(v)
@@ -135,7 +135,8 @@ $(document).on('ready', function() {
         // Configuration for the Timeline
         var options = {
             start: moment(new Date()).startOf('day'),
-            end: moment(new Date()).startOf('day').add(1, 'day')
+            end: moment(new Date()).startOf('day').add(1, 'day'),
+            moveable: false
         };
         // Create a Timeline
         var timeline = new vis.Timeline(container, processedVenues, options);
