@@ -152,35 +152,54 @@ function getPointPlan(user, cb) {
     userBalances.sort(function compare(a, b) {
         return a.balance - b.balance;
     })
-    var startBalance = userBalances.filter({
-        date: start
+    var startBalance = userBalances.filter(function callback(val, index, userBalances) {
+        if (val.date==start) {
+            return true;
+        } else {
+            return false;
+        }
     })
     var beginFoodBalance = startBalance.pop()
     var startingFoodPoints
-    if(beginFoodBalance !== null) {
+    if(beginFoodBalance !== undefined) {
         startingFoodPoints = beginFoodBalance.balance
-    } else if(userBalances.length() > 1) {
+    } else if(userBalances.length > 1) {
         var firstRead = userBalances.pop()
         var latestRead = userBalances.shift()
         var rate = getUsageRate(firstRead, latestRead)
-        var semesterPercent = calculatePercentSemester()
-        if(start == fallstart) {
-            startingFoodPoints = latestRead + semesterPercent * FALL_LENGTH * rate
-        } else {
-            startingFoodPoints = latestRead + semesterPercent * SPRING_LENGTH * rate
-        }
+        var semStart = start.toDateString();
+        var semesterPercent = subtractDates(latestRead.date, semStart)
+        startingFoodPoints = latestRead.balance + semesterPercent * rate       
     } else {
         startingFoodPoints = DEFAULT_FOOD_POINTS
     }
     console.log(startingFoodPoints)
-    //TODO set this value into the text field
-    return startingFoodPoints;
+    $("#plan").val(startingFoodPoints.toFixed(2));
 }
 
 function getUsageRate(highBalance, lowBalance) {
-    var deltaT = lowBalance.date - highBalance.date
+    var deltaT = subtractDates(lowBalance.date, highBalance.date)
     var deltaBalance = highBalance.balance - lowBalance.balance
     return deltaBalance / deltaT;
+}
+function subtractDates(recent, old) {
+    var oldDate = new Date(old);
+    var recDate = new Date(recent);
+    var monthStart=oldDate.getMonth();
+    var monthEnd=recDate.getMonth();
+    var daysDiff = recDate.getDate()-oldDate.getDate();
+    var monthsDiff=0;
+    while (monthStart!=monthEnd){
+        if (monthStart==0||monthStart==2||monthStart==4||monthStart==6||monthStart==7||monthStart==9||monthStart==11) {
+            monthsDiff+=31;
+        } else if (monthStart==1 && oldDate.getYear()%4!==0) {
+            monthsDiff+=28;
+        } else {
+            monthsDiff+=30;
+        }
+    monthStart=monthStart+1;
+    }
+    return daysDiff+monthsDiff;
 }
 
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {

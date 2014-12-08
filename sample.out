@@ -1,0 +1,94 @@
+MongoDB shell version: 2.6.1
+connecting to: foodpoints
+{
+	"_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"email" : "suuuncon@gmail.com",
+	"family_name" : "Chung",
+	"gender" : "male",
+	"given_name" : "Howard",
+	"id" : "115307917489359738692",
+	"link" : "https://plus.google.com/115307917489359738692",
+	"name" : "Howard Chung",
+	"picture" : "https://lh4.googleusercontent.com/-F7UIly5ftNw/AAAAAAAAAAI/AAAAAAABsOA/Vi1qC6AHVKY/photo.jpg",
+	"refresh_token" : "c9d26d3267dd8f9ea39f10cddeb8180984774e8b",
+	"refresh_token_expire" : ISODate("2015-04-19T00:25:30.365Z"),
+	"verified_email" : true
+}
+{
+	"_id" : ObjectId("544295060cae810b0056abaf"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1145.64,
+	"date" : ISODate("2014-10-18T16:27:50.105Z")
+}
+{
+	"_id" : ObjectId("544308524cb3110b00affa36"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1136.2,
+	"date" : ISODate("2014-10-19T00:39:46.391Z")
+}
+{
+	"_id" : ObjectId("54430ea24cb3110b00affa37"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1134.7,
+	"date" : ISODate("2014-10-19T01:06:42.440Z")
+}
+{
+	"_id" : ObjectId("54442c374cb3110b00affa38"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1127.62,
+	"date" : ISODate("2014-10-19T21:25:11.947Z")
+}
+{
+	"_id" : ObjectId("54442c8a4cb3110b00affa39"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1125.62,
+	"date" : ISODate("2014-10-19T21:26:34.863Z")
+}
+{
+	"_id" : ObjectId("544435564cb3110b00affa3a"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1123.48,
+	"date" : ISODate("2014-10-19T22:04:06.158Z")
+}
+{
+	"_id" : ObjectId("5445491221eef40b005c6e8f"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1115.44,
+	"date" : ISODate("2014-10-20T17:40:34.048Z")
+}
+{
+	"_id" : ObjectId("5445a76821eef40b005c6e90"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1113.44,
+	"date" : ISODate("2014-10-21T00:23:04.306Z")
+}
+{
+	"_id" : ObjectId("5445fc4521eef40b005c6e91"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1112.19,
+	"date" : ISODate("2014-10-21T06:25:09.865Z")
+}
+{
+	"_id" : ObjectId("5445fc5121eef40b005c6e92"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 1110.89,
+	"date" : ISODate("2014-10-21T06:25:21.020Z")
+}
+{
+	"_id" : ObjectId("5446ae3a66c9c90b00efb2e1"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 900.73,
+	"date" : ISODate("2014-11-02T00:00:00Z")
+}
+{
+	"_id" : ObjectId("5446da3666c9c90b00efb2e3"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 510.33,
+	"date" : ISODate("2014-11-28T00:00:00Z")
+}
+{
+	"_id" : ObjectId("5446da3966c9c90b00efb2e4"),
+	"user_id" : ObjectId("54428cf327a1b318f9aaee7c"),
+	"balance" : 510.09,
+	"date" : ISODate("2014-11-29T00:00:00Z")
+}

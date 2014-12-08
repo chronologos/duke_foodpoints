@@ -47,18 +47,17 @@ passport.use(new GoogleStrategy({
     console.log(profile)
     done(null, profile)
 }));
-/*
+
 app.use(function(req, res, next) {
-        users.findOne({
-            _id: "54428cf327a1b318f9aaee7c"
-        }, function(err, doc) {
-            console.log(doc)
-            req.user = doc
-            next()
-        })
-    }
+    users.findOne({
+        _id: "54428cf327a1b318f9aaee7c"
+    }, function(err, doc) {
+        console.log(doc)
+        req.user = doc
+        next()
+    })
 })
-*/
+
 app.use(function(req, res, next) {
     if(req.user) {
         users.findAndModify({
