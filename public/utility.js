@@ -183,23 +183,9 @@ function getUsageRate(highBalance, lowBalance) {
     return deltaBalance / deltaT;
 }
 function subtractDates(recent, old) {
-    var oldDate = new Date(old);
-    var recDate = new Date(recent);
-    var monthStart=oldDate.getMonth();
-    var monthEnd=recDate.getMonth();
-    var daysDiff = recDate.getDate()-oldDate.getDate();
-    var monthsDiff=0;
-    while (monthStart!=monthEnd){
-        if (monthStart==0||monthStart==2||monthStart==4||monthStart==6||monthStart==7||monthStart==9||monthStart==11) {
-            monthsDiff+=31;
-        } else if (monthStart==1 && oldDate.getYear()%4!==0) {
-            monthsDiff+=28;
-        } else {
-            monthsDiff+=30;
-        }
-    monthStart=monthStart+1;
-    }
-    return daysDiff+monthsDiff;
+    var oldDate = new moment(old);//Date(old);
+    var recDate = new moment(recent);//Date(recent);
+    return recDate.diff(oldDate, 'days');
 }
 
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
