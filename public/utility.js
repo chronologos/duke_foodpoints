@@ -152,35 +152,40 @@ function getPointPlan(user, cb) {
     userBalances.sort(function compare(a, b) {
         return a.balance - b.balance;
     })
-    var startBalance = userBalances.filter({
-        date: start
+    var startBalance = userBalances.filter(function callback(val, index, userBalances) {
+        if (val.date==start) {
+            return true;
+        } else {
+            return false;
+        }
     })
     var beginFoodBalance = startBalance.pop()
     var startingFoodPoints
-    if(beginFoodBalance !== null) {
+    if(beginFoodBalance !== undefined) {
         startingFoodPoints = beginFoodBalance.balance
-    } else if(userBalances.length() > 1) {
+    } else if(userBalances.length > 1) {
         var firstRead = userBalances.pop()
         var latestRead = userBalances.shift()
         var rate = getUsageRate(firstRead, latestRead)
-        var semesterPercent = calculatePercentSemester()
-        if(start == fallstart) {
-            startingFoodPoints = latestRead + semesterPercent * FALL_LENGTH * rate
-        } else {
-            startingFoodPoints = latestRead + semesterPercent * SPRING_LENGTH * rate
-        }
+        var semStart = start.toDateString();
+        var semesterPercent = subtractDates(latestRead.date, semStart)
+        startingFoodPoints = latestRead.balance + semesterPercent * rate       
     } else {
         startingFoodPoints = DEFAULT_FOOD_POINTS
     }
     console.log(startingFoodPoints)
-    //TODO set this value into the text field
-    return startingFoodPoints;
+    $("#plan").val(startingFoodPoints.toFixed(2));
 }
 
 function getUsageRate(highBalance, lowBalance) {
-    var deltaT = lowBalance.date - highBalance.date
+    var deltaT = subtractDates(lowBalance.date, highBalance.date)
     var deltaBalance = highBalance.balance - lowBalance.balance
     return deltaBalance / deltaT;
+}
+function subtractDates(recent, old) {
+    var oldDate = new moment(old);//Date(old);
+    var recDate = new moment(recent);//Date(recent);
+    return recDate.diff(oldDate, 'days');
 }
 
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
