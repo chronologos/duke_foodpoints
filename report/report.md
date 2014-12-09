@@ -7,7 +7,7 @@ Description
 
 E/R Diagram
 ====
-See .pdf file
+* See .pdf file
 
 Assumptions
 ====
@@ -38,7 +38,7 @@ User:
 }
 Budget:
 {
-_id: key, ID assigned by MongoDB,
+    _id: key, ID assigned by MongoDB,
     user_id: mongodb ID of the user the budget belongs to
     amount: The amount that the budget alert should trigger at
     period: The amount of time the user has to spend the specified amount
