@@ -90,7 +90,7 @@ html(lang='en')
                   select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
                 .col-xs-2
                   button.btn.btn-success
-                    i.fa.fa-plus
+                    i.glyphicon.glyphicon-plus
             h4 My Budgets
             .row.lead(ng-repeat="b in budgets")
               .col-xs-10
@@ -99,7 +99,7 @@ html(lang='en')
                     div#usage.lead {{b.display}}
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
-                  i.fa.fa-remove
+                  i.glyphicon.glyphicon-remove
       .row
         if user
           .col-md-4
