@@ -11,7 +11,6 @@ var fallend = addDays(fallstart, FALL_LENGTH);
 var springstart = getNthDay(1, 3, 0, currdate.getFullYear()); //second wednesday january
 var springend = addDays(springstart, SPRING_LENGTH);
 //var currdate=new Date("8/1/2013"); //debug date
-
 $(document).ready(function() {
     checkCookie(DEFAULT_FOOD_POINTS);
     numfoodpoints = parseInt($("#plan").val());
@@ -39,7 +38,7 @@ $(document).ready(function() {
     console.log(currdate);
     console.log(numfoodpoints);
     */
-        $('.format').each(function() {
+    $('.format').each(function() {
         $(this).text(format($(this).text()))
     })
     $('#transactions').DataTable({
@@ -54,8 +53,8 @@ $(document).ready(function() {
         updateChart()
     });
 });
-
 //functions
+
 function setCookie(c_name, value, exdays) {
     var exdate = new Date();
     exdate.setDate(exdate.getDate() + exdays);
@@ -92,8 +91,8 @@ function checkCookie(defaultval) {
         $("#plan").val(defaultval)
     }
 }
-
 //calculates and updates the percentage of the semester elapsed
+
 function calculatePercentSemester() {
     var currtime = new Date();
     //var currtime=new Date("12/1/2013"); //debug time
@@ -110,6 +109,7 @@ function addDays(date, days) {
     return result;
 }
 //gets the nth (zero-indexed) instance of a specific day of the week in a month, year
+
 function getNthDay(n, dayOfWeek, month, year) {
     var myDate = new Date();
     myDate.setHours(0, 0, 0, 0);
@@ -153,7 +153,7 @@ function getPointPlan(user, cb) {
         return a.balance - b.balance;
     })
     var startBalance = userBalances.filter(function callback(val, index, userBalances) {
-        if (val.date==start) {
+        if(val.date == start) {
             return true;
         } else {
             return false;
@@ -169,12 +169,13 @@ function getPointPlan(user, cb) {
         var rate = getUsageRate(firstRead, latestRead)
         var semStart = start.toDateString();
         var semesterPercent = subtractDates(latestRead.date, semStart)
-        startingFoodPoints = latestRead.balance + semesterPercent * rate       
+        startingFoodPoints = latestRead.balance + semesterPercent * rate
     } else {
         startingFoodPoints = DEFAULT_FOOD_POINTS
     }
     console.log(startingFoodPoints)
-    $("#plan").val(startingFoodPoints.toFixed(2));
+    $("#plan").val(startingFoodPoints.toFixed());
+    $("#plan").change();
 }
 
 function getUsageRate(highBalance, lowBalance) {
@@ -182,12 +183,12 @@ function getUsageRate(highBalance, lowBalance) {
     var deltaBalance = highBalance.balance - lowBalance.balance
     return deltaBalance / deltaT;
 }
+
 function subtractDates(recent, old) {
-    var oldDate = new moment(old);//Date(old);
-    var recDate = new moment(recent);//Date(recent);
+    var oldDate = moment(new Date(old));
+    var recDate = moment(new Date(recent));
     return recDate.diff(oldDate, 'days');
 }
-
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/').
     success(function(data, status, headers, config) {
