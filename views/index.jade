@@ -55,16 +55,17 @@ html(lang='en')
       .row
         .col-md-4
           h3 Countdown
-          div Starting Food Points:
+          div You started with:
           input.form-control#plan(type="text")
           if user
             button.btn.btn-info.btn-block(onclick='getPointPlan(user)') Estimate Starting Balance
           hr
-          div Target/Current:
+          div You should have:
           div.progress.progress-countdown
             div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
               div.lead#result
           if user
+            div You currently have:
             div.progress.progress-countdown
               div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
                 div.lead#balance=user.balances[0].balance
