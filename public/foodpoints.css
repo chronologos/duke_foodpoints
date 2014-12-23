@@ -4,8 +4,8 @@
 .c3-tooltip {
     color: #000;
 }
-.pic{
-    width:100px;
+.pic {
+    width: 100px;
 }
 .progress-countdown {
     height: 39px;
@@ -18,5 +18,8 @@
     overflow-y: scroll;
 }
 .verticalLine {
-    border-left: thick solid #ff0000;
+    background-color: red;
+    width: 1px;
+    height: 100%;
+    position: relative;
 }

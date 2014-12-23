@@ -85,10 +85,12 @@ html(lang='en' ng-app="foodpoints")
                 div.progress.progress-countdown
                   div(class="{{b.class}}", style="width:{{b.percent}}%")
                     div.lead {{b.display}}
-                  div.verticalLine
+                  div.verticalLine(style="left:{{b.elapsed}}%")
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
                   i.glyphicon.glyphicon-remove
+            ul.small
+              li The red bar marks the current point in the period
           .col-md-4
             h3 Projections
             h4 Based on your spending this semester:
