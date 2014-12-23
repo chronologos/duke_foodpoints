@@ -173,7 +173,7 @@ $(document).ready(function() {
                         enabled: false
                     }
                 });
-                //bucket by total, or by number?
+                /*
                 var cols = [];
                 for (var key in buckets) {
                     cols.push(["$" + key + "+"].concat(buckets[key]))
@@ -186,6 +186,7 @@ $(document).ready(function() {
                         type: 'pie'
                     }
                 });
+                */
                 var cal = new CalHeatMap();
                 cal.init({
                     itemSelector: "#days",
