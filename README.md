@@ -1,7 +1,6 @@
 FoodPoints+
 ====
-Howard Chung, Will Shelburne, Wenjun Mao  
-An application for tracking food points.
+An application for tracking food points of Duke University students.
 
 Dependencies
 ====
@@ -18,4 +17,8 @@ Deployment
 * Install MongoDB and Node.js
 * The backend will not operate properly without the appropriate API keys in .env
 * `npm install`
-* `node index.js`
+* `npm start`
+
+Foreman
+====
+* This app can also be run using Foreman, which will default to port 5000.

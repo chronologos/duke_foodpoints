@@ -1,5 +1,5 @@
 doctype
-html(lang='en')
+html(lang='en' ng-app="foodpoints")
   head
     title FoodPoints+
     meta(charset='utf-8')
@@ -13,22 +13,14 @@ html(lang='en')
     script(src='//cdn.rawgit.com/almende/vis/master/dist/vis.js')
     script(src='//code.angularjs.org/snapshot/angular.min.js')
     script(src='ga.js')
-    script(src='utility.js')
-    script(src='chart.js')
+    script(src='foodpoints.js')
 
     link(rel="stylesheet", href='//maxcdn.bootstrapcdn.com/bootswatch/latest/superhero/bootstrap.min.css')
     link(rel="stylesheet", href='//cdn.rawgit.com/kamisama/cal-heatmap/master/cal-heatmap.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/masayuki0812/c3/master/c3.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/almende/vis/master/dist/vis.css')
     link(rel='stylesheet', href='foodpoints.css')
-    
-    script(src='//cdn.rawgit.com/DataTables/DataTables/master/media/js/jquery.dataTables.min.js')
-    script(src='//cdn.datatables.net/plug-ins/380cb78f450/integration/bootstrap/3/dataTables.bootstrap.js')
-    link(rel='stylesheet', href='//cdn.datatables.net/plug-ins/380cb78f450/integration/bootstrap/3/dataTables.bootstrap.css')
 
-    script.
-      var user =!{JSON.stringify(user)}
-      console.log(user)
   body
     .container
       h1 FoodPoints+
@@ -40,26 +32,28 @@ html(lang='en')
           a.btn.btn-default(href="/auth/google") Sign In with Google
       hr
       .row
-        .col-md-12
+        .col-md-4
           if user
             img.pic(src=user.picture, alt=user.name)
             h3 Welcome back, #{user.given_name}!
             if (user.refresh_token)
-              p Congratulations!  FoodPoints+ is now tracking your balances.
-              p Your DukeCard link expires: 
+              p FoodPoints+ is now tracking your balances.
+              p DukeCard link expires 
                 span.format=user.refresh_token_expire
             else
               p Link your DukeCard to start tracking your balances.
           else
-            p Sign in to use advanced features such as graphing and budgets.
-      .row
+            p Sign in to use features such as graphing and budgets.
+          div.small
+            div The starting food point value is set by:
+            ul
+              li Entered value saved in a cookie
+              li Projected value based on your balances
+              li Default value of Plan A
         .col-md-4
           h3 Countdown
           div You started with:
           input.form-control#plan(type="text")
-          if user
-            button.btn.btn-info.btn-block(onclick='getPointPlan(user)') Estimate Starting Balance
-          hr
           div You should have:
           div.progress.progress-countdown
             div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
@@ -68,20 +62,13 @@ html(lang='en')
             div You currently have:
             div.progress.progress-countdown
               div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-                div.lead#balance=user.balances[0].balance
-        if user 
-          .col-md-4
-            h3 Transactions
-            table.table#transactions
-              thead
-                tr
-                  th Date
-                  th Amount
-               each t in user.trans
-                 tr
-                   td.format=t.date
-                   td=t.amount.toFixed(2)
-          .col-md-4(ng-app="foodpoints" ng-controller="BudgetController")
+                div.lead#balance
+      if user
+        .row
+          .col-md-4 
+            h3 Chart
+            div#chart
+          .col-md-4(ng-controller="BudgetController")
             h3 Budgets
             h4 Send me email when I spend more than:
             form.form-inline(name="budgetform", ng-submit="save(budget)")
@@ -96,27 +83,37 @@ html(lang='en')
             .row.lead(ng-repeat="b in budgets")
               .col-xs-10
                 div.progress.progress-countdown
-                  div#progbar3(class="{{b.class}}", style="width:{{b.percent}}%")
-                    div#usage.lead {{b.display}}
+                  div(class="{{b.class}}", style="width:{{b.percent}}%")
+                    div.lead {{b.display}}
+                  div.verticalLine
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
                   i.glyphicon.glyphicon-remove
-      .row
-        if user
           .col-md-4
-            h3 Chart
-            div#chart
+            h3 Projections
+            h4 Based on your spending this semester:
+            table#projections.table
+        .row
           .col-md-4
             h3 Breakdown
             div#pie
-          .col-md-4
             h3 Days
             div#days
             h3 Hours
             div#hours
-      .row
-        .col-md-12
-          h3 What's Open?
-          div#timeline
+          .col-md-4
+            h3 Transactions
+            table.table#transactions
+              thead
+                tr
+                  th Date
+                  th Amount
+               each t in user.trans
+                 tr
+                   td.format=t.date
+                   td=t.amount.toFixed(2)
       hr
-      
+      footer
+        div Developed by Howard Chung, Will Shelburne.
+        a(href="http://github.com/howardc93/foodpoints") This application is open source.
+      hr

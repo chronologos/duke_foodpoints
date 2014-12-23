@@ -60,7 +60,7 @@ app.use(function(req, res, next) {
 })
 */
 app.use(function(req, res, next) {
-    if(req.user) {
+    if (req.user) {
         users.findAndModify({
             id: req.user.id
         }, {
@@ -84,14 +84,16 @@ app.use(function(req, res, next) {
                 })
             })
         })
-    } else {
+    }
+    else {
         next();
     }
 })
 app.use("/api", function(req, res, next) {
-    if(req.user) {
+    if (req.user) {
         next()
-    } else {
+    }
+    else {
         res.statusCode = 403;
         res.json({
             error: "Not logged in"
@@ -109,8 +111,8 @@ function getTransactions(user, cb) {
     }, function(err, bals) {
         //compute transactions
         var arr = []
-        for(var i = 0; i < bals.length; i++) {
-            if(bals[i + 1]) {
+        for (var i = 0; i < bals.length; i++) {
+            if (bals[i + 1]) {
                 //newer number subtract older number
                 var diff = bals[i].balance - bals[i + 1].balance
                 arr.push({
@@ -126,13 +128,14 @@ app.listen(port, function() {
     console.log("Node app is running on port " + port)
 })
 var forceSsl = function(req, res, next) {
-    if(req.headers['x-forwarded-proto'] !== 'https') {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
         res.redirect(['https://', req.get('host'), req.url].join(''));
-    } else {
+    }
+    else {
         next();
     }
 }
-if(process.env.NODE_ENV == "production") {
+if (process.env.NODE_ENV == "production") {
     app.use(forceSsl);
     protocol = "https";
 }
@@ -195,7 +198,7 @@ function getAccessToken(user, cb) {
             refresh_token: refresh_token
         }
     }, function(err, resp, body) {
-        if(err || resp.statusCode != 200 || !body) {
+        if (err || resp.statusCode != 200 || !body) {
             return cb("error getting access token")
         }
         body = JSON.parse(body)
@@ -211,7 +214,7 @@ function getCurrentBalance(user, cb) {
             access_token: access_token
         }
     }, function(err, resp, body) {
-        if(err || resp.statusCode != 200 || !body) {
+        if (err || resp.statusCode != 200 || !body) {
             console.log(err, body)
             return cb("error getting balance")
         }
@@ -223,7 +226,7 @@ function getCurrentBalance(user, cb) {
 
 function validateTokens(user, cb) {
     //refresh token expired, unset it
-    if(new Date() > user.refresh_token_expire) {
+    if (new Date() > user.refresh_token_expire) {
         console.log("refresh token expired")
         users.update({
             _id: user._id
@@ -238,7 +241,7 @@ function validateTokens(user, cb) {
         })
     }
     //access token expired, get a new one
-    if(new Date() > user.access_token_expire || !user.access_token) {
+    if (new Date() > user.access_token_expire || !user.access_token) {
         console.log("access token expired")
         getAccessToken(user, function(err, access_token) {
             users.update({
@@ -254,7 +257,8 @@ function validateTokens(user, cb) {
                 return cb(err)
             })
         })
-    } else {
+    }
+    else {
         //valid token
         console.log("tokens exist")
         return cb(null)
@@ -272,24 +276,24 @@ function updateBalances() {
             $exists: true
         }
     }, function(err, res) {
-        if(err) {
+        if (err) {
             console.log(err)
             return updateBalances()
         }
         async.mapSeries(res, function(user, cb) {
             //console.log(user)
             validateTokens(user, function(err, access_token) {
-                if(err) {
+                if (err) {
                     console.log(err)
                     return cb(null)
                 }
                 getCurrentBalance(user, function(err, bal) {
-                    if(err) {
+                    if (err) {
                         console.log(err)
                         return cb(null)
                     }
                     console.log("api balance: %s", bal)
-                    //get db balance
+                        //get db balance
                     balances.find({
                         user_id: user._id
                     }, {
@@ -299,8 +303,8 @@ function updateBalances() {
                     }, function(err, bals) {
                         var dbbal = bals[0]
                         console.log(dbbal)
-                        //change in balance, or no balances
-                        if(!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
+                            //change in balance, or no balances
+                        if (!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
                             var newBal = {
                                 user_id: user._id,
                                 balance: bal,
@@ -309,7 +313,7 @@ function updateBalances() {
                             balances.insert(newBal, function(err) {
                                 getBudgetStatus(user, function(err, docs) {
                                     docs.forEach(function(budget) {
-                                        if(budget.spent >= budget.amount && budget.triggered < budget.cutoff) {
+                                        if (budget.spent >= budget.amount && budget.triggered < budget.cutoff) {
                                             var text = "<p>Hello " + user.given_name + ",</p>"
                                             text += '<p>You spent ' + budget.spent.toFixed(2) + ' this ' + budget.period + ', exceeding your budget of ' + budget.amount.toFixed(2) + '.</p>'
                                             text += '<p>To stop receiving these emails, remove your budgeting alert at ' + process.env.ROOT_URL + '</p>'
@@ -324,7 +328,8 @@ function updateBalances() {
                                 })
                                 setTimeout(cb, 60000)
                             })
-                        } else {
+                        }
+                        else {
                             setTimeout(cb, 60000)
                         }
                     })
@@ -354,6 +359,10 @@ function sendEmail(text, recipient, cb) {
         cb(err)
     });
 }
+//get user
+app.get('/api/user', function(req, res) {
+    res.json(req.user);
+})
 //create
 app.post('/api/budgets', function(req, res) {
     req.body.user_id = req.user._id
@@ -390,13 +399,14 @@ app.get('/venues', function(req, res) {
         var dates = []
         var rows = $("#schedule_table tr")
         rows.each(function(i, r) {
-            if($(r).attr('id') === "schedule_header_row") {
+            if ($(r).attr('id') === "schedule_header_row") {
                 //get dates
                 $(r).children().each(function(j, c) {
                     var date = $(c).text().slice(3)
                     dates.push(date)
                 })
-            } else {
+            }
+            else {
                 var v = {
                     name: null,
                     open: null,
@@ -404,15 +414,15 @@ app.get('/venues', function(req, res) {
                 }
                 $(r).children().each(function(j, c) {
                     var content = $(c).text()
-                    if(j === 0) {
+                    if (j === 0) {
                         v.name = content
                         v.link = $($(c).children()[0]).attr('href')
                     }
-                    if(j === 1) {
-                        if(content !== "Closed") {
+                    if (j === 1) {
+                        if (content !== "Closed") {
                             var split = content.split("-")
                             v.open = dates[j] + " " + split[0]
-                            v.close = dates[j] + " " + split[split.length-1]
+                            v.close = dates[j] + " " + split[split.length - 1]
                         }
                         venues.push(v)
                     }
