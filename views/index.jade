@@ -1,5 +1,5 @@
 doctype
-html(lang='en' ng-app="foodpoints")
+html(lang='en' data-ng-app="foodpoints")
   head
     title FoodPoints+
     meta(charset='utf-8')
@@ -68,7 +68,7 @@ html(lang='en' ng-app="foodpoints")
           .col-md-4 
             h3 Chart
             div#chart
-          .col-md-4(ng-controller="BudgetController")
+          .col-md-4(data-ng-controller="BudgetController")
             h3 Budgets
             h4 Send me email when I spend more than:
             form.form-inline(name="budgetform", ng-submit="save(budget)")
