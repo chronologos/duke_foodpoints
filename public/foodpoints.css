@@ -11,7 +11,7 @@
 }
 #transactions {
     display: block;
-    height: 500px;
+    height: 300px;
     overflow-y: scroll;
 }
 .verticalLine {

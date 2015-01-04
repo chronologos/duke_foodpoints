@@ -2,14 +2,15 @@ var start;
 var end;
 var currdate = new Date();
 //var currdate=new Date("3/3/2015"); //debug date
+var acadyear = currdate.getMonth() > 6 ? currdate.getFullYear() : currdate.getFullYear() - 1;
 var DEFAULT_FOOD_POINTS = 2152;
-var UPDATE_INTERVAL = 100;
+var UPDATE_INTERVAL = 200;
 var FALL_LENGTH = 16 * 7;
 var SPRING_LENGTH = 16 * 7 + 3;
 var numfoodpoints;
-var fallstart = getNthDay(3, 1, 7, currdate.getFullYear()); //fourth monday august
+var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19
 var fallend = addDays(fallstart, FALL_LENGTH);
-var springstart = getNthDay(1, 3, 0, currdate.getFullYear()); //second wednesday january
+var springstart = getFirstWeekday(3, 1, 0, acadyear); //wednesday after jan 1
 var springend = addDays(springstart, SPRING_LENGTH);
 var chart;
 
@@ -25,8 +26,8 @@ $(document).ready(function() {
 
             var fall = currdate > fallstart && currdate < fallend;
             var spring = currdate > springstart && currdate < springend;
-            start = spring ? springstart : fallstart;
-            end = spring ? springend : fallend;
+            start = fall ? fallstart : springstart;
+            end = fall ? fallend : springend;
 
             var projectionStart = 0;
             var projectionEnd = 0;
@@ -190,8 +191,8 @@ $(document).ready(function() {
                 var cal = new CalHeatMap();
                 cal.init({
                     itemSelector: "#days",
-                    start: start,
-                    range: 5,
+                    start: fallstart,
+                    range: 10,
                     domain: "month",
                     subDomain: "day",
                     data: dayHeatmap,
@@ -200,7 +201,7 @@ $(document).ready(function() {
                     subDomainTextFormat: function(date, value) {
                         return value ? value.toFixed() : "";
                     },
-                    cellSize: 13
+                    cellSize: 14
                 });
                 var cal2 = new CalHeatMap();
                 cal2.init({
@@ -221,7 +222,7 @@ $(document).ready(function() {
                     subDomainTextFormat: function(date, value) {
                         return value ? value.toFixed() : "";
                     },
-                    cellSize: 13
+                    cellSize: 14
                 });
             }
         })
@@ -291,21 +292,17 @@ function addDays(date, days) {
     return result;
 }
 
-function getNthDay(n, dayOfWeek, month, year) {
-    //gets the nth (zero-indexed) instance of a specific day of the week in a month, year
-
+function getFirstWeekday(dayOfWeek, day, month, year) {
+    //gets the first specified weekday following the given month, year, day
     var myDate = new Date();
     myDate.setHours(0, 0, 0, 0);
     myDate.setYear(year);
-    // get first day of month
-    myDate.setDate(1);
+    myDate.setDate(day);
     myDate.setMonth(month);
     // Find day of week.
-    while (myDate.getDay() != dayOfWeek) {
+    while (myDate.getDay() !== dayOfWeek) {
         myDate.setDate(myDate.getDate() + 1);
     }
-    // Add 7*n days (n weeks)
-    myDate.setDate(myDate.getDate() + 7 * n);
     return myDate;
 }
 
@@ -319,7 +316,7 @@ function getBudgets($scope, $http) {
     success(function(data, status, headers, config) {
         data.forEach(function(b) {
             b.percent = Math.min(b.spent / b.amount * 100, 100)
-            b.elapsed = moment().diff(b.cutoff)/moment.duration(1,b.period).asMilliseconds()*100;
+            b.elapsed = moment().diff(b.cutoff) / moment.duration(1, b.period).asMilliseconds() * 100;
             var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"]
             classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0]
             b.class = classes.join(" ")
