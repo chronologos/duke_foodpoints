@@ -6,12 +6,13 @@ var acadyear = currdate.getMonth() > 6 ? currdate.getFullYear() : currdate.getFu
 var DEFAULT_FOOD_POINTS = 2152;
 var UPDATE_INTERVAL = 200;
 var FALL_LENGTH = 16 * 7;
-var SPRING_LENGTH = 16 * 7 + 3;
+var SPRING_LENGTH = 16 * 7 + 4;
 var numfoodpoints;
-var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19
+var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of acad year
 var fallend = addDays(fallstart, FALL_LENGTH);
-var springstart = getFirstWeekday(3, 1, 0, acadyear); //wednesday after jan 1
+var springstart = getFirstWeekday(3, 2, 0, acadyear+1); //wednesday after jan 2 of following year
 var springend = addDays(springstart, SPRING_LENGTH);
+console.log(fallstart, fallend, springstart, springend)
 var chart;
 
 $(document).ready(function() {
@@ -26,8 +27,8 @@ $(document).ready(function() {
 
             var fall = currdate > fallstart && currdate < fallend;
             var spring = currdate > springstart && currdate < springend;
-            start = fall ? fallstart : springstart;
-            end = fall ? fallend : springend;
+            start = spring ? springstart : fallstart;
+            end = spring ? springend : fallend;
 
             var projectionStart = 0;
             var projectionEnd = 0;
@@ -56,19 +57,19 @@ $(document).ready(function() {
                     var month = moment.duration(1, 'month').asMilliseconds() * slope
 
                     var projections = [{
-                        time: "start",
+                        time: "Starting Balance",
                         amount: projectionStart
                     }, {
-                        time: "end",
+                        time: "Ending Balance",
                         amount: projectionEnd
                     }, {
-                        time: "day",
+                        time: "Per day",
                         amount: day
                     }, {
-                        time: "week",
+                        time: "Per week",
                         amount: week
                     }, {
-                        time: "month",
+                        time: "Per month",
                         amount: month
                     }]
                     for (var i = 0; i < projections.length; i++) {
@@ -192,7 +193,7 @@ $(document).ready(function() {
                 cal.init({
                     itemSelector: "#days",
                     start: fallstart,
-                    range: 10,
+                    range: 12,
                     domain: "month",
                     subDomain: "day",
                     data: dayHeatmap,
