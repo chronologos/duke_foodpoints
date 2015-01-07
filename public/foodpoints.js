@@ -10,7 +10,7 @@ var SPRING_LENGTH = 16 * 7 + 4;
 var numfoodpoints;
 var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of acad year
 var fallend = addDays(fallstart, FALL_LENGTH);
-var springstart = getFirstWeekday(3, 2, 0, acadyear+1); //wednesday after jan 2 of following year
+var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 2 of following year
 var springend = addDays(springstart, SPRING_LENGTH);
 console.log(fallstart, fallend, springstart, springend)
 var chart;
@@ -79,7 +79,7 @@ $(document).ready(function() {
             }
 
             var cookieVal = getCookie("numfoodpoints")
-            var numfoodpoints = parseInt(cookieVal || projectionStart || DEFAULT_FOOD_POINTS);
+            numfoodpoints = parseInt(cookieVal || projectionStart || DEFAULT_FOOD_POINTS);
             $("#plan").val(numfoodpoints);
 
             //start the countdown
@@ -87,7 +87,13 @@ $(document).ready(function() {
                 $("#result").html("0.00");
             }
             else {
-                setInterval(updateCountdown, UPDATE_INTERVAL);
+                setInterval(function updateCountdown() {
+                    var currtime = new Date();
+                    var percent = (1 - (currtime - start) / (end - start));
+                    var remaining = (numfoodpoints * percent).toFixed(4)
+                    $("#result").html(remaining);
+                    $("#progbar").width(percent * 100 + "%");
+                }, UPDATE_INTERVAL);
             }
 
             $('.format').each(function() {
@@ -276,15 +282,6 @@ function getCookie(cname) {
         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return "";
-}
-
-function updateCountdown() {
-    //calculates and updates the percentage of the semester elapsed
-
-    var currtime = new Date();
-    var percent = (1 - (currtime - start) / (end - start));
-    $("#result").html((numfoodpoints * percent).toFixed(4));
-    $("#progbar").width(percent * 100 + "%");
 }
 
 function addDays(date, days) {
