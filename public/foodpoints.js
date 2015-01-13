@@ -14,14 +14,34 @@ var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 
 var springend = addDays(springstart, SPRING_LENGTH);
 console.log(fallstart, fallend, springstart, springend)
 var chart;
+var user;
+
 
 $(document).ready(function() {
+    $('.format').each(function() {
+        $(this).text(format($(this).text()))
+    })
+
+    $("#plan").on("change", function() {
+        numfoodpoints = parseInt($("#plan").val());
+        var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);
+        $("#progbar2").width(percent2 * 100 + "%");
+        setCookie("numfoodpoints", numfoodpoints, 365);
+        if (user && chart) {
+            chart.load({
+                columns: [
+                    ['Ideal', numfoodpoints, 0]
+                ]
+            })
+        }
+    });
+
     //load user and generate user-specific visualizations
     $.ajax({
             url: "/api/user"
         }).always(function(data, status, err) {
             if (status === "success") {
-                var user = data
+                user = data
                 console.log(user)
             }
 
@@ -34,8 +54,6 @@ $(document).ready(function() {
             var projectionEnd = 0;
             if (user) {
                 $("#balance").html(user.balances[0].balance.toFixed(2));
-                var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);
-                $("#progbar2").width(percent2 * 100 + "%");
 
                 user.balances = user.balances.filter(function(b) {
                     return new Date(b.date) > start && new Date(b.date) < end
@@ -80,7 +98,7 @@ $(document).ready(function() {
 
             var cookieVal = getCookie("numfoodpoints")
             numfoodpoints = parseInt(cookieVal || projectionStart || DEFAULT_FOOD_POINTS);
-            $("#plan").val(numfoodpoints);
+            $("#plan").val(numfoodpoints).change();
 
             //start the countdown
             if (!fall && !spring) {
@@ -96,20 +114,6 @@ $(document).ready(function() {
                 }, UPDATE_INTERVAL);
             }
 
-            $('.format').each(function() {
-                $(this).text(format($(this).text()))
-            })
-            $("#plan").on("change", function() {
-                numfoodpoints = parseInt($("#plan").val());
-                setCookie("numfoodpoints", numfoodpoints, 365);
-                if (user) {
-                    chart.load({
-                        columns: [
-                            ['Ideal', numfoodpoints, 0]
-                        ]
-                    })
-                }
-            });
             if (user) {
                 var bals = ['Food Points']
                 var ideal = ['Ideal', numfoodpoints, 0]
@@ -121,6 +125,7 @@ $(document).ready(function() {
                 var buckets = {}
                 var dayHeatmap = {}
                 var hourHeatMap = {}
+
                 user.balances.forEach(function(bal) {
                     x2.push(new Date(bal.date))
                     bals.push(bal.balance)
@@ -202,6 +207,7 @@ $(document).ready(function() {
                     range: 12,
                     domain: "month",
                     subDomain: "day",
+                    highlight: new Date(),
                     data: dayHeatmap,
                     tooltip: true,
                     itemName: ["", ""],
