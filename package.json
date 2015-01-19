@@ -4,8 +4,7 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run grunt",
-    "grunt": "grunt --verbose",
+    "test": "grunt --verbose",
     "start": "nf start"
   },
   "author": "Howard Chung",
