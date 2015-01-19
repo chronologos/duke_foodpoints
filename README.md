@@ -16,6 +16,6 @@ Dumps existing db, creates and loads sample data, runs queries.
 Deployment
 ====
 * Install MongoDB and Node.js
-* The backend will not operate properly without the appropriate API keys in .env
+* Put appropriate API keys in .env
 * `npm install`
 * `npm start`
