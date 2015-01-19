@@ -19,7 +19,3 @@ Deployment
 * The backend will not operate properly without the appropriate API keys in .env
 * `npm install`
 * `npm start`
-
-Foreman
-====
-* This app can also be run using Foreman, which will default to port 5000.
