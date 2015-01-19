@@ -1,6 +1,7 @@
 FoodPoints+
 ====
 An application for tracking food points of Duke University students.
+[![Build Status](https://travis-ci.org/howardc93/foodpoints.svg?branch=master)](https://travis-ci.org/howardc93/foodpoints)
 
 Dependencies
 ====
