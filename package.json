@@ -4,8 +4,8 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+"test": "grunt --verbose",
+"start": "node index.js"
   },
   "author": "Howard Chung",
   "license": "ISC",
