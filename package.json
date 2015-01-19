@@ -4,8 +4,9 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt --verbose",
-    "start": "node index.js"
+    "test": "npm run grunt",
+    "grunt": "grunt --verbose",
+    "start": "nf start"
   },
   "author": "Howard Chung",
   "license": "ISC",
@@ -22,11 +23,11 @@
     "passport": "~0.2.1",
     "passport-google-oauth": "~0.1.5",
     "request": "~2.51.0",
-    "sendgrid": "~1.4.0"
+    "sendgrid": "~1.4.0",
+    "foreman": "~1.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
-    "grunt-cli": "~0.1.13",
     "grunt-contrib-jshint": "~0.10.0"
   }
 }
