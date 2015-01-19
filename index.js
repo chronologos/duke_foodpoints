@@ -9,7 +9,6 @@ var async = require('async');
 var cheerio = require('cheerio');
 var moment = require('moment');
 var sendgrid = require("sendgrid")(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
-var port = process.env.PORT || 3000;
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php";
 var duke_card_host = "https://dukecard-proxy.oit.duke.edu";
 var protocol = "http";
@@ -77,30 +76,30 @@ app.use(function(req, res, next) {
                     date: -1
                 }
             }, function(err, bals) {
-                user.balances = bals
+                user.balances = bals;
                 getTransactions(user, function(err, trans) {
-                    user.trans = trans
-                    req.user = user
+                    user.trans = trans;
+                    req.user = user;
                     next();
-                })
-            })
-        })
+                });
+            });
+        });
     }
     else {
         next();
     }
-})
+});
 app.use("/api", function(req, res, next) {
     if (req.user) {
-        next()
+        next();
     }
     else {
         res.statusCode = 403;
         res.json({
             error: "Not logged in"
-        })
+        });
     }
-})
+});
 var forceSsl = function(req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {
         res.redirect(['https://', req.get('host'), req.url].join(''));
@@ -108,17 +107,17 @@ var forceSsl = function(req, res, next) {
     else {
         next();
     }
-}
+};
 if (process.env.NODE_ENV === "production") {
     app.use(forceSsl);
     protocol = "https";
 }
-app.listen(port, function() {
-        console.log("Node app is running on port " + port)
-    })
-    // Redirect the user to Google for authentication.  When complete, Google
-    // will redirect the user back to the application at
-    //     /auth/google/return
+app.listen(process.env.PORT || 3000, function() {
+    console.log("Node app is running");
+});
+// Redirect the user to Google for authentication.  When complete, Google
+// will redirect the user back to the application at
+//     /auth/google/return
 app.get('/auth/google', passport.authenticate('google', {
     scope: 'openid email'
 }));
@@ -133,10 +132,10 @@ app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
         user: req.user
-    })
-})
+    });
+});
 app.get('/home/auth', function(req, res) {
-    var code = req.query.code
+    var code = req.query.code;
     request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
@@ -148,8 +147,7 @@ app.get('/home/auth', function(req, res) {
             redirect_uri: auth_url
         }
     }, function(err, resp, body) {
-        body = JSON.parse(body)
-        console.log(body)
+        body = JSON.parse(body);
         users.update({
             _id: req.user._id
         }, {
@@ -158,12 +156,10 @@ app.get('/home/auth', function(req, res) {
                 refresh_token_expire: new Date(moment().add(6, 'months'))
             }
         }, function(err) {
-            res.redirect('/')
-        })
-    })
-})
-
-updateBalances()
+            res.redirect('/');
+        });
+    });
+});
 
 app.get('/logout', function(req, res) {
     req.logout();
@@ -172,22 +168,22 @@ app.get('/logout', function(req, res) {
 });
 //get user
 app.get('/api/user', function(req, res) {
-        res.json(req.user);
-    })
-    //create
+    res.json(req.user);
+});
+//create
 app.post('/api/budgets', function(req, res) {
-    req.body.user_id = req.user._id
-    req.body.triggered = -1
-    req.body.date = new Date()
+    req.body.user_id = req.user._id;
+    req.body.triggered = -1;
+    req.body.date = new Date();
     budgets.insert(req.body, function(err, doc) {
-        res.send(doc)
+        res.send(doc);
     });
 });
 //query
 app.get('/api/budgets', function(req, res) {
     getBudgetStatus(req.user, function(err, docs) {
-        res.send(docs)
-    })
+        res.send(docs);
+    });
 });
 //delete
 app.delete('/api/budgets/:id', function(req, res) {
@@ -197,12 +193,13 @@ app.delete('/api/budgets/:id', function(req, res) {
     }, function(err) {
         res.json({
             deleted: 1
-        })
-    })
+        });
+    });
 });
 app.get('/api/cutoffs', function(req, res) {
-    res.send(getCutoffs())
-})
+    res.send(getCutoffs());
+});
+/*
 app.get('/venues', function(req, res) {
     request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
         var $ = cheerio.load(body)
@@ -243,29 +240,30 @@ app.get('/venues', function(req, res) {
         res.json(venues)
     })
 })
+*/
+
+updateBalances();
 
 function getCurrentBalance(user, cb) {
-    var access_token = user.access_token
-    console.log(access_token)
+    var access_token = user.access_token;
     request.post(duke_card_host + "/food_points", {
         form: {
             access_token: access_token
         }
     }, function(err, resp, body) {
         if (err || resp.statusCode != 200 || !body) {
-            console.log(err, body)
-            return cb("error getting balance")
+            console.log(err, body);
+            return cb("error getting balance");
         }
-        //console.log(body)
-        body = JSON.parse(body)
-        cb(err, Number(body.food_points))
-    })
+        body = JSON.parse(body);
+        cb(err, Number(body.food_points));
+    });
 }
 
 function validateTokens(user, cb) {
     //refresh token expired, unset it
     if (new Date() > user.refresh_token_expire) {
-        console.log("refresh token expired")
+        console.log("refresh token expired");
         users.update({
             _id: user._id
         }, {
@@ -275,12 +273,12 @@ function validateTokens(user, cb) {
             }
         }, function(err) {
             //can't update this user
-            return cb("refresh token expired")
-        })
+            return cb("refresh token expired");
+        });
     }
     //access token expired, get a new one
     if (new Date() > user.access_token_expire || !user.access_token) {
-        console.log("access token expired")
+        console.log("access token expired");
         getAccessToken(user, function(err, access_token) {
             users.update({
                 _id: user._id
@@ -290,16 +288,16 @@ function validateTokens(user, cb) {
                     access_token_expire: new Date(moment().add(1, 'hour'))
                 }
             }, function(err) {
-                console.log("got new access token %s", access_token)
-                user.access_token = access_token
-                return cb(err)
-            })
-        })
+                console.log("got new access token %s", access_token);
+                user.access_token = access_token;
+                return cb(err);
+            });
+        });
     }
     else {
         //valid token
-        console.log("tokens exist")
-        return cb(null)
+        console.log("tokens exist");
+        return cb(null);
     }
 }
 
@@ -314,20 +312,21 @@ function updateBalances() {
         }
     }, function(err, res) {
         if (err) {
-            console.log(err)
-            return updateBalances()
+            console.log(err);
+            return updateBalances();
         }
         async.mapSeries(res, function(user, cb) {
             //console.log(user)
             validateTokens(user, function(err, access_token) {
                 if (err) {
-                    console.log(err)
-                    return cb(null)
+                    //log the error and move on to next user
+                    console.log(err);
+                    return cb(null);
                 }
                 getCurrentBalance(user, function(err, bal) {
                     if (err) {
-                        console.log(err)
-                        return cb(null)
+                        console.log(err);
+                        return cb(null);
                     }
                     console.log("api balance: %s", bal);
                     //get db balance
@@ -351,31 +350,31 @@ function updateBalances() {
                                 getBudgetStatus(user, function(err, docs) {
                                     docs.forEach(function(budget) {
                                         if (budget.spent >= budget.amount && budget.triggered < budget.cutoff) {
-                                            var text = "<p>Hello " + user.given_name + ",</p>"
-                                            text += '<p>You spent ' + budget.spent.toFixed(2) + ' this ' + budget.period + ', exceeding your budget of ' + budget.amount.toFixed(2) + '.</p>'
-                                            text += '<p>To stop receiving these emails, remove your budgeting alert at ' + process.env.ROOT_URL + '</p>'
+                                            var text = "<p>Hello " + user.given_name + ",</p>";
+                                            text += '<p>You spent ' + budget.spent.toFixed(2) + ' this ' + budget.period + ', exceeding your budget of ' + budget.amount.toFixed(2) + '.</p>';
+                                            text += '<p>To stop receiving these emails, remove your budgeting alert at ' + process.env.ROOT_URL + '</p>';
                                             sendEmail(text, user.email, function(err) {
-                                                budget.triggered = new Date()
+                                                budget.triggered = new Date();
                                                 budgets.update({
                                                     _id: budget._id
-                                                }, budget)
-                                            })
+                                                }, budget);
+                                            });
                                         }
-                                    })
-                                })
-                                setTimeout(cb, 60000)
-                            })
+                                    });
+                                });
+
+                            });
                         }
-                        else {
-                            setTimeout(cb, 60000)
-                        }
-                    })
-                })
-            })
+                        //wait before next user
+                        setTimeout(cb, 60000);
+                    });
+                });
+            });
         }, function(err) {
-            updateBalances()
-        })
-    })
+            //done with a pass through all users, restart
+            updateBalances();
+        });
+    });
 }
 
 function getCutoffs() {
@@ -383,11 +382,11 @@ function getCutoffs() {
         'day': new Date(moment().startOf('day')),
         'week': new Date(moment().startOf('week')),
         'month': new Date(moment().startOf('month'))
-    }
+    };
 }
 
 function getBudgetStatus(user, cb) {
-    var cutoffs = getCutoffs()
+    var cutoffs = getCutoffs();
     getTransactions(user, function(err, trans) {
         budgets.find({
             user_id: user._id
@@ -397,17 +396,17 @@ function getBudgetStatus(user, cb) {
             }
         }, function(err, docs) {
             docs.forEach(function(budget) {
-                var cutoff = cutoffs[budget.period]
-                var exp = 0
+                var cutoff = cutoffs[budget.period];
+                var exp = 0;
                 trans.forEach(function(tran) {
-                    exp += tran.date > cutoff && tran.amount < 0 ? Math.abs(tran.amount) : 0
-                })
-                budget.spent = exp
-                budget.cutoff = cutoff
-            })
-            cb(err, docs)
-        })
-    })
+                    exp += tran.date > cutoff && tran.amount < 0 ? Math.abs(tran.amount) : 0;
+                });
+                budget.spent = exp;
+                budget.cutoff = cutoff;
+            });
+            cb(err, docs);
+        });
+    });
 }
 
 function sendEmail(text, recipient, cb) {
@@ -416,16 +415,16 @@ function sendEmail(text, recipient, cb) {
         from: "no-reply",
         to: recipient,
         subject: 'FoodPoints+ Alert'
-    }
-    console.log(payload)
+    };
+    console.log(payload);
     sendgrid.send(payload, function(err, json) {
-        console.log(json)
-        cb(err)
+        console.log(json);
+        cb(err);
     });
 }
 
 function getAccessToken(user, cb) {
-    var refresh_token = user.refresh_token
+    var refresh_token = user.refresh_token;
     request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
@@ -437,11 +436,11 @@ function getAccessToken(user, cb) {
         }
     }, function(err, resp, body) {
         if (err || resp.statusCode != 200 || !body) {
-            return cb("error getting access token")
+            return cb("error getting access token");
         }
-        body = JSON.parse(body)
-        cb(err, body.access_token)
-    })
+        body = JSON.parse(body);
+        cb(err, body.access_token);
+    });
 }
 
 function getTransactions(user, cb) {
@@ -453,17 +452,17 @@ function getTransactions(user, cb) {
         }
     }, function(err, bals) {
         //compute transactions
-        var arr = []
+        var arr = [];
         for (var i = 0; i < bals.length; i++) {
             if (bals[i + 1]) {
                 //newer number subtract older number
-                var diff = bals[i].balance - bals[i + 1].balance
+                var diff = bals[i].balance - bals[i + 1].balance;
                 arr.push({
                     amount: diff,
                     date: bals[i].date
-                })
+                });
             }
         }
-        cb(err, arr)
-    })
+        cb(err, arr);
+    });
 }
