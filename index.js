@@ -11,9 +11,8 @@ var moment = require('moment');
 var sendgrid = require("sendgrid")(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php";
 var duke_card_host = "https://dukecard-proxy.oit.duke.edu";
-var protocol = "http";
 var auth_url = process.env.ROOT_URL + "/home/auth";
-var db = require('monk')(process.env.MONGOHQ_URL);
+var db = require('monk')(process.env.MONGOHQ_URL || "mongodb://localhost/foodpoints");
 var users = db.get("users");
 var balances = db.get("balances");
 var budgets = db.get("budgets");
@@ -94,24 +93,19 @@ app.use("/api", function(req, res, next) {
         next();
     }
     else {
-        res.statusCode = 403;
-        res.json({
+        res.status(403).json({
             error: "Not logged in"
         });
     }
 });
-var forceSsl = function(req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
+app.use(function(req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === "production") {
         res.redirect(['https://', req.get('host'), req.url].join(''));
     }
     else {
         next();
     }
-};
-if (process.env.NODE_ENV === "production") {
-    app.use(forceSsl);
-    protocol = "https";
-}
+});
 app.listen(process.env.PORT || 3000, function() {
     console.log("Node app is running");
 });

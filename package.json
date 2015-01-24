@@ -4,7 +4,7 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt --verbose",
+    "test": "mocha",
     "start": "nf start"
   },
   "author": "Howard Chung",
@@ -26,8 +26,6 @@
     "foreman": "~1.2.1"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-cli": "~0.1.13",
-    "grunt-contrib-jshint": "~0.10.0"
+    "mocha":"*"
   }
 }
