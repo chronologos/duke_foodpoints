@@ -6,7 +6,6 @@ var session = require('cookie-session');
 var app = express();
 var request = require('request');
 var async = require('async');
-var cheerio = require('cheerio');
 var moment = require('moment');
 var sendgrid = require("sendgrid")(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 var token_broker = "https://oauth.oit.duke.edu/oauth/token.php";

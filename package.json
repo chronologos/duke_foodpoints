@@ -5,27 +5,27 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start": "nf start"
+    "start": "node index.js"
   },
   "author": "Howard Chung",
   "license": "ISC",
   "dependencies": {
     "async": "~0.9.0",
-    "body-parser": "~1.10.2",
+    "body-parser": "~1.12.0",
     "cheerio": "~0.18.0",
     "cookie-session": "~1.1.0",
-    "dotenv": "~0.4.0",
-    "express": "~4.11.1",
-    "jade": "~1.9.1",
+    "dotenv": "~0.5.1",
+    "express": "~4.11.2",
+    "jade": "~1.9.2",
     "moment": "~2.9.0",
     "monk": "~0.9.1",
     "passport": "~0.2.1",
     "passport-google-oauth": "~0.1.5",
-    "request": "~2.51.0",
-    "sendgrid": "~1.5.0",
+    "request": "~2.53.0",
+    "sendgrid": "~1.6.0",
     "foreman": "~1.3.0"
   },
   "devDependencies": {
-    "mocha":"*"
+    "mocha": "~2.1.0"
   }
 }
