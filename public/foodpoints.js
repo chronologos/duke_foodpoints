@@ -12,7 +12,7 @@ var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of ac
 var fallend = addDays(fallstart, FALL_LENGTH);
 var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 2 of following year
 var springend = addDays(springstart, SPRING_LENGTH);
-console.log(fallstart, fallend, springstart, springend)
+console.log(fallstart, fallend, springstart, springend);
 var chart;
 var user;
 
@@ -20,7 +20,7 @@ var user;
 $(document).ready(function() {
     $('.format').each(function() {
         $(this).text(format($(this).text()))
-    })
+    });
 
     $("#plan").on("change", function() {
         numfoodpoints = parseInt($("#plan").val());
@@ -41,7 +41,7 @@ $(document).ready(function() {
             url: "/api/user"
         }).always(function(data, status, err) {
             if (status === "success") {
-                user = data
+                user = data;
                 console.log(user)
             }
 
@@ -57,26 +57,46 @@ $(document).ready(function() {
 
                 user.balances = user.balances.filter(function(b) {
                     return new Date(b.date) > start && new Date(b.date) < end
-                })
+                });
                 if (user.balances.length > 0) {
-                    var first = user.balances[0]
-                    var last = user.balances[user.balances.length - 1]
-                    var delta = last.balance - first.balance
-                    var timedelta = moment(first.date).diff(last.date)
-                    var slope = delta / timedelta
+                    var first = user.balances[0];
+                    var last = user.balances[user.balances.length - 1];
+                    var addedTotal = 0;
+                    var deposits = [];
+
+                    user.trans.forEach(function(exp) {
+                        if (exp.amount > 0) {
+                            deposits.push([exp.amount,exp.date]);
+                        }
+                    });
+
+                    deposits.forEach(function(deps){
+                       addedTotal+=deps[0];
+                    });
+
+                    var delta = last.balance - first.balance - addedTotal;
+
+                    var timedelta = moment(first.date).diff(last.date);
+                    var slope = delta / timedelta;
 
                     //extrapolate line to semester start/end
-                    projectionStart = moment(first.date).diff(start) * slope + first.balance
-                    projectionEnd = moment(first.date).diff(end) * slope + first.balance
+                    projectionStart = moment(first.date).diff(start) * slope + first.balance;
+                    projectionEnd = moment(first.date).diff(end) * slope + first.balance;
+
+
 
                     //compute estimated usages for day, week, month
-                    var day = moment.duration(1, 'day').asMilliseconds() * slope
-                    var week = moment.duration(1, 'week').asMilliseconds() * slope
-                    var month = moment.duration(1, 'month').asMilliseconds() * slope
+                    var day = moment.duration(1, 'day').asMilliseconds() * slope;
+                    var week = moment.duration(1, 'week').asMilliseconds() * slope;
+                    var month = moment.duration(1, 'month').asMilliseconds() * slope;
+
 
                     var projections = [{
                         time: "Starting Balance",
                         amount: projectionStart
+                    },{
+                        time:"Added Balance",
+                        amount: addedTotal
                     }, {
                         time: "Ending Balance",
                         amount: projectionEnd
@@ -89,14 +109,14 @@ $(document).ready(function() {
                     }, {
                         time: "Per month",
                         amount: month
-                    }]
+                    }];
                     for (var i = 0; i < projections.length; i++) {
                         $("#projections").append("<tr><td>" + projections[i].time + "</td><td>" + projections[i].amount.toFixed(2) + "</td></tr>");
                     }
                 }
             }
 
-            var cookieVal = getCookie("numfoodpoints")
+            var cookieVal = getCookie("numfoodpoints");
             numfoodpoints = parseInt(cookieVal || projectionStart || DEFAULT_FOOD_POINTS);
             $("#plan").val(numfoodpoints).change();
 
@@ -108,49 +128,50 @@ $(document).ready(function() {
                 setInterval(function updateCountdown() {
                     var currtime = new Date();
                     var percent = (1 - (currtime - start) / (end - start));
-                    var remaining = (numfoodpoints * percent).toFixed(4)
+                    var remaining = (numfoodpoints * percent).toFixed(4);
                     $("#result").html(remaining);
                     $("#progbar").width(percent * 100 + "%");
                 }, UPDATE_INTERVAL);
             }
 
             if (user) {
-                var bals = ['Food Points']
-                var ideal = ['Ideal', numfoodpoints, 0]
-                var proj = ['Projection', projectionStart, projectionEnd]
-                var x = ['x', start, end]
-                var x2 = ['x2']
-                var bucketSize = 5
-                var numBuckets = 4
-                var buckets = {}
-                var dayHeatmap = {}
-                var hourHeatMap = {}
+                var bals = ['Food Points'];
+                var ideal = ['Ideal', numfoodpoints, 0];
+                var deposits = [];
+                var proj = ['Projection', projectionStart, projectionEnd];
+                var x = ['x', start, end];
+                var x2 = ['x2'];
+                var bucketSize = 5;
+                var numBuckets = 4;
+                var buckets = {};
+                var dayHeatmap = {};
+                var hourHeatMap = {};
 
                 user.balances.forEach(function(bal) {
-                    x2.push(new Date(bal.date))
+                    x2.push(new Date(bal.date));
                     bals.push(bal.balance)
-                })
+                });
                 user.trans.forEach(function(exp) {
                     if (exp.amount < 0) {
-                        var timestamp = moment(exp.date).format('X')
-                        var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X')
-                        var amt = exp.amount * -1
-                        dayHeatmap[timestamp] = ~~amt
+                        var timestamp = moment(exp.date).format('X');
+                        var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X');
+                        var amt = exp.amount * -1;
+                        dayHeatmap[timestamp] = ~~amt;
                         if (!hourHeatMap[timestamp2]) {
                             hourHeatMap[timestamp2] = 0
                         }
-                        hourHeatMap[timestamp2] += ~~amt
+                        hourHeatMap[timestamp2] += ~~amt;
                         for (var i = 0; i <= numBuckets; i++) {
                             //console.log(amt, i*bucketSize, (i+1)*bucketSize)
                             if (i >= numBuckets || (amt > i * bucketSize && amt <= (i + 1) * bucketSize)) {
                                 //console.log(i, amt)
-                                buckets[i * bucketSize] ? buckets[i * bucketSize] += amt : buckets[i * bucketSize] = amt
+                                buckets[i * bucketSize] ? buckets[i * bucketSize] += amt : buckets[i * bucketSize] = amt;
                                 break;
                             }
                         }
                     }
-                })
-                console.log(x, x2, ideal, bals)
+                });
+                console.log(x, x2, ideal, bals);
                 chart = c3.generate({
                     bindto: "#chart",
                     data: {
@@ -240,7 +261,7 @@ $(document).ready(function() {
                     cellSize: 14
                 });
             }
-        })
+        });
         /*
             //ajax call to get data for timeline
             $.ajax({
@@ -321,37 +342,37 @@ function getBudgets($scope, $http) {
     $http.get('/api/budgets/').
     success(function(data, status, headers, config) {
         data.forEach(function(b) {
-            b.percent = Math.min(b.spent / b.amount * 100, 100)
+            b.percent = Math.min(b.spent / b.amount * 100, 100);
             b.elapsed = moment().diff(b.cutoff) / moment.duration(1, b.period).asMilliseconds() * 100;
-            var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"]
-            classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0]
-            b.class = classes.join(" ")
+            var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"];
+            classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0];
+            b.class = classes.join(" ");
             b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period
-        })
+        });
         $scope.budgets = data
     })
 }
 
 angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/').success(function(data, status, headers, config) {
-        $scope.periods = Object.keys(data)
+        $scope.periods = Object.keys(data);
         $scope.budget = {
             amount: 150,
             period: 'week'
         }
-    })
-    getBudgets($scope, $http)
+    });
+    getBudgets($scope, $http);
     $scope.save = function(budget) {
-        console.log(budget)
+        console.log(budget);
         $http.post('/api/budgets/', budget).success(function(data, status, headers, config) {
-            console.log(data)
+            console.log(data);
             getBudgets($scope, $http)
         })
-    }
+    };
     $scope.delete = function(budget) {
         $http.delete('/api/budgets/' + budget._id).success(function(data, status, headers, config) {
-            console.log(data)
+            console.log(data);
             getBudgets($scope, $http)
         })
     }
-})
+});
