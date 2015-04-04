@@ -84,7 +84,7 @@ $(document).ready(function() {
 
                     //extrapolate line to semester start/end
                     projectionStart = moment(first.date).diff(start) * slope + first.balance;
-                    projectionEnd = moment(first.date).diff(end) * slope + first.balance;
+                    projectionEnd = moment(first.date).diff(end) * slope + first.balance+addedTotal;
 
 
 
