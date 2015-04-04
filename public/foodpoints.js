@@ -7,6 +7,7 @@ var DEFAULT_FOOD_POINTS = 2152;
 var UPDATE_INTERVAL = 200;
 var FALL_LENGTH = 16 * 7;
 var SPRING_LENGTH = 16 * 7 + 4;
+var MAX_AMOUNT_BALANCEADDITION = 1500;
 var numfoodpoints;
 var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of acad year
 var fallend = addDays(fallstart, FALL_LENGTH);
@@ -65,7 +66,7 @@ $(document).ready(function() {
                     var deposits = [];
 
                     user.trans.forEach(function(exp) {
-                        if ((exp.amount > 0)&&(exp.amount < 1500)) {
+                        if ((exp.amount > 0)&&(exp.amount < MAX_AMOUNT_BALANCEADDITION)) {
                             deposits.push([exp.amount,exp.date]);
                         }
                     });
@@ -73,7 +74,7 @@ $(document).ready(function() {
                        addedTotal+=deps[0];
                     });
 
-                    
+
 
                     var delta = last.balance - first.balance - addedTotal;
 
