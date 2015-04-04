@@ -65,14 +65,15 @@ $(document).ready(function() {
                     var deposits = [];
 
                     user.trans.forEach(function(exp) {
-                        if (exp.amount > 0) {
+                        if ((exp.amount > 0)&&(exp.amount < 1500)) {
                             deposits.push([exp.amount,exp.date]);
                         }
                     });
-
                     deposits.forEach(function(deps){
                        addedTotal+=deps[0];
                     });
+
+                    
 
                     var delta = last.balance - first.balance - addedTotal;
 
