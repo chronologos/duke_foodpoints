@@ -67,11 +67,12 @@ $(document).ready(function() {
 
                     user.trans.forEach(function(exp) {
                         if ((exp.amount > 0)&&(exp.amount < MAX_AMOUNT_BALANCEADDITION)) {
-                            deposits.push([exp.amount,exp.date]);
+                            deposits.push(exp.amount);
                         }
                     });
+
                     deposits.forEach(function(deps){
-                       addedTotal+=deps[0];
+                       addedTotal+=deps;
                     });
 
 
