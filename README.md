@@ -1,7 +1,7 @@
 FoodPoints+
 ====
-[![Build Status](https://travis-ci.org/howardchung/foodpoints.svg?branch=master)](https://travis-ci.org/howardc93/foodpoints)
-[![Dependency Status](https://david-dm.org/howardchung/foodpoints.svg)](https://david-dm.org/howardc93/foodpoints)
+[![Build Status](https://travis-ci.org/howardchung/foodpoints.svg?branch=master)](https://travis-ci.org/howardchung/foodpoints)
+[![Dependency Status](https://david-dm.org/howardchung/foodpoints.svg)](https://david-dm.org/howardchung/foodpoints)
 
 About
 ====
