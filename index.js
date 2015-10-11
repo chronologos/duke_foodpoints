@@ -166,6 +166,13 @@ app.get('/logout', function(req, res) {
 app.get('/api/user', function(req, res) {
     res.json(req.user);
 });
+
+//average spending
+app.get('/api/spending', function(req, res) {
+  res.set("text/plain");
+  res.send(""+globalAverage);
+});
+
 //create
 app.post('/api/budgets', function(req, res) {
     req.body.user_id = req.user._id;

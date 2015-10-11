@@ -16,13 +16,18 @@ var springend = addDays(springstart, SPRING_LENGTH);
 console.log(fallstart, fallend, springstart, springend);
 var chart;
 var user;
-
+var avgSpent;
 
 $(document).ready(function() {
 
     // function to format dates
     $('.format').each(function() {
         $(this).text(format($(this).text()));
+    });
+
+    $.get("/api/spending", function(data){
+      avgSpent = data;
+      alert(avgSpent);
     });
 
     $("#plan").on("change", function() {
@@ -341,23 +346,4 @@ function getFirstWeekday(dayOfWeek, day, month, year) {
 function format(input) {
     var format = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
     return format;
-}
-
-function getAverage($scope) {
-        $scope.average = globalAverage;
-}
-
-function getBudgets($scope, $http) {
-    $http.get('/api/budgets/').
-    success(function(data, status, headers, config) {
-        data.forEach(function(b) {
-            b.percent = Math.min(b.spent / b.amount * 100, 100);
-            b.elapsed = moment().diff(b.cutoff) / moment.duration(1, b.period).asMilliseconds() * 100;
-            var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"];
-            classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0];
-            b.class = classes.join(" ");
-            b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period;
-        });
-        $scope.budgets = data;
-    });
 }
