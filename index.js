@@ -299,6 +299,15 @@ function updateBalances() {
     //for each user get their most recent balance
     //get a new balance for that user
     //only insert in db if number has changed
+
+    //variables for counting of average $ spent per day
+    var globalAvg = 0;
+    var today = new Date();
+    var day = today.getDate();
+    var month = today.getMonth();
+    var year = today.getYear();
+    var len = 0;
+
     users.find({
         refresh_token: {
             $exists: true
@@ -330,7 +339,33 @@ function updateBalances() {
                             date: -1
                         }
                     }, function(err, bals) {
+                        console.log("bals length"+bals.length);
+                        var currentIndex = 0;
+                        var highest = -1;
+                        var next = -1;
+
+                        // average spending code
+                        if (bals && bals.length > 0) {
+                          while (currentIndex < bals.length && bals[currentIndex].date.getDate() == day && bals[currentIndex].date.getMonth() == month && bals[currentIndex].date.getYear() == year) {
+                           if (currentIndex === 0) {
+                             highest = bals[currentIndex].balance;
+                             highest = bals[currentIndex].balance;
+                           }
+                           currentIndex ++;
+                          }
+                          if (currentIndex>=bals.length){
+                            currentIndex = bals.length-1;
+                          }
+                          next = bals[currentIndex].balance;
+                          if (highest != -1) {
+                            globalAvg += next - highest;
+                          }
+                        }
+
+                        console.log("highest" + highest);
+                        console.log("next" + next);
                         var dbbal = bals[0];
+
                         console.log(dbbal);
                         //change in balance, or no balances
                         if (!dbbal || Math.abs(dbbal.balance - bal) >= 0.01) {
@@ -359,13 +394,18 @@ function updateBalances() {
                             });
                         }
                         //wait before next user
-                        setTimeout(cb, 60000);
+                        setTimeout(cb, 10000);
                     });
                 });
             });
         }, function(err) {
-            //done with a pass through all users, restart
-            updateBalances();
+          if (err){
+            console.log("error in updating transactions");
+            console.log(err);
+          }
+          //done with a pass through all users, restart
+          console.log("Average spent today is " + globalAvg/18);
+          updateBalances();
         });
     });
 }
