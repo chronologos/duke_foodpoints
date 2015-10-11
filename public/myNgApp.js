@@ -32,10 +32,10 @@ angular.module('foodpoints', [])
         });
     };
   });
-  //
-  // function getAverage($scope) {
-  //         $scope.average = globalAverage;
-  // }
+
+  function getAverage($scope) {
+          $scope.average = globalAverage;
+  }
 
   function getBudgets($scope, $http) {
       $http.get('/api/budgets/').
