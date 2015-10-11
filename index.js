@@ -327,7 +327,7 @@ function updateBalances() {
             console.log(err);
             return updateBalances();
         }
-        len = res.length();
+        len = res.length;
         async.mapSeries(res, function(user, cb) {
             //console.log(user)
             validateTokens(user, function(err, access_token) {
