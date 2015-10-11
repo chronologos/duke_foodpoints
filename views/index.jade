@@ -25,7 +25,7 @@ html(lang='en' data-ng-app="foodpoints")
   body
     .container
       h1 FoodPoints+
-      div (data-ng-controller="AverageSpendingController")
+      div(data-ng-controller="AverageSpendingController")
         #{average}
         if (user)
           a.btn.btn-default(href="/logout") Sign Out
