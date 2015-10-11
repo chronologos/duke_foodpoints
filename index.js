@@ -16,6 +16,7 @@ var users = db.get("users");
 var balances = db.get("balances");
 var budgets = db.get("budgets");
 var passport = require('passport');
+var globalAverage = 0;
 users.index('id', {
     unique: true
 });
@@ -44,6 +45,7 @@ passport.use(new GoogleStrategy({
     console.log(profile);
     done(null, profile);
 }));
+
 /*
 app.use(function(req, res, next) {
         users.findOne({
@@ -56,6 +58,7 @@ app.use(function(req, res, next) {
     }
 })
 */
+
 app.use(function(req, res, next) {
     if (req.user) {
         //user is logged in
@@ -301,7 +304,7 @@ function updateBalances() {
     //only insert in db if number has changed
 
     //variables for counting of average $ spent per day
-    var globalAvg = 0;
+    var spendingAvg = 0;
     var today = new Date();
     var day = today.getDate();
     var month = today.getMonth();
@@ -358,7 +361,7 @@ function updateBalances() {
                           }
                           next = bals[currentIndex].balance;
                           if (highest != -1) {
-                            globalAvg += next - highest;
+                            spendingAvg += next - highest;
                           }
                         }
 
@@ -404,7 +407,9 @@ function updateBalances() {
             console.log(err);
           }
           //done with a pass through all users, restart
-          console.log("Average spent today is " + globalAvg/18);
+          // this number is average amount spent today
+          globalAverage = spendingAvg/len;
+          console.log("Average spent today is " + globalAverage);
           updateBalances();
         });
     });

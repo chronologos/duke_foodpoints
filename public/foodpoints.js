@@ -19,8 +19,10 @@ var user;
 
 
 $(document).ready(function() {
+
+    // function to format dates
     $('.format').each(function() {
-        $(this).text(format($(this).text()))
+        $(this).text(format($(this).text()));
     });
 
     $("#plan").on("change", function() {
@@ -33,7 +35,7 @@ $(document).ready(function() {
                 columns: [
                     ['Ideal', numfoodpoints, 0]
                 ]
-            })
+            });
         }
     });
 
@@ -43,7 +45,7 @@ $(document).ready(function() {
         }).always(function(data, status, err) {
             if (status === "success") {
                 user = data;
-                console.log(user)
+                console.log(user);
             }
 
             var fall = currdate > fallstart && currdate < fallend;
@@ -57,7 +59,7 @@ $(document).ready(function() {
                 $("#balance").html(user.balances[0].balance.toFixed(2));
 
                 user.balances = user.balances.filter(function(b) {
-                    return new Date(b.date) > start && new Date(b.date) < end
+                    return new Date(b.date) > start && new Date(b.date) < end;
                 });
                 if (user.balances.length > 0) {
                     var first = user.balances[0];
@@ -152,7 +154,7 @@ $(document).ready(function() {
 
                 user.balances.forEach(function(bal) {
                     x2.push(new Date(bal.date));
-                    bals.push(bal.balance)
+                    bals.push(bal.balance);
                 });
                 user.trans.forEach(function(exp) {
                     if (exp.amount < 0) {
@@ -161,7 +163,7 @@ $(document).ready(function() {
                         var amt = exp.amount * -1;
                         dayHeatmap[timestamp] = ~~amt;
                         if (!hourHeatMap[timestamp2]) {
-                            hourHeatMap[timestamp2] = 0
+                            hourHeatMap[timestamp2] = 0;
                         }
                         hourHeatMap[timestamp2] += ~~amt;
                         for (var i = 0; i <= numBuckets; i++) {
@@ -311,7 +313,7 @@ function getCookie(cname) {
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
     }
     return "";
 }
@@ -338,7 +340,11 @@ function getFirstWeekday(dayOfWeek, day, month, year) {
 
 function format(input) {
     var format = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
-    return format
+    return format;
+}
+
+function getAverage($scope) {
+        $scope.average = globalAverage;
 }
 
 function getBudgets($scope, $http) {
@@ -350,32 +356,8 @@ function getBudgets($scope, $http) {
             var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"];
             classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0];
             b.class = classes.join(" ");
-            b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period
+            b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period;
         });
-        $scope.budgets = data
-    })
-}
-
-angular.module('foodpoints', []).controller("BudgetController", function($scope, $http) {
-    $http.get('/api/cutoffs/').success(function(data, status, headers, config) {
-        $scope.periods = Object.keys(data);
-        $scope.budget = {
-            amount: 150,
-            period: 'week'
-        }
+        $scope.budgets = data;
     });
-    getBudgets($scope, $http);
-    $scope.save = function(budget) {
-        console.log(budget);
-        $http.post('/api/budgets/', budget).success(function(data, status, headers, config) {
-            console.log(data);
-            getBudgets($scope, $http)
-        })
-    };
-    $scope.delete = function(budget) {
-        $http.delete('/api/budgets/' + budget._id).success(function(data, status, headers, config) {
-            console.log(data);
-            getBudgets($scope, $http)
-        })
-    }
-});
+}
