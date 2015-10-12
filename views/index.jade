@@ -39,7 +39,7 @@ html(lang='en' data-ng-app="foodpoints")
             img(height=100, src=user.picture, alt=user.name)
             h3 Welcome back, #{user.given_name}!
             if (user.refresh_token)
-              a.btn.btn-default(href="#lameinfo" data-toggle="modal") More Info
+              a.btn(href="#lameinfo" data-toggle="modal" role="button") More Info
               div#lameinfo.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfoLabel" aria-hidden="true")
                 p FoodPoints+ is now tracking your balances.
                 p DukeCard link expires 
@@ -48,7 +48,7 @@ html(lang='en' data-ng-app="foodpoints")
               p Link your DukeCard to start tracking your balances.
           else
             p Sign in to use features such as graphing and budgets.
-            a.btn.btn-default(href="#lameinfo2" data-toggle="modal") More Info
+            a.btn(href="#lameinfo2" data-toggle="modal" role="button") More Info
             div.small
               div#lameinfo2.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfo2Label" aria-hidden="true")
                 div The starting food point value is set by:
