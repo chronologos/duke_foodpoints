@@ -26,12 +26,16 @@ client.on("error", function (err) {
     console.log("Error " + err);
 });
 client.on('connect', function() {
-    console.log('connected');
+    console.log('Connected to Redis');
 });
 client.set('framework', 'AngularJS');
-client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
+//client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
+client.ltrim("weekly", -7, -1);
 client.rpush(["daily",],function(err,res){
-    if (res === 0) {
+    if (err) {
+        console.log("Error occurred in initializing daily list: " + err);
+    }
+    if (!res) {
         console.log("Initialized Empty List for today");
     }
     else {
@@ -359,6 +363,7 @@ function updateBalances() {
     //variables for counting of average $ spent per day
     var spendingAvg = 0;
     var today = new Date();
+    var hour = today.getHours();
     var day = today.getDate();
     var month = today.getMonth();
     var year = today.getYear();
@@ -468,12 +473,30 @@ function updateBalances() {
             if (err) {
                 console.log(err);
             }
-            console.log("Pushed" + globalAverage + "onto today's averages");
-            console.log("Number of average values stored for today: " + res);
-          });
+            else {
+                console.log("Pushed" + globalAverage + "onto today's averages");
+                console.log("Number of average values stored for today: " + res);
+                client.ltrim("daily", 0, 0)
+                if (hour === 23 && !saved) {
+                    client.rpush(["weekly", globalAverage], function(err, resp){
+                        if (err) {
+                            console.log("Error in saving today's spending into weekly data: " + err);
+                        }
+                        else {
+                            client.ltrim("weekly", -7, -1);
+                            console.log("Saved today's spending into weekly data");
+                            client.lrange("weekly", 0, 7, function(err, response) {
+                                console.log("Weekly data so far:\n");
+                                console.log(response);
+                            });
+                        }
+                    });
+                }
+            }
+            });
           updateBalances();
-        });
     });
+});
 }
 
 function getCutoffs() {
