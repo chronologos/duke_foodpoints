@@ -22,9 +22,9 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='myNgApp.js')
 
 
-  body
+  body.container-fluid
       h1 FoodPoints+
-      div.container-fluid
+      div
         if (user)
           button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
           div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
@@ -32,9 +32,9 @@ html(lang='en' data-ng-app="foodpoints")
               div.modal-content
                 div.modal-body
                 .row
-                  .col-md-4
+                  .col-md-4 
                     img(height=50, src=user.picture, alt=user.name)
-                  .col-md-4.col-md-offset-4 
+                  .col-md-4.col-md-offset-1 
                     p Welcome back #{user.given_name}!
                     p FoodPoints+ is now tracking your balances.
                   if (!user.refresh_token)
@@ -56,7 +56,9 @@ html(lang='en' data-ng-app="foodpoints")
       .row
         .col-md-4
           div(data-ng-controller="AverageSpendingController")
-            {{average}}
+              h3 Stats
+                div The average student spent: {{average}}
+                div 
         .col-md-4
           h3 Countdown
           div You started with:
