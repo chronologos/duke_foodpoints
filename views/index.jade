@@ -39,7 +39,7 @@ html(lang='en' data-ng-app="foodpoints")
             img(height=100, src=user.picture, alt=user.name)
             h3 Welcome back, #{user.given_name}!
             if (user.refresh_token)
-              a.btn.btn-default(href={"#lameinfo"} data-toggle="modal") More Info
+              a.btn.btn-default(href="#lameinfo" data-toggle="modal") More Info
               div#lameinfo.modal.hide.fade
                 p FoodPoints+ is now tracking your balances.
                 p DukeCard link expires 
