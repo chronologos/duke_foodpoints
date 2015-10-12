@@ -29,12 +29,21 @@ html(lang='en' data-ng-app="foodpoints")
         {{average}}
         
         if (user)
+<<<<<<< HEAD
           button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
           div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
             div.modal-dialog.modal-sm(role="document")
             div.modal-content
               div.modal-body
                 img(height=50, src=user.picture, alt=user.name)
+=======
+          button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") More Info
+          div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
+            div.modal-dialog(role="document")
+            div.modal-content
+              div.modal-body
+                img(height=100, src=user.picture, alt=user.name)
+>>>>>>> 0f75d771a6efa6328ebc87e6e895189b51c7a76d
                 p FoodPoints+ is now tracking your balances.
                 if (!user.refresh_token)
                     p Link your DukeCard to start tracking your balances.
