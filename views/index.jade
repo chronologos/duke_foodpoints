@@ -72,8 +72,8 @@ html(lang='en' data-ng-app="foodpoints")
               button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                 | Action 
                 span.caret
-              ul.dropdown-menu(ng-repeat="item in mealPlans") 
-                li
+              ul.dropdown-menu
+                li(ng-repeat="item in mealPlans") 
                   a(href="#") {{item.name}}
                   
           input.form-control#plan(type="text")
