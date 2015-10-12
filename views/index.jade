@@ -29,7 +29,7 @@ html(lang='en' data-ng-app="foodpoints")
         div.modal-content
           div.modal-body
             .row
-              .col-md-4
+              .col-md-1
                 img(height=50, src=user.picture, alt=user.name)
               .col-md-4 
                 p Welcome back #{user.given_name}!
@@ -50,100 +50,97 @@ html(lang='en' data-ng-app="foodpoints")
                 a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
+    div
+      h1 FoodPoints+      
+      if (user)
+        button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
+      else
+        p Sign in to use features such as graphing and budgets.
+        a.btn.btn-default(href="/auth/google") Sign In with Google
+    hr
+      
+    // start of various widgets
     .row
       .col-md-4
-        h1 FoodPoints+
+        div(data-ng-controller="AverageSpendingController")
+            h3 Stats
+              div 
+                p The average student spent: {{average}}
+                p You spent: {{average}}
+                p Way to go!
+      .col-md-4
+        h3 Countdown
         
-      .col-md-4.col-md-offset-4
-        if (user)
-          button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
-        else
-          p Sign in to use features such as graphing and budgets.
-          a.btn.btn-default(href="/auth/google") Sign In with Google
-      hr
-      
-      // start of various widgets
-      .row
-        .col-md-4
-          div(data-ng-controller="AverageSpendingController")
-              h3 Stats
-                div 
-                  p The average student spent: {{average}}
-                  p You spent: {{average}}
-                  p Way to go!
-        .col-md-4
-          h3 Countdown
-          
-          // dropdown menu to select your mealplan
-          div(ng-controller="MealPlanController")
-            div.dropdown
-              button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                | {{selectedItem}}
-                span.caret
-              ul.dropdown-menu(aria-labelledby="dropdownMenu1")
-                li(ng-repeat="item in mealPlans") 
-                  a(ng-click="dropboxitemselected(item)") {{item.name}}
-                  
-          input.form-control#plan(type="text")
-          div You should have:
+        // dropdown menu to select your mealplan
+        div(ng-controller="MealPlanController")
+          div.dropdown
+            button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | {{selectedItem}}
+              span.caret
+            ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+              li(ng-repeat="item in mealPlans") 
+                a(ng-click="dropboxitemselected(item)") {{item.name}}
+                
+        input.form-control#plan(type="text")
+        div You should have:
+        div.progress.progress-countdown
+          div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
+            div.lead#result
+        if user
+          div You currently have:
           div.progress.progress-countdown
-            div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-              div.lead#result
-          if user
-            div You currently have:
-            div.progress.progress-countdown
-              div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-                div.lead#balance
-        .col-md-4
-          if user
-            h3 Transactions
-            table.table#transactions
-              thead
-                tr
-                  th Date
-                  th Amount
-               each t in user.trans
-                 tr
-                   td.format=t.date
-                   td=t.amount.toFixed(2)
-      if user
-        .row
-          .col-md-4 
-            h3 Chart
-            div#chart
-          .col-md-4(data-ng-controller="BudgetController")
-            h3 Budgets
-            h4 Send me email when I spend more than:
-            form.form-inline(name="budgetform", ng-submit="save(budget)")
-              .row
-                .col-xs-10
-                  input.form-control(required, type='number', ng-model="budget.amount")
-                  select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
-                .col-xs-2
-                  button.btn.btn-success
-                    i.glyphicon.glyphicon-plus
-            h4 My Budgets
-            .row.lead(ng-repeat="b in budgets")
+            div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
+              div.lead#balance
+      .col-md-4
+        if user
+          h3 Transactions
+          table.table#transactions
+            thead
+              tr
+                th Date
+                th Amount
+             each t in user.trans
+               tr
+                 td.format=t.date
+                 td=t.amount.toFixed(2)
+    if user
+      .row
+        .col-md-4 
+          h3 Chart
+          div#chart
+        .col-md-4(data-ng-controller="BudgetController")
+          h3 Budgets
+          h4 Send me email when I spend more than:
+          form.form-inline(name="budgetform", ng-submit="save(budget)")
+            .row
               .col-xs-10
-                div.progress.progress-countdown
-                  div(class="{{b.class}}", style="width:{{b.percent}}%")
-                    div.lead {{b.display}}
-                  div.verticalLine(style="left:{{b.elapsed}}%")
+                input.form-control(required, type='number', ng-model="budget.amount")
+                select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
               .col-xs-2
-                button.btn.btn-danger(ng-click="delete(b)")
-                  i.glyphicon.glyphicon-remove
-          .col-md-4
-            h3 Projections
-            h4 Based on your spending this semester:
-            table#projections.table
-        .row
-          .col-md-12
-            h3 Days
-            div#days
-            h3 Hours
-            div#hours
-      hr
-      footer
-        div Developed by Howard Chung, Will Shelburne.
-        a(href="http://github.com/howardc93/foodpoints") This application is open source.
-      hr
+                button.btn.btn-success
+                  i.glyphicon.glyphicon-plus
+          h4 My Budgets
+          .row.lead(ng-repeat="b in budgets")
+            .col-xs-10
+              div.progress.progress-countdown
+                div(class="{{b.class}}", style="width:{{b.percent}}%")
+                  div.lead {{b.display}}
+                div.verticalLine(style="left:{{b.elapsed}}%")
+            .col-xs-2
+              button.btn.btn-danger(ng-click="delete(b)")
+                i.glyphicon.glyphicon-remove
+        .col-md-4
+          h3 Projections
+          h4 Based on your spending this semester:
+          table#projections.table
+      .row
+        .col-md-12
+          h3 Days
+          div#days
+          h3 Hours
+          div#hours
+    hr
+    footer
+      div Developed by Howard Chung, Will Shelburne.
+      a(href="http://github.com/howardc93/foodpoints") This application is open source.
+    hr
