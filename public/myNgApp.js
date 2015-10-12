@@ -1,11 +1,47 @@
 angular.module('foodpoints', [])
 
-  .controller("AdvancedStatsController", function($scope, $http) {
+  .controller("AdvancedStatsController", function($scope) {
     $scope.advanced = false;
   })
 
-  .controller("MealPlanController", function($scope, $http){
-    
+  .controller("MealPlanController", function($scope){
+    $scope.mealPlans=[{
+      name: "Plan H ($432, Freshmen)",
+      value: 432
+      },
+      {
+        name: "Plan I ($499, Freshmen)",
+        value: 499
+        },
+      {
+        name: "Plan A ($2062)",
+        value: 2062
+        },
+      {
+        name: "Plan B ($2473)",
+        value: 2062
+        },
+      {
+        name: "Plan C ($2738)",
+        value: 2738
+        },
+      {
+        name: "Plan D ($2938)",
+        value: 2938
+      },
+      {
+        name: "Plan E ($3204)",
+        value: 3204
+        },
+      {
+        name: "Plan F ($676, off-campus)",
+        value: 676
+        },
+      {
+        name: "Plan J ($1458, central, off-campus)",
+        value: 31458204
+      }
+    ];
   })
 
   .controller("AverageSpendingController", function($scope, $http) {
