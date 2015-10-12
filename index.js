@@ -27,6 +27,20 @@ client.rpop(["weekly"],function(err, res){
   console.log("redis testing code \n");
   console.log(res);
 });
+client.get("weekly", function(err, reply) {
+    // reply is null when the key is missing
+    console.log(reply);
+});
+client.set("string key", "string val", redis.print);
+client.hset("hash key", "hashtest 1", "some value", redis.print);
+client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
+client.hkeys("hash key", function (err, replies) {
+    console.log(replies.length + " replies:");
+    replies.forEach(function (reply, i) {
+        console.log("    " + i + ": " + reply);
+    });
+    client.quit();
+});
 var globalAverage = 0;
 users.index('id', {
     unique: true
