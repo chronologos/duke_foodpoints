@@ -12,6 +12,7 @@ html(lang='en' data-ng-app="foodpoints")
     
     script(src='//code.jquery.com/jquery-latest.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.1/ui-bootstrap.min.js')
     script(src='//code.angularjs.org/snapshot/angular.min.js')
     script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
     script(src='//cdn.jsdelivr.net/d3js/latest/d3.min.js')    
@@ -63,7 +64,22 @@ html(lang='en' data-ng-app="foodpoints")
                   p Way to go!
         .col-md-4
           h3 Countdown
-          div You started with:
+          div(data-ng-controller="MealPlanController") You started with:
+            // Single button
+            .btn-group
+              button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                | Action 
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='#') Action
+                li
+                  a(href='#') Another action
+                li
+                  a(href='#') Something else here
+                li.divider(role='separator')
+                li
+                  a(href='#') Separated link
           input.form-control#plan(type="text")
           div You should have:
           div.progress.progress-countdown

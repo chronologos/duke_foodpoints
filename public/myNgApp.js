@@ -4,6 +4,10 @@ angular.module('foodpoints', [])
     $scope.advanced = false;
   })
 
+  .controller("MealPlanController", function($scope, $http){
+    
+  })
+
   .controller("AverageSpendingController", function($scope, $http) {
     $http.get('/api/spending')
       .then(function(response) {
