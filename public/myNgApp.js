@@ -42,6 +42,11 @@ angular.module('foodpoints', [])
         value: 31458204
       }
     ];
+    $scope.selectedItem = NULL;
+    $scope.dropboxitemselected = function (thisItem) {
+        $scope.selectedItemName = thisItem;
+        alert($scope.selectedItemName);
+    };
   })
 
   .controller("AverageSpendingController", function($scope, $http) {

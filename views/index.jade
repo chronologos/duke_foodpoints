@@ -67,14 +67,14 @@ html(lang='en' data-ng-app="foodpoints")
           h3 Countdown
           
           // dropdown menu to select your mealplan
-          div.btn-group(data-ng-controller="MealPlanController")
-            p You started with:
-              button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          div(ng-controller="MealPlanController")
+            div.dropdown
+              button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                 | Action 
                 span.caret
-              ul.dropdown-menu
+              ul.dropdown-menu(aria-labelledby="dropdownMenu1")
                 li(ng-repeat="item in mealPlans") 
-                  a(href="#") {{item.name}}
+                  a(ng-click="dropboxitemselected(item.name)") {{item.name}}
                   
           input.form-control#plan(type="text")
           div You should have:
