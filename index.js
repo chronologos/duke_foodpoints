@@ -24,24 +24,32 @@ client.on("error", function (err) {
     console.log("Error " + err);
 });
 client.lpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
-client.rpop(["weekly"],function(err, res){
+client.lpush(["daily"],function(err,res){
+    if (res === 0) {
+        console.log("Initialized Empty List for today");
+    }
+    else {
+        console.log("Length of today's list of averages: " + res);
+    }
+});
+client.lpop(["weekly"],function(err, res){
   console.log("redis testing code \n");
-  console.log(res);
+  console.log("Average amount spent 7 days ago: " + res);
 });
 client.get("weekly", function(err, reply) {
     // reply is null when the key is missing
-    console.log(reply);
+    console.log("Average daily spending for past week: " + reply);
 });
-client.set("string key", "string val", redis.print);
-client.hset("hash key", "hashtest 1", "some value", redis.print);
-client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-client.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    client.quit();
-});
+//client.set("string key", "string val", redis.print);
+//client.hset("hash key", "hashtest 1", "some value", redis.print);
+//client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
+//client.hkeys("hash key", function (err, replies) {
+//    console.log(replies.length + " replies:");
+//    replies.forEach(function (reply, i) {
+//        console.log("    " + i + ": " + reply);
+//    });
+//    client.quit();
+//});
 var globalAverage = 0;
 users.index('id', {
     unique: true
@@ -444,6 +452,13 @@ function updateBalances() {
           // this number is average amount spent today
           globalAverage = spendingAvg/len;
           console.log("Average spent today is " + globalAverage);
+          client.rpush(["daily", globalAverage], function(err, res){
+            if (err) {
+                console.log(err);
+            }
+            console.log("Pushed" + globalAverage + "onto today's averages");
+            console.log("Number of average values stored for today: " + res);
+          });
           updateBalances();
         });
     });
