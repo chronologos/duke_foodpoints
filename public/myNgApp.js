@@ -7,7 +7,7 @@ angular.module('foodpoints', [])
   .controller("AverageSpendingController", function($scope, $http) {
     $http.get('/api/spending')
       .then(function(response) {
-        $scope.average = response.data.toFixed(2);
+        $scope.average = parseFloat(response.data).toFixed(2);
       }
   );
 })
