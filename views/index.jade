@@ -35,6 +35,12 @@ html(lang='en' data-ng-app="foodpoints")
       hr
       .row
         .col-md-4
+          div#lameinfo2.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfo2Label" aria-hidden="true")
+            div The starting food point value is set by:
+            ul
+              li Entered value saved in a cookie
+              li Projected value based on your balances
+              li Default value of Plan A
           if user
             img(height=100, src=user.picture, alt=user.name)
             h3 Welcome back, #{user.given_name}!
@@ -49,12 +55,6 @@ html(lang='en' data-ng-app="foodpoints")
           else
             p Sign in to use features such as graphing and budgets.
             a.btn(href="#lameinfo2" data-toggle="modal" role="button") More Info
-            div#lameinfo2.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfo2Label" aria-hidden="true")
-              div The starting food point value is set by:
-              ul
-                li Entered value saved in a cookie
-                li Projected value based on your balances
-                li Default value of Plan A
         .col-md-4
           h3 Countdown
           div You started with:
