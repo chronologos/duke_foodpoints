@@ -25,9 +25,7 @@ html(lang='en' data-ng-app="foodpoints")
   body
     .container-fluid
       h1 FoodPoints+
-      div(data-ng-controller="AverageSpendingController")
-        {{average}}
-        
+      div
         if (user)
           button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
           div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
@@ -35,12 +33,7 @@ html(lang='en' data-ng-app="foodpoints")
             div.modal-content
               div.modal-body
                 img(height=50, src=user.picture, alt=user.name)
-          button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") More Info
-          div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
-            div.modal-dialog(role="document")
-            div.modal-content
-              div.modal-body
-                img(height=100, src=user.picture, alt=user.name)
+                p Welcome back #{user.given_name}!
                 p FoodPoints+ is now tracking your balances.
                 if (!user.refresh_token)
                     p Link your DukeCard to start tracking your balances.
@@ -60,8 +53,8 @@ html(lang='en' data-ng-app="foodpoints")
       hr
       .row
         .col-md-4
-          blah
-            
+          div(data-ng-controller="AverageSpendingController")
+            {{average}}
         .col-md-4
           h3 Countdown
           div You started with:
