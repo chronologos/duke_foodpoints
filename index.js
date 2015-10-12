@@ -17,6 +17,7 @@ var balances = db.get("balances");
 var budgets = db.get("budgets");
 var passport = require('passport');
 var favicon = require('serve-favicon');
+console.log(__dirname + '/public/favicon.ico');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 //redis for storing weekly and monthly stats
@@ -215,12 +216,15 @@ app.get('/api/user', function(req, res) {
 app.get('/api/spending', function(req, res) {
   res.set("text/plain");
   if (globalAverage === 0) {
-    client.lindex("daily", -1, function(err, res) {
-        globalAverage = res;
+    client.lindex("daily", -1, function(err, response) {
+        globalAverage = response;
         console.log("As server restarted, daily average value of " + res + " was retrieved from Redis");
-    })
+        res.send(""+globalAverage);
+    });
   }
-  res.send(""+globalAverage);
+  else {
+    res.send(""+globalAverage);
+  }
 });
 
 //create

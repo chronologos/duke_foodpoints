@@ -25,11 +25,7 @@ $(document).ready(function() {
         $(this).text(format($(this).text()));
     });
 
-    $.get("/api/spending", function(data){
-      avgSpent = data;
-      alert(avgSpent);
-    });
-
+    // dynamically change progressbars on change in food plan #TODO $ for different foodplans
     $("#plan").on("change", function() {
         numfoodpoints = parseInt($("#plan").val());
         var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);
@@ -344,6 +340,6 @@ function getFirstWeekday(dayOfWeek, day, month, year) {
 }
 
 function format(input) {
-    var format = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
-    return format;
+    var formatted = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
+    return formatted;
 }
