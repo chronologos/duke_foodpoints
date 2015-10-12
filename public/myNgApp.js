@@ -1,14 +1,17 @@
 angular.module('foodpoints', [])
+
   .controller("AdvancedStatsController", function($scope, $http) {
     $scope.advanced = false;
   })
+
   .controller("AverageSpendingController", function($scope, $http) {
     $http.get('/api/spending')
       .then(function(response) {
-        $scope.average = response.data;
+        $scope.average = response.data.toFixed(2);
       }
   );
 })
+
   .controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/')
       .success(function(data, status, headers, config) {
@@ -18,7 +21,6 @@ angular.module('foodpoints', [])
           period: 'week'
         };
       });
-
     getBudgets($scope, $http);
     $scope.save = function(budget) {
       console.log(budget);
