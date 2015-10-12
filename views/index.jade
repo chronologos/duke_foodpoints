@@ -70,7 +70,7 @@ html(lang='en' data-ng-app="foodpoints")
           div(ng-controller="MealPlanController")
             div.dropdown
               button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                | Action 
+                | {{selectedItem}}
                 span.caret
               ul.dropdown-menu(aria-labelledby="dropdownMenu1")
                 li(ng-repeat="item in mealPlans") 

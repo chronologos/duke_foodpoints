@@ -42,11 +42,21 @@ angular.module('foodpoints', [])
         value: 31458204
       }
     ];
-    $scope.selectedItem;
+    $scope.selectedItem = "Choose foodplan";
     $scope.dropboxitemselected = function (thisItem) {
         $scope.selectedItemName = thisItem.name;
         $scope.mealPlanCost = thisItem.value;
         alert($scope.selectedItemName);
+        var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);
+        $("#progbar2").width(percent2 * 100 + "%");
+        setCookie("numfoodpoints", numfoodpoints, 365);
+        if (user && chart) {
+            chart.load({
+                columns: [
+                    ['Ideal', numfoodpoints, 0]
+                ]
+            });
+        }
     };
   })
 
