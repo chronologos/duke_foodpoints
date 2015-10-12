@@ -25,30 +25,35 @@ html(lang='en' data-ng-app="foodpoints")
 
   body.container-fluid
     // modal for extra info
-    div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
-      div.modal-dialog.modal-lg(role="document")
-        div.modal-content
-          div.modal-body
-            .row
-              .col-md-1
-                img(height=50, src=user.picture, alt=user.name)
-              .col-md-4 
-                p Welcome back #{user.given_name}!
-                p FoodPoints+ is now tracking your balances.
-            .row
-              .col-md-8
-                if (!user.refresh_token)
-                    p Link your DukeCard to start tracking your balances.
-                    a.btn.btn-primary(href=auth_link) Link DukeCard
-                else
-                  p DukeCard link expires 
-                    span.format=user.refresh_token_expire
-                  div The starting food point value is set by:
-                  ul
-                    li Entered value saved in a cookie
-                    li Projected value based on your balances
-                    li Default value of Plan A
-                a.btn.btn-default(href="/logout") Sign Out
+    if (user)
+      div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
+        div.modal-dialog.modal-lg(role="document")
+          div.modal-content
+            div.modal-body
+              .row
+                .col-md-1
+                  img(height=50, src=user.picture, alt=user.name)
+                .col-md-4 
+                  p Welcome back #{user.given_name}!
+                  p FoodPoints+ is now tracking your balances.
+              .row
+                .col-md-8
+                  if (!user.refresh_token)
+                      p Link your DukeCard to start tracking your balances.
+                      a.btn.btn-primary(href=auth_link) Link DukeCard
+                  else
+                    p DukeCard link expires 
+                      span.format=user.refresh_token_expire
+                    div
+                      p To get started, choose your starting food plan from the drop down menu.
+                  form
+                    div.checkbox
+                      label
+                        input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
+                        p Reveal advanced settings
+                        
+                  a.btn.btn-default(href="/api/delete") Irreversibly(!) delete my transactions
+                  a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
     div
@@ -56,7 +61,7 @@ html(lang='en' data-ng-app="foodpoints")
       if (user)
         button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
       else
-        p Sign in to use features such as graphing and budgets.
+        p Sign in and link your Dukecard to use features such as graphing and budgets. Note for new users: Many features start working only after the second day of use. 
         a.btn.btn-default(href="/auth/google") Sign In with Google
     hr
       
@@ -64,13 +69,17 @@ html(lang='en' data-ng-app="foodpoints")
     .row
       .col-md-4
         div(data-ng-controller="AverageSpendingController")
-            h3 Stats
-              div 
-                p The average student spent: {{average}}
-                p You spent: {{average}}
-                p Way to go!
+            h3 Comparative Analysis
+              div
+                h5
+                  p The average student spent: {{average}}
+                  p You spent: {{average}}
+                  p Way to go!
+            h3 Projections
+              h4 Based on your spending this semester:
+              table#projections.table
       .col-md-4
-        h3 Countdown
+        h3 Will I starve?
         
         // dropdown menu to select your mealplan
         div(ng-controller="MealPlanController")
@@ -82,19 +91,18 @@ html(lang='en' data-ng-app="foodpoints")
               li(ng-repeat="item in mealPlans") 
                 a(ng-click="dropboxitemselected(item)") {{item.name}}
                 
-        input.form-control#plan(type="text")
-        div You should have:
+        div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
             div.lead#result
         if user
-          div You currently have:
+          div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
               div.lead#balance
       .col-md-4
         if user
-          h3 Transactions
+          h3 The times I bought grub
           table.table#transactions
             thead
               tr
@@ -104,7 +112,7 @@ html(lang='en' data-ng-app="foodpoints")
                tr
                  td.format=t.date
                  td=t.amount.toFixed(2)
-    div(ng-show="myValue")
+    div.animate-show(ng-show="checked")
       if user
         .row
           .col-md-4 
@@ -131,10 +139,7 @@ html(lang='en' data-ng-app="foodpoints")
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
                   i.glyphicon.glyphicon-remove
-          .col-md-4
-            h3 Projections
-            h4 Based on your spending this semester:
-            table#projections.table
+            
         .row
           .col-md-12
             h3 Days

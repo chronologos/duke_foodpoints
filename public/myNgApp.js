@@ -19,7 +19,7 @@ angular.module('foodpoints', [])
         },
       {
         name: "Plan B ($2473)",
-        value: 2062
+        value: 2473
         },
       {
         name: "Plan C ($2738)",
@@ -39,10 +39,10 @@ angular.module('foodpoints', [])
         },
       {
         name: "Plan J ($1458, central, off-campus)",
-        value: 31458204
+        value: 1458
       }
     ];
-    $scope.selectedItemName = thisItem.name;
+    $scope.selectedItemName = "Choose meal plan";
     // dynamically change progressbar size on change in food plan
     $scope.dropboxitemselected = function (thisItem) {
         $scope.selectedItemName = thisItem.name;
