@@ -5,6 +5,7 @@ html(lang='en' data-ng-app="foodpoints")
     meta(charset='utf-8')
     meta(name="viewport", content="initial-scale=1")
     
+    link(rel="stylesheet", href='https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css')
     link(rel="stylesheet", href='//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/lumen/bootstrap.min.css')
     link(rel="stylesheet", href='//cdn.jsdelivr.net/cal-heatmap/latest/cal-heatmap.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/masayuki0812/c3/0.4.9/c3.min.css')
@@ -75,7 +76,7 @@ html(lang='en' data-ng-app="foodpoints")
         div(ng-controller="MealPlanController")
           div.dropdown
             button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | {{selectedItem}}
+              | {{selectedItemName}}
               span.caret
             ul.dropdown-menu(aria-labelledby="dropdownMenu1")
               li(ng-repeat="item in mealPlans") 
@@ -103,44 +104,45 @@ html(lang='en' data-ng-app="foodpoints")
                tr
                  td.format=t.date
                  td=t.amount.toFixed(2)
-    if user
-      .row
-        .col-md-4 
-          h3 Chart
-          div#chart
-        .col-md-4(data-ng-controller="BudgetController")
-          h3 Budgets
-          h4 Send me email when I spend more than:
-          form.form-inline(name="budgetform", ng-submit="save(budget)")
-            .row
+    div(ng-show="myValue")
+      if user
+        .row
+          .col-md-4 
+            h3 Chart
+            div#chart
+          .col-md-4(data-ng-controller="BudgetController")
+            h3 Budgets
+            h4 Send me email when I spend more than:
+            form.form-inline(name="budgetform", ng-submit="save(budget)")
+              .row
+                .col-xs-10
+                  input.form-control(required, type='number', ng-model="budget.amount")
+                  select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
+                .col-xs-2
+                  button.btn.btn-success
+                    i.glyphicon.glyphicon-plus
+            h4 My Budgets
+            .row.lead(ng-repeat="b in budgets")
               .col-xs-10
-                input.form-control(required, type='number', ng-model="budget.amount")
-                select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
+                div.progress.progress-countdown
+                  div(class="{{b.class}}", style="width:{{b.percent}}%")
+                    div.lead {{b.display}}
+                  div.verticalLine(style="left:{{b.elapsed}}%")
               .col-xs-2
-                button.btn.btn-success
-                  i.glyphicon.glyphicon-plus
-          h4 My Budgets
-          .row.lead(ng-repeat="b in budgets")
-            .col-xs-10
-              div.progress.progress-countdown
-                div(class="{{b.class}}", style="width:{{b.percent}}%")
-                  div.lead {{b.display}}
-                div.verticalLine(style="left:{{b.elapsed}}%")
-            .col-xs-2
-              button.btn.btn-danger(ng-click="delete(b)")
-                i.glyphicon.glyphicon-remove
-        .col-md-4
-          h3 Projections
-          h4 Based on your spending this semester:
-          table#projections.table
-      .row
-        .col-md-12
-          h3 Days
-          div#days
-          h3 Hours
-          div#hours
+                button.btn.btn-danger(ng-click="delete(b)")
+                  i.glyphicon.glyphicon-remove
+          .col-md-4
+            h3 Projections
+            h4 Based on your spending this semester:
+            table#projections.table
+        .row
+          .col-md-12
+            h3 Days
+            div#days
+            h3 Hours
+            div#hours
     hr
     footer
-      div Developed by Howard Chung, Will Shelburne.
+      div Developed by Howard Chung, Will Shelburne, Ian Tay, Adi Raghunathan
       a(href="http://github.com/howardc93/foodpoints") This application is open source.
     hr
