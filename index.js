@@ -372,6 +372,7 @@ function updateBalances() {
     var month = today.getMonth();
     var year = today.getYear();
     var len = 0;
+    var saved = false;
 
     users.find({
         refresh_token: {
@@ -487,6 +488,7 @@ function updateBalances() {
                             console.log("Error in saving today's spending into weekly data: " + err);
                         }
                         else {
+                            saved = true;
                             client.ltrim("weekly", -7, -1);
                             console.log("Saved today's spending into weekly data");
                             client.lrange("weekly", 0, 7, function(err, response) {
