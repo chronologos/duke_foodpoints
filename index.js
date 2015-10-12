@@ -212,7 +212,7 @@ app.get('/api/user', function(req, res) {
     res.json(req.user);
 });
 
-//average spending
+//get average spending
 app.get('/api/spending', function(req, res) {
   res.set("text/plain");
   if (globalAverage === 0) {
@@ -225,6 +225,20 @@ app.get('/api/spending', function(req, res) {
   else {
     res.send(""+globalAverage);
   }
+});
+
+//unsubscribe
+app.get('/api/delete', function(req, res) {
+    if (req.user) {
+      users.remove({
+          id: req.user.id
+      });
+      res.set("text/plain");
+      res.send("You have been removed from our database.");
+    }
+    else {
+        next();
+    }
 });
 
 //create
@@ -479,25 +493,26 @@ function updateBalances() {
                 console.log(err);
             }
             else {
-                console.log("Pushed" + globalAverage + "onto today's averages");
-                console.log("Number of average values stored for today: " + res);
-                client.ltrim("daily", 0, 0)
-                if (hour === 23 && !saved) {
-                    client.rpush(["weekly", globalAverage], function(err, resp){
-                        if (err) {
-                            console.log("Error in saving today's spending into weekly data: " + err);
-                        }
-                        else {
-                            saved = true;
-                            client.ltrim("weekly", -7, -1);
-                            console.log("Saved today's spending into weekly data");
-                            client.lrange("weekly", 0, 7, function(err, response) {
-                                console.log("Weekly data so far:\n");
-                                console.log(response);
-                            });
-                        }
-                    });
-                }
+              // store average spending in Redis #TODO
+              console.log("Pushed" + globalAverage + "onto today's averages");
+              console.log("Number of average values stored for today: " + res);
+              client.ltrim("daily", 0, 0)
+              if (hour === 23 && !saved) {
+                  client.rpush(["weekly", globalAverage], function(err, resp){
+                      if (err) {
+                          console.log("Error in saving today's spending into weekly data: " + err);
+                      }
+                      else {
+                          saved = true;
+                          client.ltrim("weekly", -7, -1);
+                          console.log("Saved today's spending into weekly data");
+                          client.lrange("weekly", 0, 7, function(err, response) {
+                              console.log("Weekly data so far:\n");
+                              console.log(response);
+                          });
+                      }
+                  });
+              }
             }
             });
           updateBalances();

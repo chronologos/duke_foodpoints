@@ -42,7 +42,7 @@ angular.module('foodpoints', [])
         value: 31458204
       }
     ];
-    $scope.selectedItemName = thisItem.name;
+    $scope.selectedItemName = "Choose meal plan";
     // dynamically change progressbar size on change in food plan
     $scope.dropboxitemselected = function (thisItem) {
         $scope.selectedItemName = thisItem.name;
