@@ -153,6 +153,7 @@ app.use("/api", function(req, res, next) {
         });
     }
 });
+
 app.use(function(req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === "production") {
         res.redirect(['https://', req.get('host'), req.url].join(''));
@@ -161,9 +162,11 @@ app.use(function(req, res, next) {
         next();
     }
 });
+
 app.listen(process.env.PORT || 3000, function() {
     console.log("Node app is running");
 });
+
 // Redirect the user to Google for authentication.  When complete, Google
 // will redirect the user back to the application at
 //     /auth/google/return
@@ -177,6 +180,7 @@ app.get('/auth/google/return', passport.authenticate('google', {
     successRedirect: '/',
     failureRedirect: '/'
 }));
+
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
