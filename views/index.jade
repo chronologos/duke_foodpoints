@@ -74,30 +74,31 @@ html(lang='en' data-ng-app="foodpoints")
                   p The average student spent: {{average}}
                   p You spent: {{average}}
                   p Way to go!
+            h3 Projections
+              h4 Based on your spending this semester:
+              table#projections.table
       .col-md-4
-        .row
-          .col-md-2
-            h3 Will I starve?
-          .col-md-2
-            // dropdown menu to select your mealplan
-            div(ng-controller="MealPlanController")
-              div.dropdown
-                button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                  | {{selectedItemName}}
-                  span.caret
-                ul.dropdown-menu(aria-labelledby="dropdownMenu1")
-                  li(ng-repeat="item in mealPlans") 
-                    a(ng-click="dropboxitemselected(item)") {{item.name}}
-      .row  
-          div I should have:
+        h3 Will I starve?
+        
+        // dropdown menu to select your mealplan
+        div(ng-controller="MealPlanController")
+          div.dropdown
+            button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | {{selectedItemName}}
+              span.caret
+            ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+              li(ng-repeat="item in mealPlans") 
+                a(ng-click="dropboxitemselected(item)") {{item.name}}
+                
+        div I should have:
+        div.progress.progress-countdown
+          div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
+            div.lead#result
+        if user
+          div I actually have:
           div.progress.progress-countdown
-            div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-              div.lead#result
-          if user
-            div I actually have:
-            div.progress.progress-countdown
-              div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-                div.lead#balance
+            div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
+              div.lead#balance
       .col-md-4
         if user
           h3 The times I bought grub
@@ -137,10 +138,7 @@ html(lang='en' data-ng-app="foodpoints")
               .col-xs-2
                 button.btn.btn-danger(ng-click="delete(b)")
                   i.glyphicon.glyphicon-remove
-          .col-md-4
-            h3 Projections
-            h4 Based on your spending this semester:
-            table#projections.table
+            
         .row
           .col-md-12
             h3 Days
