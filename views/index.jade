@@ -68,16 +68,17 @@ html(lang='en' data-ng-app="foodpoints")
     .row
       .col-md-4
         div(data-ng-controller="AverageSpendingController")
-            h3 Stats
-              div 
-                p The average student spent: {{average}}
-                p You spent: {{average}}
-                p Way to go!
+            h3 Comparative Analysis
+              div
+                h5
+                  p The average student spent: {{average}}
+                  p You spent: {{average}}
+                  p Way to go!
       .col-md-4
-        h3 Countdown
+        h3 Will I starve?
         
         // dropdown menu to select your mealplan
-        div(ng-show="checked")
+        div(ng-controller="MealPlanController")
           div.dropdown
             button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | {{selectedItemName}}
@@ -86,18 +87,18 @@ html(lang='en' data-ng-app="foodpoints")
               li(ng-repeat="item in mealPlans") 
                 a(ng-click="dropboxitemselected(item)") {{item.name}}
                 
-        div You should have:
+        div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
             div.lead#result
         if user
-          div You currently have:
+          div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
               div.lead#balance
       .col-md-4
         if user
-          h3 Transactions
+          h3 The times I bought grub
           table.table#transactions
             thead
               tr
@@ -107,7 +108,7 @@ html(lang='en' data-ng-app="foodpoints")
                tr
                  td.format=t.date
                  td=t.amount.toFixed(2)
-    div.animate-show(ng-show="myValue")
+    div.animate-show(ng-show="checked")
       if user
         .row
           .col-md-4 
