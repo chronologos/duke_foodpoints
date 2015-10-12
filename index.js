@@ -32,17 +32,17 @@ client.on('connect', function() {
 client.set('framework', 'AngularJS');
 //client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
 client.ltrim("weekly", -7, -1);
-client.rpush(["daily"],function(err,res){
-    if (err) {
-        console.log("Error occurred in initializing daily list: " + err);
-    }
-    if (!res) {
-        console.log("Initialized Empty List for today");
-    }
-    else {
-        console.log("Length of today's list of averages: " + res);
-    }
-});
+//client.rpush(["daily"],function(err,res){
+//    if (err) {
+//        console.log("Error occurred in initializing daily list: " + err);
+//    }
+//    if (!res) {
+//        console.log("Initialized Empty List for today");
+//    }
+//    else {
+//        console.log("Length of today's list of averages: " + res);
+//    }
+//});
 //client.lpop(["weekly"],function(err, res){
 //  console.log("redis testing code \n");
 //  console.log("Average amount spent 7 days ago: " + res);
