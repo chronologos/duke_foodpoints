@@ -25,11 +25,6 @@ $(document).ready(function() {
         $(this).text(format($(this).text()));
     });
 
-    $.get("/api/spending", function(data){
-      avgSpent = data;
-      alert(avgSpent);
-    });
-
     $("#plan").on("change", function() {
         numfoodpoints = parseInt($("#plan").val());
         var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);

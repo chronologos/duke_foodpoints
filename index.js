@@ -215,7 +215,7 @@ app.get('/api/spending', function(req, res) {
     client.lindex("daily", -1, function(err, res) {
         globalAverage = res;
         console.log("As server restarted, daily average value of " + res + " was retrieved from Redis");
-    })
+    });
   }
   res.send(""+globalAverage);
 });
