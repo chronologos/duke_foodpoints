@@ -15,15 +15,16 @@
     "cookie-session": "~1.1.0",
     "dotenv": "~0.5.1",
     "express": "~4.11.2",
+    "foreman": "~1.3.0",
     "jade": "~1.9.2",
     "moment": "~2.9.0",
     "monk": "~0.9.1",
     "passport": "~0.2.1",
     "passport-google-oauth": "~0.1.5",
+    "redis": "^2.2.1",
     "request": "~2.53.0",
     "sendgrid": "~1.6.0",
-    "foreman": "~1.3.0",
-    "redis": "^2.2.1"
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "mocha": "~2.1.0"
