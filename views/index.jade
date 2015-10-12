@@ -39,8 +39,8 @@ html(lang='en' data-ng-app="foodpoints")
             img(height=100, src=user.picture, alt=user.name)
             h3 Welcome back, #{user.given_name}!
             if (user.refresh_token)
-              a.btn.btn-default(href={"#lameinfo"} data-toggle="modal") More Info
-              div#lameinfo.modal.hide.fade
+              a.btn.btn-default(href="#lameinfo" data-toggle="modal") More Info
+              div#lameinfo.modal.hide.fade(role="dialog")
                 p FoodPoints+ is now tracking your balances.
                 p DukeCard link expires 
                   span.format=user.refresh_token_expire
@@ -48,12 +48,13 @@ html(lang='en' data-ng-app="foodpoints")
               p Link your DukeCard to start tracking your balances.
           else
             p Sign in to use features such as graphing and budgets.
-          div.small
-            div The starting food point value is set by:
-            ul
-              li Entered value saved in a cookie
-              li Projected value based on your balances
-              li Default value of Plan A
+            div.small
+              div#lameinfo2.modal.hide.fade(role="dialog")
+                div The starting food point value is set by:
+                ul
+                  li Entered value saved in a cookie
+                  li Projected value based on your balances
+                  li Default value of Plan A
         .col-md-4
           h3 Countdown
           div You started with:
