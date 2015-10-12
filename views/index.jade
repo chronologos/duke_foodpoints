@@ -64,22 +64,17 @@ html(lang='en' data-ng-app="foodpoints")
                   p Way to go!
         .col-md-4
           h3 Countdown
-          div(data-ng-controller="MealPlanController") You started with:
-            // Single button
-            .btn-group
+          
+          // dropdown menu to select your mealplan
+          div.btn-group(data-ng-controller="MealPlanController")
+            p You started with:
               button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                 | Action 
                 span.caret
               ul.dropdown-menu
-                li
-                  a(href='#') Action
-                li
-                  a(href='#') Another action
-                li
-                  a(href='#') Something else here
-                li.divider(role='separator')
-                li
-                  a(href='#') Separated link
+                li(ng-repeat="item in mealPlans") 
+                  a(href="#") {{item.name}}
+                  
           input.form-control#plan(type="text")
           div You should have:
           div.progress.progress-countdown
