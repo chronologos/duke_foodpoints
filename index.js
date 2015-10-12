@@ -47,10 +47,18 @@ client.set('framework', 'AngularJS');
 //  console.log("redis testing code \n");
 //  console.log("Average amount spent 7 days ago: " + res);
 //});
-client.get("weekly", function(err, reply) {
+//client.get("weekly", function(err, reply) {
     // reply is null when the key is missing
-    console.log("Average daily spending for past week: " + reply);
+//    console.log("Average daily spending for past week: " + reply);
+//});
+client.lindex("daily", 0, function(err, res){
+    console.log("Item at index 0 of daily list: " + res);
 });
+
+client.lindex("daily", -1, function(err, res){
+    console.log("Item at last index of daily list: " + res);
+});
+
 //client.set("string key", "string val", redis.print);
 //client.hset("hash key", "hashtest 1", "some value", redis.print);
 //client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
