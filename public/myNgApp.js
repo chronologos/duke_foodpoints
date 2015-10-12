@@ -42,6 +42,24 @@ angular.module('foodpoints', [])
         value: 31458204
       }
     ];
+    $scope.selectedItemName = thisItem.name;
+    // dynamically change progressbar size on change in food plan
+    $scope.dropboxitemselected = function (thisItem) {
+        $scope.selectedItemName = thisItem.name;
+        $scope.mealPlanCost = thisItem.value;
+        // alert($scope.selectedItemName);
+        var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
+        $("#progbar2").width(percent2 * 100 + "%");
+        setCookie("numfoodpoints", $scope.mealPlanCost, 365);
+        if (user && chart) {
+            chart.load({
+                columns: [
+                    ['Ideal', $scope.mealPlanCost, 0]
+                ]
+            });
+        }
+        numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
+    };
   })
 
   .controller("AverageSpendingController", function($scope, $http) {

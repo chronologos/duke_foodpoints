@@ -25,21 +25,6 @@ $(document).ready(function() {
         $(this).text(format($(this).text()));
     });
 
-    // dynamically change progressbars on change in food plan #TODO $ for different foodplans
-    $("#plan").on("change", function() {
-        numfoodpoints = parseInt($("#plan").val());
-        var percent2 = Math.min($("#balance").text() / numfoodpoints, 1);
-        $("#progbar2").width(percent2 * 100 + "%");
-        setCookie("numfoodpoints", numfoodpoints, 365);
-        if (user && chart) {
-            chart.load({
-                columns: [
-                    ['Ideal', numfoodpoints, 0]
-                ]
-            });
-        }
-    });
-
     //load user and generate user-specific visualizations
     $.ajax({
             url: "/api/user"
