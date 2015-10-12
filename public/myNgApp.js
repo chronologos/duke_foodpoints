@@ -43,7 +43,7 @@ angular.module('foodpoints', [])
       }
     ];
     $scope.selectedItem = "Choose foodplan";
-    // dynamically change progressbars on change in food plan
+    // dynamically change progressbar size on change in food plan
     $scope.dropboxitemselected = function (thisItem) {
         $scope.selectedItemName = thisItem.name;
         $scope.mealPlanCost = thisItem.value;
@@ -58,6 +58,7 @@ angular.module('foodpoints', [])
                 ]
             });
         }
+        numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
     };
   })
 
