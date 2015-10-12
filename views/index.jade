@@ -48,7 +48,7 @@ html(lang='en' data-ng-app="foodpoints")
                 form
                   div.checkbox
                     label
-                      input(type="checkbox" ng-model="AdvancedStatsController" aria-label="Toggle ngHide")
+                      input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
                       Show advanced settings
                       
                 a.btn.btn-default(href="/api/delete") Irreversibly(!) delete my transactions
@@ -77,7 +77,7 @@ html(lang='en' data-ng-app="foodpoints")
         h3 Countdown
         
         // dropdown menu to select your mealplan
-        div(ng-controller="MealPlanController")
+        div(ng-show="checked")
           div.dropdown
             button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | {{selectedItemName}}
@@ -86,7 +86,6 @@ html(lang='en' data-ng-app="foodpoints")
               li(ng-repeat="item in mealPlans") 
                 a(ng-click="dropboxitemselected(item)") {{item.name}}
                 
-        input.form-control#plan(type="text")
         div You should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
