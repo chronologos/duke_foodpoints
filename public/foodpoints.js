@@ -341,5 +341,5 @@ function getFirstWeekday(dayOfWeek, day, month, year) {
 
 function format(input) {
     var formatted = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
-    return formattted;
+    return formatted;
 }
