@@ -23,39 +23,48 @@ html(lang='en' data-ng-app="foodpoints")
 
 
   body
-    .container
+    .container-fluid
       h1 FoodPoints+
       div(data-ng-controller="AverageSpendingController")
         {{average}}
+        
         if (user)
-          a.btn.btn-default(href="/logout") Sign Out
-          a.btn.btn-primary(href=auth_link) Link DukeCard
+<<<<<<< HEAD
+          button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
+          div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
+            div.modal-dialog.modal-sm(role="document")
+            div.modal-content
+              div.modal-body
+                img(height=50, src=user.picture, alt=user.name)
+=======
+          button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") More Info
+          div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
+            div.modal-dialog(role="document")
+            div.modal-content
+              div.modal-body
+                img(height=100, src=user.picture, alt=user.name)
+>>>>>>> 0f75d771a6efa6328ebc87e6e895189b51c7a76d
+                p FoodPoints+ is now tracking your balances.
+                if (!user.refresh_token)
+                    p Link your DukeCard to start tracking your balances.
+                    a.btn.btn-primary(href=auth_link) Link DukeCard
+                else
+                  p DukeCard link expires 
+                    span.format=user.refresh_token_expire
+                  div The starting food point value is set by:
+                  ul
+                    li Entered value saved in a cookie
+                    li Projected value based on your balances
+                    li Default value of Plan A
+                a.btn.btn-default(href="/logout") Sign Out
         else
+          p Sign in to use features such as graphing and budgets.
           a.btn.btn-default(href="/auth/google") Sign In with Google
       hr
       .row
         .col-md-4
-          if user
-            img(height=100, src=user.picture, alt=user.name)
-            h3 Welcome back, #{user.given_name}!
-            if (user.refresh_token)
-              a.btn(href="#lameinfo" data-toggle="modal" role="button") More Info
-              div#lameinfo.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfoLabel" aria-hidden="true")
-                p FoodPoints+ is now tracking your balances.
-                p DukeCard link expires 
-                  span.format=user.refresh_token_expire
-            else
-              p Link your DukeCard to start tracking your balances.
-          else
-            p Sign in to use features such as graphing and budgets.
-            a.btn(href="#lameinfo2" data-toggle="modal" role="button") More Info
-            div.small
-              div#lameinfo2.modal.hide.fade(role="dialog" tabindex="-1" aria-labelledby="lameinfo2Label" aria-hidden="true")
-                div The starting food point value is set by:
-                ul
-                  li Entered value saved in a cookie
-                  li Projected value based on your balances
-                  li Default value of Plan A
+          blah
+            
         .col-md-4
           h3 Countdown
           div You started with:

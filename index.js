@@ -23,6 +23,10 @@ var redis = require('redis'),
 client.on("error", function (err) {
     console.log("Error " + err);
 });
+client.on('connect', function() {
+    console.log('connected');
+});
+client.set('framework', 'AngularJS');
 client.lpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
 client.lpush(["daily"],function(err,res){
     if (res === 0) {
