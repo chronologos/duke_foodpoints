@@ -18,7 +18,8 @@ var budgets = db.get("budgets");
 var passport = require('passport');
 
 //redis for storing weekly and monthly stats
-var client = require('redis').createClient(process.env.REDIS_URL);
+var redis = require('redis'),
+  client = redis.createClient(process.env.REDIS_URL);
 client.on("error", function (err) {
     console.log("Error " + err);
 });
