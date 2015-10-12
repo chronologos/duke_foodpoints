@@ -27,6 +27,7 @@ html(lang='en' data-ng-app="foodpoints")
       h1 FoodPoints+
       div(data-ng-controller="AverageSpendingController")
         #{average}
+        {{average}}
         if (user)
           a.btn.btn-default(href="/logout") Sign Out
           a.btn.btn-primary(href=auth_link) Link DukeCard
