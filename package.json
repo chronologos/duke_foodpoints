@@ -1,6 +1,6 @@
 {
   "name": "foodpoints",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
