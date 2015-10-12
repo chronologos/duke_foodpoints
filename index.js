@@ -17,6 +17,7 @@ var balances = db.get("balances");
 var budgets = db.get("budgets");
 var passport = require('passport');
 var favicon = require('serve-favicon');
+console.log(__dirname + '/public/favicon.ico')
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 //redis for storing weekly and monthly stats
