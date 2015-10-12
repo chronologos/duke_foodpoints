@@ -30,8 +30,8 @@ client.on('connect', function() {
     console.log('connected');
 });
 client.set('framework', 'AngularJS');
-client.lpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
-client.lpush(["daily"],function(err,res){
+client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
+client.rpush(["daily",],function(err,res){
     if (res === 0) {
         console.log("Initialized Empty List for today");
     }
@@ -211,6 +211,12 @@ app.get('/api/user', function(req, res) {
 //average spending
 app.get('/api/spending', function(req, res) {
   res.set("text/plain");
+  if (globalAverage === 0) {
+    client.lindex("daily", -1, function(err, res) {
+        globalAverage = res;
+        console.log("As server restarted, daily average value of " + res + " was retrieved from Redis");
+    })
+  }
   res.send(""+globalAverage);
 });
 
