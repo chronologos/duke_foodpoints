@@ -43,11 +43,15 @@ html(lang='en' data-ng-app="foodpoints")
                 else
                   p DukeCard link expires 
                     span.format=user.refresh_token_expire
-                  div The starting food point value is set by:
-                  ul
-                    li Entered value saved in a cookie
-                    li Projected value based on your balances
-                    li Default value of Plan A
+                  div
+                    p To get started, choose your starting food plan from the drop down menu.
+                form
+                  div.checkbox
+                    label
+                      input(type="checkbox" ng-model="AdvancedStatsController" aria-label="Toggle ngHide")
+                      Show advanced settings
+                      
+                a.btn.btn-default(href="/api/delete") Irreversibly(!) delete my transactions
                 a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
@@ -104,7 +108,7 @@ html(lang='en' data-ng-app="foodpoints")
                tr
                  td.format=t.date
                  td=t.amount.toFixed(2)
-    div(ng-show="myValue")
+    div.animate-show(ng-show="myValue")
       if user
         .row
           .col-md-4 

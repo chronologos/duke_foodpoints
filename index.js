@@ -219,7 +219,19 @@ app.get('/logout', function(req, res) {
 app.get('/api/user', function(req, res) {
     res.json(req.user);
 });
-
+//unsubscribe
+app.get('/api/delete', function(req, res) {
+    if (req.user) {
+      users.remove({
+          id: req.user.id
+      });
+      res.set("text/plain");
+      res.send("You have been removed from our database.");
+    }
+    else {
+        next();
+    }
+});
 //average spending
 app.get('/api/spending', function(req, res) {
   res.set("text/plain");
