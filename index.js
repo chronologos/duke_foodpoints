@@ -22,8 +22,8 @@ var client = require('redis').createClient(process.env.REDIS_URL);
 client.on("error", function (err) {
     console.log("Error " + err);
 });
-client.lpush([weekly,1,2,3,4,5,6,7],function(err, res){});
-client.rpop([weekly],function(err, res){
+client.lpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
+client.rpop(["weekly"],function(err, res){
   console.log("redis testing code \n");
   console.log(res);
 });
