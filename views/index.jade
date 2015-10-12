@@ -74,7 +74,7 @@ html(lang='en' data-ng-app="foodpoints")
                 span.caret
               ul.dropdown-menu(aria-labelledby="dropdownMenu1" ng-repeat="item in mealPlans") 
                 li
-                  a(ng-click="dropboxitemselected(item.name)") {{item.name}}
+                  a(ng-click="dropboxitemselected(item)") {{item.name}}
                   
           input.form-control#plan(type="text")
           div You should have:

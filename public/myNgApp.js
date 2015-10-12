@@ -44,7 +44,8 @@ angular.module('foodpoints', [])
     ];
     $scope.selectedItem;
     $scope.dropboxitemselected = function (thisItem) {
-        $scope.selectedItemName = thisItem;
+        $scope.selectedItemName = thisItem.name;
+        $scope.mealPlanCost = thisItem.value;
         alert($scope.selectedItemName);
     };
   })
