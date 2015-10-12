@@ -12,7 +12,6 @@ html(lang='en' data-ng-app="foodpoints")
     
     script(src='//code.jquery.com/jquery-latest.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.1/ui-bootstrap.min.js')
     script(src='//code.angularjs.org/snapshot/angular.min.js')
     script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
     script(src='//cdn.jsdelivr.net/d3js/latest/d3.min.js')    
@@ -35,21 +34,23 @@ html(lang='en' data-ng-app="foodpoints")
                 .row
                   .col-md-4 
                     img(height=50, src=user.picture, alt=user.name)
-                  .col-md-4.col-md-offset-1 
+                  .col-md-4 
                     p Welcome back #{user.given_name}!
                     p FoodPoints+ is now tracking your balances.
-                  if (!user.refresh_token)
-                      p Link your DukeCard to start tracking your balances.
-                      a.btn.btn-primary(href=auth_link) Link DukeCard
-                  else
-                    p DukeCard link expires 
-                      span.format=user.refresh_token_expire
-                    div The starting food point value is set by:
-                    ul
-                      li Entered value saved in a cookie
-                      li Projected value based on your balances
-                      li Default value of Plan A
-                  a.btn.btn-default(href="/logout") Sign Out
+                .row
+                  .col-md-8
+                    if (!user.refresh_token)
+                        p Link your DukeCard to start tracking your balances.
+                        a.btn.btn-primary(href=auth_link) Link DukeCard
+                    else
+                      p DukeCard link expires 
+                        span.format=user.refresh_token_expire
+                      div The starting food point value is set by:
+                      ul
+                        li Entered value saved in a cookie
+                        li Projected value based on your balances
+                        li Default value of Plan A
+                    a.btn.btn-default(href="/logout") Sign Out
         else
           p Sign in to use features such as graphing and budgets.
           a.btn.btn-default(href="/auth/google") Sign In with Google
@@ -71,8 +72,8 @@ html(lang='en' data-ng-app="foodpoints")
               button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                 | Action 
                 span.caret
-              ul.dropdown-menu
-                li(ng-repeat="item in mealPlans") 
+              ul.dropdown-menu(ng-repeat="item in mealPlans") 
+                li
                   a(href="#") {{item.name}}
                   
           input.form-control#plan(type="text")
