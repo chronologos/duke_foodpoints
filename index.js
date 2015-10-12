@@ -31,7 +31,7 @@ client.on('connect', function() {
 });
 client.set('framework', 'AngularJS');
 //client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
-//client.ltrim("weekly", -7, -1);
+//client.ltrim("weekly", 0, 6);
 //client.rpush(["daily"],function(err,res){
 //    if (err) {
 //        console.log("Error occurred in initializing daily list: " + err);
@@ -424,7 +424,7 @@ function updateBalances() {
                           while (currentIndex < bals.length && bals[currentIndex].date.getDate() == day && bals[currentIndex].date.getMonth() == month && bals[currentIndex].date.getYear() == year) {
                            if (currentIndex === 0) {
                              highest = bals[currentIndex].balance;
-                             highest = bals[currentIndex].balance;
+//                             highest = bals[currentIndex].balance;
                            }
                            currentIndex ++;
                           }
@@ -489,7 +489,7 @@ function updateBalances() {
             else {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
-                //client.ltrim("daily", 0, 0)
+                client.ltrim("daily", 0, 0)
                 if (hour === 23 && !saved) {
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
