@@ -31,7 +31,7 @@ client.on('connect', function() {
 });
 client.set('framework', 'AngularJS');
 //client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
-//client.ltrim("weekly", -7, -1);
+//client.ltrim("weekly", 0, 6);
 //client.rpush(["daily"],function(err,res){
 //    if (err) {
 //        console.log("Error occurred in initializing daily list: " + err);
@@ -57,6 +57,11 @@ client.lindex("daily", 0, function(err, res){
 
 client.lindex("daily", -1, function(err, res){
     console.log("Item at last index of daily list: " + res);
+});
+
+client.lrange("weekly", 0, 6, function(err, res){
+    console.log("Weekly average data so far: \n");
+    console.log(res);
 });
 
 //client.set("string key", "string val", redis.print);
@@ -441,7 +446,7 @@ function updateBalances() {
                           while (currentIndex < bals.length && bals[currentIndex].date.getDate() == day && bals[currentIndex].date.getMonth() == month && bals[currentIndex].date.getYear() == year) {
                            if (currentIndex === 0) {
                              highest = bals[currentIndex].balance;
-                             highest = bals[currentIndex].balance;
+//                             highest = bals[currentIndex].balance;
                            }
                            currentIndex ++;
                           }
@@ -506,17 +511,17 @@ function updateBalances() {
             else {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
-                //client.ltrim("daily", 0, 0)
-                if (hour === 23 && !saved) {
+                client.ltrim("daily", 0, 1)
+                if (hour === 3 && !saved) {
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
                             console.log("Error in saving today's spending into weekly data: " + err);
                         }
                         else {
                             saved = true;
-                            client.ltrim("weekly", 0, 6);
+                            client.ltrim("weekly", 0, 7);
                             console.log("Saved today's spending into weekly data");
-                            client.lrange("weekly", 0, 6, function(err, response) {
+                            client.lrange("weekly", 0, -1, function(err, response) {
                                 console.log("Weekly data so far:\n");
                                 console.log(response);
                             });
