@@ -5,7 +5,6 @@ html(lang='en' data-ng-app="foodpoints")
     meta(charset='utf-8')
     meta(name="viewport", content="initial-scale=1")
     
-    link(rel="stylesheet", href='https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css')
     link(rel="stylesheet", href='//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/lumen/bootstrap.min.css')
     link(rel="stylesheet", href='//cdn.jsdelivr.net/cal-heatmap/latest/cal-heatmap.css')
     link(rel='stylesheet', href='//cdn.rawgit.com/masayuki0812/c3/0.4.9/c3.min.css')
@@ -60,35 +59,34 @@ html(lang='en' data-ng-app="foodpoints")
                   a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
-    div
-      h1 FoodPoints+
-            
+    div            
       if (user)
-        button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
+        button.btn.btn-primary.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
           span.caret
-        // dropdown menu to select your mealplan
         if (!user.refresh_token)
           p Link your DukeCard to start tracking your balances.
           a.btn.btn-primary(href=auth_link) Link DukeCard
       else
         p Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
         a.btn.btn-default(href="/auth/google") Sign In with Google
-      
+      h1 FoodPoints+
+
     hr
       
     // start of various widgets
     .row
       .col-md-4
-        .row
-        h3 Will I starve?
-        div(ng-controller="MealPlanController")
-          div.dropdown
+      
+        div(ng-controller="MealPlanController" ng-init="init()")
+          div.dropdown.pull-right
             button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | {{selectedItemName}}
               span.caret
-            ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+            ul.dropdown-menu.dropdown-menu-right(aria-labelledby="dropdownMenu1")
               li(ng-repeat="item in mealPlans") 
-                a(ng-click="dropboxitemselected(item)") {{item.name}}        
+                a(ng-click="dropboxitemselected(item)") {{item.name}}
+          h3 Will I starve?
+
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
@@ -97,7 +95,7 @@ html(lang='en' data-ng-app="foodpoints")
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.lead#balance
+              div.lead#balance(ngwatchthis)
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis
             div
@@ -106,7 +104,7 @@ html(lang='en' data-ng-app="foodpoints")
                   td The average student spent:
                   td {{average}}
                 tr
-                  td You spent:
+                  td I spent:
                   td XXX 
             
       .col-md-4
@@ -162,5 +160,5 @@ html(lang='en' data-ng-app="foodpoints")
     hr
     footer
       div Developed by Howard Chung, Will Shelburne, Ian Tay, Adi Raghunathan
-      a(href="http://github.com/howardc93/foodpoints") This application is open source.
+      a(href="http://github.com/chronologos/forkpoints") This application is open source.
     hr
