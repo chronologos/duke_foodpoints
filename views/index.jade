@@ -76,20 +76,6 @@ html(lang='en' data-ng-app="foodpoints")
     // start of various widgets
     .row
       .col-md-4
-        div(data-ng-controller="AverageSpendingController")
-            h3 Comparative Analysis
-            div
-              table.table
-                tr
-                  td The average student spent:
-                  td {{average}}
-                tr
-                  td You spent:
-                  td XXX 
-              p Way to go!
-            h3 Projections
-            table#projections.table
-      .col-md-4
         h3 Will I starve?
         
         // dropdown menu to select your mealplan
@@ -111,6 +97,22 @@ html(lang='en' data-ng-app="foodpoints")
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
               div.lead#balance
+        div(data-ng-controller="AverageSpendingController")
+            h3 Comparative Analysis
+            div
+              table.table
+                tr
+                  td The average student spent:
+                  td {{average}}
+                tr
+                  td You spent:
+                  td XXX 
+              p Way to go!
+            
+      .col-md-4
+        h3 Projections
+        table#projections.table
+        
       .col-md-4
         if user
           h3 The times I bought grub
