@@ -117,6 +117,7 @@ app.use(function(req, res, next) {
 })
 */
 
+// a middleware with no mount path; gets executed for every request to the app
 app.use(function(req, res, next) {
     if (req.user) {
         //user is logged in
@@ -136,6 +137,18 @@ app.use(function(req, res, next) {
                 }
             }, function(err, bals) {
                 user.balances = bals;
+                // if the user is new...
+                if (user.balances.length===0){
+                  getCurrentBalance(user,function(err,updateFp){
+                    if (err){
+                      console.log("Error in getting balance of new user.");
+                    }
+                    else {
+                      user.balances = updateFp.toFixed(2);
+                      user.new = true;
+                    }
+                  });
+                }
                 getTransactions(user, function(err, trans) {
                     user.trans = trans;
                     req.user = user;
@@ -511,7 +524,7 @@ function updateBalances() {
             else {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
-                client.ltrim("daily", 0, 1)
+                client.ltrim("daily", 0, 1);
                 if (hour === 3 && !saved) {
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
