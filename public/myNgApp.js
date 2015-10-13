@@ -44,6 +44,8 @@ angular.module('foodpoints', [])
     ];
     if (docCookies.getItem("foodplan")!==""){
       $scope.selectedItemName = docCookies.getItem("foodplan");
+      var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
+      $("#progbar2").width(percent2 * 100 + "%");
     }
     else {
       $scope.selectedItemName = "Choose meal plan";
