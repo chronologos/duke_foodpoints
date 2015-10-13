@@ -59,6 +59,11 @@ client.lindex("daily", -1, function(err, res){
     console.log("Item at last index of daily list: " + res);
 });
 
+client.lrange("weekly", 0, 6, function(err, res){
+    console.log("Weekly average data so far: \n");
+    console.log(res);
+});
+
 //client.set("string key", "string val", redis.print);
 //client.hset("hash key", "hashtest 1", "some value", redis.print);
 //client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
@@ -506,7 +511,7 @@ function updateBalances() {
             else {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
-                client.ltrim("daily", 0, 0)
+                client.ltrim("daily", 0, 1)
                 if (hour === 23 && !saved) {
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
