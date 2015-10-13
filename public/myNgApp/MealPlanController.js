@@ -44,6 +44,14 @@ angular.module('foodpoints')
     $scope.mealPlanCost = docCookies.getItem("mealPlanCost");
     var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
     $("#progbar2").width(percent2 * 100 + "%");
+    if (user && chart) {
+        chart.load({
+            columns: [
+                ['Ideal', $scope.mealPlanCost, 0]
+            ]
+        });
+    }
+    numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
   }
   else {
     $scope.selectedItemName = "Choose meal plan";
@@ -55,6 +63,7 @@ angular.module('foodpoints')
       // alert($scope.selectedItemName);
       var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
       $("#progbar2").width(percent2 * 100 + "%");
+
       //store numfoodpoints and foodplan as cookies
       docCookies.setItem("numfoodpoints", $scope.mealPlanCost, 31536e3);
       docCookies.setItem("foodplan", $scope.selectedItemName, 31536e3);
