@@ -38,10 +38,7 @@ html(lang='en' data-ng-app="foodpoints")
                   p FoodPoints+ is now tracking your balances.
               .row
                 .col-md-8
-                  if (!user.refresh_token)
-                      p Link your DukeCard to start tracking your balances.
-                      a.btn.btn-primary(href=auth_link) Link DukeCard
-                  else
+                  if (user.refresh_token)
                     p DukeCard link expires 
                       span.format=user.refresh_token_expire
                     div
@@ -60,8 +57,11 @@ html(lang='en' data-ng-app="foodpoints")
       h1 FoodPoints+      
       if (user)
         button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
+        if (!user.refresh_token)
+          p Link your DukeCard to start tracking your balances.
+          a.btn.btn-primary(href=auth_link) Link DukeCard
       else
-        p Sign in and link your Dukecard to use features such as graphing and budgets. Note for new users: Many features start working only after the second day of use. 
+        p Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
         a.btn.btn-default(href="/auth/google") Sign In with Google
     hr
       
