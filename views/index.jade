@@ -62,9 +62,8 @@ html(lang='en' data-ng-app="foodpoints")
     div
       h1 FoodPoints+      
       if (user)
-        button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") 
-        | #{user.given_name} 
-        span.caret
+        button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
+          span.caret
         if (!user.refresh_token)
           p Link your DukeCard to start tracking your balances.
           a.btn.btn-primary(href=auth_link) Link DukeCard
