@@ -1,6 +1,5 @@
 FoodPoints+
 ====
-[![Build Status](https://travis-ci.org/howardchung/foodpoints.svg?branch=master)](https://travis-ci.org/howardchung/foodpoints)
 [![Dependency Status](https://david-dm.org/chronologos/forkpoints.svg)](https://david-dm.org/chronologos/forkpoints)
 
 About
@@ -24,3 +23,9 @@ Deployment
 * Put appropriate API keys in .env
 * `npm install`
 * `npm start`
+
+Data
+====
+* Food Plans stored in `MealPlanController.js`
+* Redis for calculating average spending
+* Mongo for users, balances etc.

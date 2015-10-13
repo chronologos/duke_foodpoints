@@ -56,7 +56,7 @@ html(lang='en' data-ng-app="foodpoints")
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
                         p Reveal advanced settings (Budgeting, Calendar, Account Deletion)
                         
-                  a.btn.btn-default(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
+                  a.btn.btn-danger(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
@@ -126,39 +126,39 @@ html(lang='en' data-ng-app="foodpoints")
                  td.format=t.date
                  td=t.amount.toFixed(2)
     div.animate-show(ng-show="checked")
-      if user
-        .row
-          .col-md-4 
-            h3 Chart
-            div#chart
-          .col-md-4(data-ng-controller="BudgetController")
-            h3 Budgets
-            h4 Send me email when I spend more than:
-            form.form-inline(name="budgetform", ng-submit="save(budget)")
-              .row
-                .col-xs-10
-                  input.form-control(required, type='number', ng-model="budget.amount")
-                  select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
-                .col-xs-2
-                  button.btn.btn-success
-                    i.glyphicon.glyphicon-plus
-            h4 My Budgets
-            .row.lead(ng-repeat="b in budgets")
-              .col-xs-10
-                div.progress.progress-countdown
-                  div(class="{{b.class}}", style="width:{{b.percent}}%")
-                    div.lead {{b.display}}
-                  div.verticalLine(style="left:{{b.elapsed}}%")
-              .col-xs-2
-                button.btn.btn-danger(ng-click="delete(b)")
-                  i.glyphicon.glyphicon-remove
-            
-        .row
-          .col-md-12
-            h3 Days
-            div#days
-            h3 Hours
-            div#hours
+      //- if user
+      //-   .row
+      //-     .col-md-4 
+      //-       h3 Chart
+      //-       div#chart
+      //-     .col-md-4(data-ng-controller="BudgetController")
+      //-       h3 Budgets
+      //-       h4 Send me email when I spend more than:
+      //-       form.form-inline(name="budgetform", ng-submit="save(budget)")
+      //-         .row
+      //-           .col-xs-10
+      //-             input.form-control(required, type='number', ng-model="budget.amount")
+      //-             select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
+      //-           .col-xs-2
+      //-             button.btn.btn-success
+      //-               i.glyphicon.glyphicon-plus
+      //-       h4 My Budgets
+      //-       .row.lead(ng-repeat="b in budgets")
+      //-         .col-xs-10
+      //-           div.progress.progress-countdown
+      //-             div(class="{{b.class}}", style="width:{{b.percent}}%")
+      //-               div.lead {{b.display}}
+      //-             div.verticalLine(style="left:{{b.elapsed}}%")
+      //-         .col-xs-2
+      //-           button.btn.btn-danger(ng-click="delete(b)")
+      //-             i.glyphicon.glyphicon-remove
+      //-       
+      //-   .row
+      //-     .col-md-12
+      //-       h3 Days
+      //-       div#days
+      //-       h3 Hours
+      //-       div#hours
     hr
     footer
       div Developed by Howard Chung, Will Shelburne, Ian Tay, Adi Raghunathan
