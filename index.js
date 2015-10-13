@@ -512,16 +512,16 @@ function updateBalances() {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
                 client.ltrim("daily", 0, 1)
-                if (hour === 23 && !saved) {
+                if (hour === 3 && !saved) {
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
                             console.log("Error in saving today's spending into weekly data: " + err);
                         }
                         else {
                             saved = true;
-                            client.ltrim("weekly", 0, 6);
+                            client.ltrim("weekly", 0, 7);
                             console.log("Saved today's spending into weekly data");
-                            client.lrange("weekly", 0, 6, function(err, response) {
+                            client.lrange("weekly", 0, 7, function(err, response) {
                                 console.log("Weekly data so far:\n");
                                 console.log(response);
                             });
