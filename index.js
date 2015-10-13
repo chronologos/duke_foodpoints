@@ -521,7 +521,7 @@ function updateBalances() {
                             saved = true;
                             client.ltrim("weekly", 0, 7);
                             console.log("Saved today's spending into weekly data");
-                            client.lrange("weekly", 0, 7, function(err, response) {
+                            client.lrange("weekly", 0, -1, function(err, response) {
                                 console.log("Weekly data so far:\n");
                                 console.log(response);
                             });
