@@ -67,14 +67,6 @@ html(lang='en' data-ng-app="foodpoints")
         button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
           span.caret
         // dropdown menu to select your mealplan
-        div(ng-controller="MealPlanController")
-          div.dropdown
-            button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | {{selectedItemName}}
-              span.caret
-            ul.dropdown-menu(aria-labelledby="dropdownMenu1")
-              li(ng-repeat="item in mealPlans") 
-                a(ng-click="dropboxitemselected(item)") {{item.name}}
         if (!user.refresh_token)
           p Link your DukeCard to start tracking your balances.
           a.btn.btn-primary(href=auth_link) Link DukeCard
@@ -87,7 +79,16 @@ html(lang='en' data-ng-app="foodpoints")
     // start of various widgets
     .row
       .col-md-4
-        h3 Will I starve?        
+        .row
+        h3 Will I starve?
+        div(ng-controller="MealPlanController")
+          div.dropdown
+            button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              | {{selectedItemName}}
+              span.caret
+            ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+              li(ng-repeat="item in mealPlans") 
+                a(ng-click="dropboxitemselected(item)") {{item.name}}        
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
