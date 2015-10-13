@@ -24,12 +24,13 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='myNgApp/myNgApp.js')
     script(src='myNgApp/MealPlanController.js')
 
-
-
   body.container-fluid
+  
+    // display alert if user is new
     if (user && user.new)
       div.alert.alert-info(role="alert")
         p It seems like this is your first time using Foodpoints+. Foodpoints+ will start tracking your balances after you make your next purchase.
+        
     // modal for extra info
     if (user)
       div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
@@ -55,7 +56,7 @@ html(lang='en' data-ng-app="foodpoints")
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
                         p Reveal advanced settings
                         
-                  a.btn.btn-default(href="/api/delete") Irreversibly(!) delete my transactions
+                  a.btn.btn-default(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
@@ -77,14 +78,17 @@ html(lang='en' data-ng-app="foodpoints")
       .col-md-4
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis
-              div
-                h5
-                  p The average student spent: {{average}}
-                  p You spent: {{average}}
-                  p Way to go!
+            div
+              table
+                tr
+                  td The average student spent:
+                  td {{average}}
+                tr
+                  td You spent:
+                  td XXX 
+              p Way to go!
             h3 Projections
-              h4 Based on your spending this semester:
-              table#projections.table
+            table#projections.table
       .col-md-4
         h3 Will I starve?
         
