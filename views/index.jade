@@ -61,23 +61,11 @@ html(lang='en' data-ng-app="foodpoints")
     
     // top navbar
     div
-      h1 FoodPoints+      
+      h1 FoodPoints+
+            
       if (user)
         button.btn.btn-primary(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
           span.caret
-        if (!user.refresh_token)
-          p Link your DukeCard to start tracking your balances.
-          a.btn.btn-primary(href=auth_link) Link DukeCard
-      else
-        p Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
-        a.btn.btn-default(href="/auth/google") Sign In with Google
-    hr
-      
-    // start of various widgets
-    .row
-      .col-md-4
-        h3 Will I starve?
-        
         // dropdown menu to select your mealplan
         div(ng-controller="MealPlanController")
           div.dropdown
@@ -87,7 +75,19 @@ html(lang='en' data-ng-app="foodpoints")
             ul.dropdown-menu(aria-labelledby="dropdownMenu1")
               li(ng-repeat="item in mealPlans") 
                 a(ng-click="dropboxitemselected(item)") {{item.name}}
-                
+        if (!user.refresh_token)
+          p Link your DukeCard to start tracking your balances.
+          a.btn.btn-primary(href=auth_link) Link DukeCard
+      else
+        p Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
+        a.btn.btn-default(href="/auth/google") Sign In with Google
+      
+    hr
+      
+    // start of various widgets
+    .row
+      .col-md-4
+        h3 Will I starve?        
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
@@ -107,7 +107,6 @@ html(lang='en' data-ng-app="foodpoints")
                 tr
                   td You spent:
                   td XXX 
-              p Way to go!
             
       .col-md-4
         h3 Projections
