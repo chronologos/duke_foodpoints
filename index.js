@@ -114,19 +114,6 @@ passport.use(new GoogleStrategy({
     done(null, profile);
 }));
 
-/*
-app.use(function(req, res, next) {
-        users.findOne({
-            _id: "54428cf327a1b318f9aaee7c"
-        }, function(err, doc) {
-            console.log(doc)
-            req.user = doc
-            next()
-        })
-    }
-})
-*/
-
 // a middleware with no mount path; gets executed for every request to the app
 app.use(function(req, res, next) {
     if (req.user) {
@@ -220,7 +207,7 @@ app.get('/home/auth', function(req, res) {
             redirect_uri: auth_url
         }
     }, function(err, resp, body) {
-        body = JSON.parse(body);
+        body = parseLodash(body);
         users.update({
             _id: req.user._id
         }, {
@@ -301,48 +288,6 @@ app.delete('/api/budgets/:id', function(req, res) {
 app.get('/api/cutoffs', function(req, res) {
     res.send(getCutoffs());
 });
-/*
-app.get('/venues', function(req, res) {
-    request("http://studentaffairs.duke.edu/dining/venues-menus-hours", function(err, resp, body) {
-        var $ = cheerio.load(body)
-        var venues = []
-        var dates = []
-        var rows = $("#schedule_table tr")
-        rows.each(function(i, r) {
-            if ($(r).attr('id') === "schedule_header_row") {
-                //get dates
-                $(r).children().each(function(j, c) {
-                    var date = $(c).text().slice(3)
-                    dates.push(date)
-                })
-            }
-            else {
-                var v = {
-                    name: null,
-                    open: null,
-                    close: null
-                }
-                $(r).children().each(function(j, c) {
-                    var content = $(c).text()
-                    if (j === 0) {
-                        v.name = content
-                        v.link = $($(c).children()[0]).attr('href')
-                    }
-                    if (j === 1) {
-                        if (content !== "Closed") {
-                            var split = content.split("-")
-                            v.open = dates[j] + " " + split[0]
-                            v.close = dates[j] + " " + split[split.length - 1]
-                        }
-                        venues.push(v)
-                    }
-                })
-            }
-        })
-        res.json(venues)
-    })
-})
-*/
 
 updateBalances();
 
@@ -357,7 +302,7 @@ function getCurrentBalance(user, cb) {
             console.log(err, body);
             return cb("error getting balance");
         }
-        body = JSON.parse(body);
+        body = parseLodash(body);
         cb(err, Number(body.food_points));
     });
 }
@@ -611,7 +556,7 @@ function getAccessToken(user, cb) {
         if (err || resp.statusCode != 200 || !body) {
             return cb("error getting access token");
         }
-        body = JSON.parse(body);
+        body = parseLodash(body);
         cb(err, body.access_token);
     });
 }
@@ -638,4 +583,9 @@ function getTransactions(user, cb) {
         }
         cb(err, arr);
     });
+}
+
+// http://colintoh.com/blog/lodash-10-javascript-utility-functions-stop-rewriting
+function parseLodash(str){
+    return _.attempt(JSON.parse.bind(null, str));
 }
