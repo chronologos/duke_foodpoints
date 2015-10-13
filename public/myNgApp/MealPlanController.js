@@ -39,7 +39,7 @@ angular.module('foodpoints')
   ];
 
   // a long chunk of code that essentially stores your selected mealplan in a cookie and uses it to update progbars
-  if (docCookies.getItem("foodplan")!=null){
+  if (docCookies.getItem("foodplan")!==null){
     $scope.selectedItemName = docCookies.getItem("foodplan");
     $scope.mealPlanCost = docCookies.getItem("numfoodpoints");
     var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
