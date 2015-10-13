@@ -18,6 +18,7 @@ var budgets = db.get("budgets");
 var passport = require('passport');
 var favicon = require('serve-favicon');
 console.log(__dirname + '/public/favicon.ico');
+console.log("We are in "+ process.env.NODE_ENV);
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 //redis for storing weekly and monthly stats
@@ -81,9 +82,18 @@ users.index('id', {
 app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
-app.use(session({
-    secret: process.env.SESSION_SECRET
-}));
+if (process.env.NODE_ENV == "dev"){
+  app.use(session({
+    name: 'devsession',
+    keys: ['key1', 'key2']
+  })
+  );
+}
+else {
+  app.use(session({
+      secret: process.env.SESSION_SECRET
+  }));
+}
 app.use(passport.initialize());
 app.use(passport.session());
 app.locals.moment = moment;

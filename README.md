@@ -11,6 +11,7 @@ Dependencies
 ====
 * Node.js
 * MongoDB
+* Redis
 
 Sample Data
 ====
