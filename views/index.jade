@@ -54,7 +54,7 @@ html(lang='en' data-ng-app="foodpoints")
                     div.checkbox
                       label
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
-                        p Reveal advanced settings
+                        p Reveal advanced settings (Budgeting, Calendar, Account Deletion)
                         
                   a.btn.btn-default(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
@@ -79,7 +79,7 @@ html(lang='en' data-ng-app="foodpoints")
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis
             div
-              table
+              table.table
                 tr
                   td The average student spent:
                   td {{average}}
