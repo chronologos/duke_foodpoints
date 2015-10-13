@@ -42,7 +42,12 @@ angular.module('foodpoints', [])
         value: 1458
       }
     ];
-    $scope.selectedItemName = "Choose meal plan";
+    if (getCookie("foodplan")!==""){
+      $scope.selectedItemName = getCookie("foodplan");
+    }
+    else {
+      $scope.selectedItemName = "Choose meal plan";
+    }
     // dynamically change progressbar size on change in food plan
     $scope.dropboxitemselected = function (thisItem) {
         $scope.selectedItemName = thisItem.name;
@@ -50,7 +55,10 @@ angular.module('foodpoints', [])
         // alert($scope.selectedItemName);
         var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
         $("#progbar2").width(percent2 * 100 + "%");
+        //store numfoodpoints and foodplan as cookies
         setCookie("numfoodpoints", $scope.mealPlanCost, 365);
+        setCookie("foodplan", $scope.selectedItemName, 365);
+
         if (user && chart) {
             chart.load({
                 columns: [
