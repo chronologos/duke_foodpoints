@@ -42,8 +42,8 @@ angular.module('foodpoints', [])
         value: 1458
       }
     ];
-    if (getCookie("foodplan")!==""){
-      $scope.selectedItemName = getCookie("foodplan");
+    if (docCookies.getItem("foodplan")!==""){
+      $scope.selectedItemName = docCookies.getItem("foodplan");
     }
     else {
       $scope.selectedItemName = "Choose meal plan";
@@ -56,8 +56,8 @@ angular.module('foodpoints', [])
         var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
         $("#progbar2").width(percent2 * 100 + "%");
         //store numfoodpoints and foodplan as cookies
-        setCookie("numfoodpoints", $scope.mealPlanCost, 365);
-        setCookie("foodplan", $scope.selectedItemName, 365);
+        docCookies.setItem("numfoodpoints", $scope.mealPlanCost, 31536e3);
+        docCookies.setItem("foodplan", $scope.selectedItemName, 31536e3);
 
         if (user && chart) {
             chart.load({
