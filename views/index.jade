@@ -24,6 +24,9 @@ html(lang='en' data-ng-app="foodpoints")
 
 
   body.container-fluid
+    if (user.new)
+      div.alert.alert-info(role="alert")
+        p It seems like this is your first time using Foodpoints+. Foodpoints+ will start tracking your balances after you make your next purchase.
     // modal for extra info
     if (user)
       div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")

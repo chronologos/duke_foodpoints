@@ -137,17 +137,9 @@ app.use(function(req, res, next) {
                 }
             }, function(err, bals) {
                 user.balances = bals;
-                // if the user is new...
+                // new user or error getting balance
                 if (user.balances.length===0){
-                  getCurrentBalance(user,function(err,updateFp){
-                    if (err){
-                      console.log("Error in getting balance of new user.");
-                    }
-                    else {
-                      user.balances = updateFp.toFixed(2);
-                      user.new = true;
-                    }
-                  });
+                  user.new = true;
                 }
                 getTransactions(user, function(err, trans) {
                     user.trans = trans;
