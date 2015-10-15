@@ -60,16 +60,20 @@ html(lang='en' data-ng-app="foodpoints")
                   a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
-    div            
+    div
+      if (!user)
+        div.alert.alert-warning.alert-dismissible Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
+          button(type="button" class="close" data-dismiss="alert" aria-label="close")
+            span(aria-hidden="true") &times;
+                   
       if (user)
         button.btn.btn-primary.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name} 
           span.caret
         if (!user.refresh_token)
           p Link your DukeCard to start tracking your balances.
-          a.btn.btn-primary(href=auth_link) Link DukeCard
+          a.btn.btn-primary.pull-right(href=auth_link) Link DukeCard
       else
-        p Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
-        a.btn.btn-default(href="/auth/google") Sign In with Google
+        a.btn.btn-default.pull-right(href="/auth/google") Sign In with Google
       h1 FoodPoints+
 
     hr
@@ -91,12 +95,12 @@ html(lang='en' data-ng-app="foodpoints")
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-            div.lead#result
+            div.lead#result(ngShouldHave) {{shouldHave}} 
         if user
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.lead#balance(ngwatchthis) {{balance}} 
+              div.lead#balance(ngActuallyHave) {{balance}} 
               // {{balance}} is from UserController
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis

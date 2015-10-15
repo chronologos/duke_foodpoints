@@ -1,5 +1,7 @@
 angular.module('foodpoints')
 .controller("MealPlanController", ['$scope',function($scope){
+
+
   $scope.mealPlans=[{
     name: "Plan H ($432, Freshmen)",
     value: 432
@@ -86,20 +88,4 @@ angular.module('foodpoints')
       }
       numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
   };
-}])
-.directive('ngwatchthis',['$interval', function($interval) {
-  return {
-    link: function(scope, element, attrs) {
-       scope.$watch("ngwatchthis", function() {
-         if (!isNaN(parseInt(element.html()))){
-           console.log(parseInt(element.html())+".");
-         }
-
-        var a = setTimeout(function(){console.log("delayed " + element.html()+" "+ typeof(element.html()));},1000);
-       });
-    }
-  };
-
-  }
-
-]);
+}]);
