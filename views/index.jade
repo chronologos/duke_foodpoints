@@ -21,9 +21,10 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='cookies.js')
     script(src='foodpoints.js')
     script(src='myNgApp/myNgApp.js')
+    script(src='myNgApp/UserController.js')
     script(src='myNgApp/MealPlanController.js')
 
-  body.container-fluid
+  body.container-fluid(ng-controller="UserController")
   
     // display alert if user is new
     if (user && user.new)
@@ -53,7 +54,7 @@ html(lang='en' data-ng-app="foodpoints")
                     div.checkbox
                       label
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
-                        p Reveal advanced settings (Budgeting, Calendar, Account Deletion)
+                        p Reveal advanced settings (only account deletion for now)
                         
                   a.btn.btn-danger(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
@@ -95,7 +96,8 @@ html(lang='en' data-ng-app="foodpoints")
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.lead#balance(ngwatchthis)
+              div.lead#balance(ngwatchthis) {{balance}} 
+              // {{balance}} is from UserController
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis
             div

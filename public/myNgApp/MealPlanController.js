@@ -39,26 +39,30 @@ angular.module('foodpoints')
   ];
 
 // a long chunk of code that essentially stores your selected mealplan in a cookie and uses it to update progbars
-  $scope.init = function () {
-    if (docCookies.getItem("foodplan")!==null){
-      $scope.selectedItemName = docCookies.getItem("foodplan");
-      $scope.mealPlanCost = docCookies.getItem("numfoodpoints");
-      var percent2 = Math.min($("#balance").text() / $scope.mealPlanCost, 1);
-      console.log(percent2);
-      $("#progbar2").width(percent2 * 100 + "%");
-      if (user && chart) {
-          chart.load({
-              columns: [
-                  ['Ideal', $scope.mealPlanCost, 0]
-              ]
-          });
-      }
-      numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
-    }
-    else {
-      $scope.selectedItemName = "Choose meal plan";
-    }
-  };
+  if (docCookies.getItem("foodplan")!==null){
+    $scope.selectedItemName = docCookies.getItem("foodplan");
+    $scope.mealPlanCost = docCookies.getItem("numfoodpoints");
+  }
+  else {
+    $scope.selectedItemName = "Choose meal plan";
+  }
+
+  $scope.balanceFetchedFromServer={"Fetched":"No","value":""};
+  $scope.$on('balanceChange', function(event, args){
+       console.log("balance fetched");
+       $scope.balanceFetchedFromServer.Fetched="Yes";
+       $scope.balanceFetchedFromServer.value=args.val;
+       var percent2 = Math.min($scope.balanceFetchedFromServer.value / $scope.mealPlanCost, 1);
+       console.log(percent2);
+       $("#progbar2").width(percent2 * 100 + "%");
+       if (user && chart) {
+           chart.load({
+               columns: [
+                   ['Ideal', $scope.mealPlanCost, 0]
+               ]
+           });
+       }
+   });
 
   // dynamically change progressbar size on change in food plan
   $scope.dropboxitemselected = function (thisItem) {
@@ -88,10 +92,10 @@ angular.module('foodpoints')
     link: function(scope, element, attrs) {
        scope.$watch("ngwatchthis", function() {
          if (!isNaN(parseInt(element.html()))){
-           console.log(parseInt(element.html())+".")
+           console.log(parseInt(element.html())+".");
          }
-         
-        var a = setTimeout(function(){console.log("delayed " + element.html()+" "+ typeof(element.html()))},1000);
+
+        var a = setTimeout(function(){console.log("delayed " + element.html()+" "+ typeof(element.html()));},1000);
        });
     }
   };
