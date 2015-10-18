@@ -6,6 +6,7 @@ angular.module('foodpoints', [])
 
   .controller("AverageSpendingController", function($scope, $http) {
     var globalDaily;
+    var globalWeekly;
 //    var personalDaily;
     $http.get('/api/spending')
       .then(function(response) {
@@ -26,8 +27,17 @@ angular.module('foodpoints', [])
         // TEMPORARY
         $scope.wkAvg = 7 * globalDaily;
         $scope.weeklyTotal = 7 * floatVal;
+        globalWeekly = $scope.wkAvg;
       }
   );
+    $http.get('/api/spending/weekly')
+      .then(function(res) {
+        var weeklyTotal = res.data;
+        console.log("Response received for weekly total is " + weeklyTotal);
+        var weekTotalFloat = parseFloat(weeklyTotal);
+        var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
+        $scope.weeklyTotal = weekTotalFloat;
+      });
 //      .then(function(response) {
 //        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
 //        alert($scope.dailyTotal);

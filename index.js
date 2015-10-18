@@ -264,12 +264,7 @@ app.get('/api/spending', function(req, res) {
 
 app.get('/api/personal', function(req, res) {
     res.set("text/plain");
-      //var userDailyTotal;
-      //var userDailyTotal = getTransactions(req.user, getDailyTotal);
       console.log("GET request to user's personal data detected.");
-      
-      //console.log("User is " + JSON.stringify(req.user));
-
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs()['day'];
         //var dayStart = new Date(moment().startOf('day'))
@@ -281,7 +276,7 @@ app.get('/api/personal', function(req, res) {
             arr.forEach(function(trans) {
             if (trans.date > dayStart) {
             //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-                //dailyTotal += dayStart;
+            //dailyTotal += dayStart;
                 dailyTotal += Math.abs(trans.amount);
             }
             else {
@@ -292,34 +287,17 @@ app.get('/api/personal', function(req, res) {
         else {
             console.log("Unable to retrieve array of spending data for user");
         }
-        
-        /***
-        if (arr) {
-        //    console.log("Length of array : " + arr.length);
-        //    console.log(typeof(arr[0].date));
-            for (var i = 0; i < arr.length; i ++) {
-               if (arr[i].date > dayStart) {
-                dailyTotal += Math.abs(arr[i].amount);
-               }
-               else {
-        //        console.log("Date of " + arr[i].date + " is before today, stopping iteration");
-                break;
-               } 
-            }
-        }
-
-        else {
-            console.log("Unable to retrieve array of spending data for user");
-        }
-        ***/
-
         console.log("Amount spent today : " + dailyTotal);
         res.send("" + dailyTotal);
-//      return dailyTotal;
+});
 });
 
-//    console.log("GET request to user's personal data detected. Returning value of " + userDailyTotal);
-//    res.send("" + userDailyTotal);
+app.get('/api/spending/weekly', function(req, res) {
+    res.set("text/plain");
+    console.log("GET request for weekly aggregate data detected");
+    var weeklyTotal = getWeeklySum();
+    console.log("Sending value of " + weeklyTotal + " for weekly sum");
+    res.send("" + weeklyTotal);
 });
 
 
@@ -730,3 +708,18 @@ function getDailyTotal(err, arr) {
     return dailyTotal;
 }
 ***/
+function getWeeklySum() {
+    var total = 0
+    client.lrange("weekly", 0, -1, function(err, rep) {
+        if (err) {
+            console.log("Unable to retrieve weekly info: " + err)
+            return 0;
+        }
+        else {
+            rep.forEach(function(val){
+                total += val;
+            });
+        }
+    });
+    return total;
+}
