@@ -270,6 +270,7 @@ app.get('/api/personal', function(req, res) {
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs['day'];
         var dailyTotal = 0;
+        /***
         if (arr) {
             console.log(arr.length);
             arr.forEach(function(trans) {
@@ -285,6 +286,22 @@ app.get('/api/personal', function(req, res) {
         else {
             console.log("Unable to retrieve array of spending data for user");
         }
+        ***/
+        if (arr) {
+            for (var i = 0; i < arr.length; i ++) {
+               if (arr[i].date > dayStart) {
+                dailyTotal += Math.abs(arr[i].amount);
+               }
+               else {
+                break;
+               } 
+            }
+        }
+
+        else {
+            console.log("Unable to retrieve array of spending data for user");
+        }
+
         console.log("Amount spent today : " + dailyTotal);
         res.send("" + dailyTotal);
 //      return dailyTotal;
