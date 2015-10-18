@@ -598,7 +598,7 @@ function updateBalances() {
                     });
 ***/
                 }
-                if (hour === 2) {
+                if (hour === 23) {
                     client.set("savedDaily", 0, function(err, rep) {
                         if (err) {
                             console.log("Unable to reset value of savedDaily: " + err);
