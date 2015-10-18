@@ -264,11 +264,25 @@ app.get('/api/spending', function(req, res) {
 
 app.get('/api/personal', function(req, res) {
     res.set("text/plain");
-      var userDailyTotal;
-      //    var userDailyTotal = getTransactions(req.user, getDailyTotal);
+      //var userDailyTotal;
+      //var userDailyTotal = getTransactions(req.user, getDailyTotal);
+      console.log("GET request to user's personal data detected.");
+      getTransactions(req.user, function(err, arr) {
+        var dayStart = getCutoffs['day'];
+        var dailyTotal = 0;
+        arr.forEach(function(trans) {
+        //if (trans.date > dayStart) {
+            dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
+        //}
+        });
+      console.log("Amount spent today : " + dailyTotal);
+      res.send("" + dailyTotal);
 
-    console.log("GET request to user's personal data detected. Returning value of " + userDailyTotal);
-    res.send("" + userDailyTotal);
+//      return dailyTotal;
+});
+
+//    console.log("GET request to user's personal data detected. Returning value of " + userDailyTotal);
+//    res.send("" + userDailyTotal);
 });
 
 
@@ -443,6 +457,7 @@ function updateBalances() {
                             }
                             else {
                                 console.log("Somebody added food points today... Skipping this person!");
+                                len --;
                             }
                           }
                         }
@@ -620,13 +635,14 @@ function parseLodash(str){
 
 // Uses array arr retrieved from getTransactions
 // Called by invoking getTransactions(user, getDailyTotal)
+
 /***
 function getDailyTotal(err, arr) {
     var dayStart = getCutoffs['day'];
     var dailyTotal = 0;
     arr.forEach(function(trans) {
         //if (trans.date > dayStart) {
-        dailyTotal += trans.date > dayStart ? 0 : Math.abs(trans.amount);
+        dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
         //}
     });
     console.log("Amount spent today : " + dailyTotal);
