@@ -271,7 +271,8 @@ app.get('/api/personal', function(req, res) {
       //console.log("User is " + JSON.stringify(req.user));
 
       getTransactions(req.user, function(err, arr) {
-        var dayStart = getCutoffs['day'];
+        //var dayStart = getCutoffs['day'];
+        var dayStart = new Date(moment().startOf('day'))
         console.log("Start of the day is " + dayStart);
         var dailyTotal = 0;
         /***
