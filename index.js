@@ -549,14 +549,45 @@ function updateBalances() {
             else {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
-                client.ltrim("daily", 0, 1);
-                if (hour === 3 && !saved) {
+                client.ltrim("daily", 0, 0);
+//                if (hour === 3 && !saved) {
+                if (hour === 3) {
+                    client.get("savedDaily", function(err, rep){
+                        if (!rep) {
+                            client.lpush(["weekly", globalAverage], function(err, resp){
+                            if (err) {
+                                console.log("Error in saving today's spending into weekly data: " + err);
+                            }
+                            else {
+//                            saved = true;
+                                client.ltrim("weekly", 0, 6);
+                                console.log("Saved today's spending into weekly data");
+                                client.lrange("weekly", 0, -1, function(err, response) {
+                                console.log("Weekly data so far:\n");
+                                console.log(response);
+                                client.set("savedDaily", 1, function(error, reply) {
+                                    if (err) {
+                                        console.log("Unable to set savedDaily to 1: " + error);
+                                    }
+                                    else {
+                                        console.log("Set value of savedDaily to 1 to prevent repetition");
+                                    }
+                                });
+                                });
+                            }
+                            });
+                        }
+                        else {
+                            console.log("Already saved daily average into weekly array");
+                        }
+                    });
+/***
                     client.lpush(["weekly", globalAverage], function(err, resp){
                         if (err) {
                             console.log("Error in saving today's spending into weekly data: " + err);
                         }
                         else {
-                            saved = true;
+//                            saved = true;
                             client.ltrim("weekly", 0, 7);
                             console.log("Saved today's spending into weekly data");
                             client.lrange("weekly", 0, -1, function(err, response) {
@@ -564,6 +595,19 @@ function updateBalances() {
                                 console.log(response);
                             });
                         }
+                    });
+***/
+                }
+                if (hour === 2) {
+                    client.set("savedDaily", 0, function(err, rep) {
+                        if (err) {
+                            console.log("Unable to reset value of savedDaily: " + err);
+                        }
+                        else {
+                            console.log("Reset value of savedDaily to enable saving of today's average into weekly data");
+                        }
+
+
                     });
                 }
             }
