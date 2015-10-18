@@ -270,14 +270,19 @@ app.get('/api/personal', function(req, res) {
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs['day'];
         var dailyTotal = 0;
-        arr.forEach(function(trans) {
-        //if (trans.date > dayStart) {
+        if (arr) {
+            console.log(arr.length);
+            arr.forEach(function(trans) {
+            //if (trans.date > dayStart) {
             dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-        //}
-        });
-      console.log("Amount spent today : " + dailyTotal);
-      res.send("" + dailyTotal);
-
+            //}
+            });
+        }
+        else {
+            console.log("Unable to retrieve array of spending data for user");
+        }
+        console.log("Amount spent today : " + dailyTotal);
+        res.send("" + dailyTotal);
 //      return dailyTotal;
 });
 
@@ -622,8 +627,8 @@ function getTransactions(user, cb) {
                 });
             }
         }
-//        console.log("Array returned from getTransactions:\r\n");
-//        console.log(arr);
+        console.log("Array returned from getTransactions:\r\n");
+        console.log(arr);
         cb(err, arr);
     });
 }
