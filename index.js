@@ -596,8 +596,8 @@ function getTransactions(user, cb) {
                 });
             }
         }
-        console.log("Array returned from getTransactions:\r\n");
-        console.log(arr);
+//        console.log("Array returned from getTransactions:\r\n");
+//        console.log(arr);
         cb(err, arr);
     });
 }
