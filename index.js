@@ -267,6 +267,9 @@ app.get('/api/personal', function(req, res) {
       //var userDailyTotal;
       //var userDailyTotal = getTransactions(req.user, getDailyTotal);
       console.log("GET request to user's personal data detected.");
+      
+      console.log("User is " + JSON.stringify(req.user));
+
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs['day'];
         var dailyTotal = 0;
@@ -288,6 +291,7 @@ app.get('/api/personal', function(req, res) {
         }
         ***/
         if (arr) {
+            console.log("Length of array : " + arr.length);
             for (var i = 0; i < arr.length; i ++) {
                if (arr[i].date > dayStart) {
                 dailyTotal += Math.abs(arr[i].amount);
@@ -648,8 +652,8 @@ function getTransactions(user, cb) {
                 });
             }
         }
-        console.log("Array returned from getTransactions:\r\n");
-        console.log(arr);
+//        console.log("Array returned from getTransactions:\r\n");
+//        console.log(arr);
         cb(err, arr);
     });
 }
