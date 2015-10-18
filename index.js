@@ -281,7 +281,8 @@ app.get('/api/personal', function(req, res) {
             arr.forEach(function(trans) {
             if (trans.date > dayStart) {
             //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-                dailyTotal += dayStart;
+                //dailyTotal += dayStart;
+                dailyTotal += trans.amount;
             }
             else {
                 return;
