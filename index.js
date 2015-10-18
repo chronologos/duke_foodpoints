@@ -261,12 +261,16 @@ app.get('/api/spending', function(req, res) {
 });
 
 //User's total spending today
+
 app.get('/api/personal', function(req, res) {
     res.set("text/plain");
-    var userDailyTotal = getTransactions(req.user, getDailyTotal);
+      var userDailyTotal;
+      //    var userDailyTotal = getTransactions(req.user, getDailyTotal);
+
     console.log("GET request to user's personal data detected. Returning value of " + userDailyTotal);
     res.send("" + userDailyTotal);
 });
+
 
 //create
 app.post('/api/budgets', function(req, res) {

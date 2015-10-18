@@ -16,7 +16,7 @@ angular.module('foodpoints', [])
         console.log("Response recieved is " + checkDailyData);
         var floatVal = parseFloat(checkDailyData).toFixed(2);
         console.log("Float Value of that is: " + floatVal);
-        $scope.dailyTotal = parseFloat(res.data).toFixed(2);
+        $scope.dailyTotal = floatVal || "Coming Soon!";
       }
   );
 //      .then(function(response) {
