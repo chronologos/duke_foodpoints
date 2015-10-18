@@ -7,7 +7,8 @@ angular.module('foodpoints', [])
   .controller("AverageSpendingController", function($scope, $http) {
     $http.get('/api/spending')
       .then(function(response) {
-        $scope.average = parseFloat(response.data).toFixed(2);
+        var dailyAverage = parseFloat(response.data).toFixed(2);
+        $scope.average = dailyAverage;
       }
   );
     $http.get('/api/personal')
@@ -21,7 +22,7 @@ angular.module('foodpoints', [])
         $scope.dailyTotal = floatVal; //&& isNaN(floatVal) ? "Coming Soon!" : floatVal;
 
         // TEMPORARY
-        $scope.wkAvg = 7 * $scope.average;
+        $scope.wkAvg = 7 * dailyAverage;
         $scope.weeklyTotal = 7 * floatVal;
       }
   );
