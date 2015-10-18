@@ -609,14 +609,16 @@ function parseLodash(str){
 
 // Uses array arr retrieved from getTransactions
 // Called by invoking getTransactions(user, getDailyTotal)
+/***
 function getDailyTotal(err, arr) {
     var dayStart = getCutoffs['day'];
     var dailyTotal = 0;
     arr.forEach(function(trans) {
         //if (trans.date > dayStart) {
-        dailyTotal += trans.date > dayStart ? 0 : trans.amount;
+        dailyTotal += trans.date > dayStart ? 0 : Math.abs(trans.amount);
         //}
     });
     console.log("Amount spent today : " + dailyTotal);
     return dailyTotal;
 }
+***/
