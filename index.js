@@ -433,13 +433,15 @@ function updateBalances() {
                             currentIndex = bals.length-1;
                           }
                           next = bals[currentIndex].balance;
-                          if (highest != -1) {
+
+                        console.log("highest : " + highest);
+                        console.log("next : " + next);
+                        if (highest != -1) {
+                            console.log("Adding " + (next - highest) + " to total spending of the day");
                             spendingAvg += next - highest;
                           }
                         }
 
-                        console.log("highest" + highest);
-                        console.log("next" + next);
                         var dbbal = bals[0];
 
                         console.log(dbbal);
