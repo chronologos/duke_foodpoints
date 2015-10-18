@@ -292,7 +292,7 @@ app.get('/api/personal', function(req, res) {
         ***/
         if (arr) {
             console.log("Length of array : " + arr.length);
-            console.log(typeof(arr[i].date));
+            console.log(typeof(arr[0].date));
             for (var i = 0; i < arr.length; i ++) {
                if (arr[i].date > dayStart) {
                 dailyTotal += Math.abs(arr[i].amount);
