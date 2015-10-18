@@ -271,11 +271,11 @@ app.get('/api/personal', function(req, res) {
       //console.log("User is " + JSON.stringify(req.user));
 
       getTransactions(req.user, function(err, arr) {
-        //var dayStart = getCutoffs['day'];
-        var dayStart = new Date(moment().startOf('day'))
-        console.log("Start of the day is " + dayStart);
+        var dayStart = getCutoffs()['day'];
+        //var dayStart = new Date(moment().startOf('day'))
+        //console.log("Start of the day is " + dayStart);
         var dailyTotal = 0;
-        /***
+        
         if (arr) {
             console.log(arr.length);
             arr.forEach(function(trans) {
@@ -291,16 +291,17 @@ app.get('/api/personal', function(req, res) {
         else {
             console.log("Unable to retrieve array of spending data for user");
         }
-        ***/
+        
+        /***
         if (arr) {
-            console.log("Length of array : " + arr.length);
-            console.log(typeof(arr[0].date));
+        //    console.log("Length of array : " + arr.length);
+        //    console.log(typeof(arr[0].date));
             for (var i = 0; i < arr.length; i ++) {
                if (arr[i].date > dayStart) {
                 dailyTotal += Math.abs(arr[i].amount);
                }
                else {
-                console.log("Date of " + arr[i].date + " is before today, stopping iteration");
+        //        console.log("Date of " + arr[i].date + " is before today, stopping iteration");
                 break;
                } 
             }
@@ -309,6 +310,7 @@ app.get('/api/personal', function(req, res) {
         else {
             console.log("Unable to retrieve array of spending data for user");
         }
+        ***/
 
         console.log("Amount spent today : " + dailyTotal);
         res.send("" + dailyTotal);
