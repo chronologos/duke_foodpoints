@@ -19,6 +19,10 @@ angular.module('foodpoints', [])
  //       console.log("Float Value of that is: " + floatVal);
         //$scope.dailyTotal = floatVal || "Coming Soon!";
         $scope.dailyTotal = floatVal; //&& isNaN(floatVal) ? "Coming Soon!" : floatVal;
+
+        // TEMPORARY
+        $scope.wkAvg = 7 * $scope.average;
+        $scope.weeklyTotal = 7 * floatVal;
       }
   );
 //      .then(function(response) {
