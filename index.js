@@ -59,7 +59,7 @@ client.lindex("daily", -1, function(err, res){
     console.log("Item at last index of daily list: " + res);
 });
 
-client.lrange("weekly", 0, 6, function(err, res){
+client.lrange("weekly", 0, -1, function(err, res){
     console.log("Weekly average data so far: \n");
     console.log(res);
 });
@@ -394,6 +394,12 @@ function updateBalances() {
     //get a new balance for that user
     //only insert in db if number has changed
 
+
+    client.lrange("weekly", 0, -1, function(err, res){
+    console.log("Weekly average data so far: \n");
+    console.log(res);
+});
+
     //variables for counting of average $ spent per day
     var spendingAvg = 0;
     var today = new Date();
@@ -621,6 +627,8 @@ function getTransactions(user, cb) {
                 });
             }
         }
+        console.log("Array returned from getTransactions:\r\n");
+        console.log(arr);
         cb(err, arr);
     });
 }
