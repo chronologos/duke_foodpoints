@@ -14,7 +14,7 @@ angular.module('foodpoints', [])
       .then(function(res) {
  //       var checkDailyData = res.data;
  //       console.log("Response recieved is " + checkDailyData);
-        var tryFloat = parseFloat(checkDailyData);
+        var tryFloat = parseFloat(res.data);
         var floatVal = isNaN(tryFloat) ?  "Coming Soon!" : tryFloat.toFixed(2);
  //       console.log("Float Value of that is: " + floatVal);
         //$scope.dailyTotal = floatVal || "Coming Soon!";
