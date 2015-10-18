@@ -10,7 +10,27 @@ angular.module('foodpoints', [])
         $scope.average = parseFloat(response.data).toFixed(2);
       }
   );
+    $http.get('/api/personal')
+      .then(function(res) {
+        $scope.dailyTotal = parseFloat(res.data).toFixed(2);
+      }
+  );
+//      .then(function(response) {
+//        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
+//        alert($scope.dailyTotal);
+//      }
 })
+
+//  .controller("PersonalController", function($scope, $http) {
+//    $http.get('/api/personal')
+//      .then(function(response) {
+//        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
+//        alert($scope.dailyTotal);
+//      }
+//  );
+//})
+
+
 
   .controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/')

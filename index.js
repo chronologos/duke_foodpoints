@@ -260,6 +260,14 @@ app.get('/api/spending', function(req, res) {
   }
 });
 
+//User's total spending today
+app.get('/api/personal', function(req, res) {
+    res.set("text/plain");
+    var userDailyTotal = getTransactions(req.user, getDailyTotal);
+    console.log("GET request to user's personal data detected. Returning value of " + userDailyTotal);
+    res.send("" + userDailyTotal);
+});
+
 //create
 app.post('/api/budgets', function(req, res) {
     req.body.user_id = req.user._id;
@@ -597,4 +605,18 @@ function getTransactions(user, cb) {
 // http://colintoh.com/blog/lodash-10-javascript-utility-functions-stop-rewriting
 function parseLodash(str){
     return _.attempt(JSON.parse.bind(null, str));
+}
+
+// Uses array arr retrieved from getTransactions
+// Called by invoking getTransactions(user, getDailyTotal)
+function getDailyTotal(err, arr) {
+    var dayStart = getCutoffs['day'];
+    var dailyTotal = 0;
+    arr.forEach(function(trans) {
+        //if (trans.date > dayStart) {
+        dailyTotal += trans.date > dayStart ? 0 : trans.amount;
+        //}
+    });
+    console.log("Amount spent today : " + dailyTotal);
+    return dailyTotal;
 }
