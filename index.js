@@ -282,7 +282,7 @@ app.get('/api/personal', function(req, res) {
             if (trans.date > dayStart) {
             //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
                 //dailyTotal += dayStart;
-                dailyTotal += trans.amount;
+                dailyTotal += Math.abs(trans.amount);
             }
             else {
                 return;
