@@ -273,7 +273,7 @@ app.get('/api/personal', function(req, res) {
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs()['day'];
         //var dayStart = new Date(moment().startOf('day'))
-        //console.log("Start of the day is " + dayStart);
+        console.log("Start of the day is " + dayStart);
         var dailyTotal = 0;
         
         if (arr) {
