@@ -273,9 +273,13 @@ app.get('/api/personal', function(req, res) {
         if (arr) {
             console.log(arr.length);
             arr.forEach(function(trans) {
-            //if (trans.date > dayStart) {
-            dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-            //}
+            if (trans.date > dayStart) {
+            //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
+                dailyTotal += dayStart;
+            }
+            else {
+                return;
+            }
             });
         }
         else {
