@@ -104,6 +104,7 @@ html(lang='en' data-ng-app="foodpoints")
               // {{balance}} is from UserController
         div(data-ng-controller="AverageSpendingController")
             h3 Comparative Analysis
+            h4 Today
             div
               table.table
                 tr
@@ -112,6 +113,15 @@ html(lang='en' data-ng-app="foodpoints")
                 tr
                   td I spent:
                   td {{dailyTotal}} 
+            h4 The Past Week
+            div
+              table.table
+                tr
+                  td The average student spent:
+                  td {{average}}
+                tr
+                  td I spent:
+                  td {{dailyTotal}}      
             
       .col-md-4
         h3 Projections

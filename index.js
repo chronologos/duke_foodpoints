@@ -432,7 +432,7 @@ function updateBalances() {
     var month = today.getMonth();
     var year = today.getYear();
     var len = 0;
-    var saved = false;
+//    var saved = false;
 
     users.find({
         refresh_token: {
