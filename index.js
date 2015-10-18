@@ -438,7 +438,12 @@ function updateBalances() {
                         console.log("next : " + next);
                         if (highest != -1) {
                             console.log("Adding " + (next - highest) + " to total spending of the day");
-                            spendingAvg += next - highest;
+                            if ((next - highest) >= 0) {
+                                spendingAvg += next - highest;
+                            }
+                            else {
+                                console.log("Somebody added food points today... Skipping this person!");
+                            }
                           }
                         }
 
