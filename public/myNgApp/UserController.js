@@ -2,6 +2,7 @@
 angular.module('foodpoints')
 .controller("UserController", function($scope,$http){
 
+  // a globally accessible $scope.user with several fields (see README):
   $http.get('/api/user')
     .success(function(data, status, headers, config) {
       if (status === 200) {
