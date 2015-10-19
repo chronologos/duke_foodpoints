@@ -266,7 +266,8 @@ app.get('/api/personal', function(req, res) {
     //res.set("text/plain");
     res.set("application/json");
     console.log("GET request to user's personal data detected.");
-    getTransactions(req.user, getPersonalStats(arr, function(info) {
+    //getTransactions(req.user, getPersonalStats(arr, function(info) {
+    getTransactions(req.user, getPersonalStats(function(info) {
         console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
         //res.send("" + info['day']);
         res.send(info);
@@ -698,7 +699,7 @@ function sendEmail(text, recipient, cb) {
 
 function getAccessToken(user, cb) {
     var refresh_token = user.refresh_token;
-    request.post(token_broker, {
+    request.post(token_brogetker, {
         auth: {
             'user': process.env.API_ID,
             'pass': process.env.API_SECRET
