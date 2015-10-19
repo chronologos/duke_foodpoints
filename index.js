@@ -295,9 +295,13 @@ app.get('/api/personal', function(req, res) {
 app.get('/api/spending/weekly', function(req, res) {
     res.set("text/plain");
     console.log("GET request for weekly aggregate data detected");
-    var weeklyTotal = getWeeklySum();
-    console.log("Sending value of " + weeklyTotal + " for weekly sum");
-    res.send("" + weeklyTotal);
+    getWeeklySum(function(err, total) {
+    //    if (err) {
+    //        console.log(err);
+    //    }
+        console.log("Sending value of " + total + " for weekly sum");
+        res.send("" + total);
+    });
 });
 
 
@@ -708,7 +712,7 @@ function getDailyTotal(err, arr) {
     return dailyTotal;
 }
 ***/
-function getWeeklySum() {
+function getWeeklySum(cb) {
     var total = 0
     client.lrange("weekly", 0, -1, function(err, rep) {
         if (err) {
@@ -721,5 +725,6 @@ function getWeeklySum() {
             });
         }
     });
-    return total;
+    cb(err, total);
+//    return total;
 }
