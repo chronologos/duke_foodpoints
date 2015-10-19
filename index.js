@@ -267,12 +267,42 @@ app.get('/api/personal', function(req, res) {
     res.set("application/json");
     console.log("GET request to user's personal data detected.");
     //getTransactions(req.user, getPersonalStats(arr, function(info) {
+    getTransactions(req.user, function(err, arr){
+        var dayStart = getCutoffs()['day'];
+        var weekStart = getCutoffs()['week'];
+        var dailyTotal = 0;
+        var weeklyTotal = 0;
+        var info = {};
+        arr.forEach(function(trans) {
+            if (trans.date > dayStart) {
+            //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
+            var val = Math.abs(trans.amount);
+            dailyTotal += val;
+            weeklyTotal += val;
+            }
+            else if (trans.date > weekStart) {
+                weeklyTotal += Math.abs(trans.amount);
+            }
+            else {
+                return;
+            }
+        });
+        console.log("Amount spent by user today : " + dailyTotal);
+        console.log("Amount spent by user this week : " + dailyTotal);
+        info['day'] = dailyTotal;
+        info['week'] = weeklyTotal;
+        res.send(info);
+    });
+
+
+    /***
     getTransactions(req.user, getPersonalStats(function(info) {
         console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
         //res.send("" + info['day']);
         res.send(info);
     })
-    );  
+    );
+    ***/  
     /***
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs()['day'];
@@ -751,7 +781,7 @@ function parseLodash(str){
 // Uses array arr retrieved from getTransactions
 // Called by invoking getTransactions(user, getPersonalStats)
 
-
+/***
 function getPersonalStats(arr, cb) {
     var dayStart = getCutoffs()['day'];
     var weekStart = getCutoffs()['week'];
@@ -779,6 +809,7 @@ function getPersonalStats(arr, cb) {
     cb(info);
 //    return dailyTotal;
 }
+***/
 
 function getWeeklySum(cb) {
     var total = 0
