@@ -295,7 +295,7 @@ app.get('/api/personal', function(req, res) {
 app.get('/api/spending/weekly', function(req, res) {
     res.set("text/plain");
     console.log("GET request for weekly aggregate data detected");
-    getWeeklySum(function(err, total) {
+    getWeeklySum(function(total) {
     //    if (err) {
     //        console.log(err);
     //    }
@@ -725,6 +725,6 @@ function getWeeklySum(cb) {
             });
         }
     });
-    cb(err, total);
+    cb(total);
 //    return total;
 }
