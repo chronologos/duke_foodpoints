@@ -724,7 +724,8 @@ function getWeeklySum(cb) {
                 total += val;
             });
         }
+        cb(total);
     });
-    cb(total);
+//    cb(total);
 //    return total;
 }
