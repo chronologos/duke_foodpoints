@@ -721,7 +721,7 @@ function getWeeklySum(cb) {
         }
         else {
             rep.forEach(function(val){
-                total += val;
+                total += parseFloat(val);
             });
         }
         cb(total);
