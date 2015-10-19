@@ -266,7 +266,7 @@ app.get('/api/personal', function(req, res) {
     //res.set("text/plain");
     res.set("application/json");
     console.log("GET request to user's personal data detected.");
-    getTransactions(req.user, getPersonalStats(err, arr, function(info) {
+    getTransactions(req.user, getPersonalStats(arr, function(info) {
         console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
         //res.send("" + info['day']);
         res.send(info);
@@ -751,7 +751,7 @@ function parseLodash(str){
 // Called by invoking getTransactions(user, getPersonalStats)
 
 
-function getPersonalStats(err, arr, cb) {
+function getPersonalStats(arr, cb) {
     var dayStart = getCutoffs()['day'];
     var weekStart = getCutoffs()['week'];
     var dailyTotal = 0;
