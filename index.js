@@ -731,7 +731,7 @@ function sendEmail(text, recipient, cb) {
 
 function getAccessToken(user, cb) {
     var refresh_token = user.refresh_token;
-    request.post(token_brogetker, {
+    request.post(token_broker, {
         auth: {
             'user': process.env.API_ID,
             'pass': process.env.API_SECRET
