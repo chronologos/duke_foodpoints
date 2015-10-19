@@ -7,7 +7,6 @@ angular.module('foodpoints', [])
   .controller("AverageSpendingController", function($scope, $http) {
     var globalDaily;
     var globalWeekly;
-//    var personalDaily;
     $http.get('/api/spending')
       .then(function(response) {
         $scope.average = parseFloat(response.data).toFixed(2);
@@ -20,22 +19,8 @@ angular.module('foodpoints', [])
         console.log("Response recieved is " + JSON.stringify(checkDailyData));
         var personalDaily = parseFloat(checkDailyData['day']);
         var personalWeekly = parseFloat(checkDailyData['week']);
-
-
- //       var tryFloat = parseFloat(res.data);
- //       var floatVal = isNaN(personalDaily) ?  "Coming Soon!" : personalDaily.toFixed(2);
- //       console.log("Float Value of that is: " + floatVal);
-        //$scope.dailyTotal = floatVal || "Coming Soon!";
         $scope.dailyTotal = isNaN(personalDaily) ? "Coming Soon!" : personalDaily.toFixed(2);
         $scope.weeklyTotal = isNaN(personalWeekly) ? "Coming Soon!" : personalWeekly.toFixed(2);
-
-
-        // TEMPORARY
-//        $scope.wkAvg = 7 * globalDaily;
-
-//        $scope.weeklyTotal = 7 * floatVal;
-
-//        globalWeekly = $scope.wkAvg;
       }
   );
     $http.get('/api/spending/weekly')
@@ -46,24 +31,8 @@ angular.module('foodpoints', [])
         globalWeekly = 7 * globalDaily;
         var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
         $scope.wkAvg = weekTotalFloat;    
-    //    $scope.weeklyTotal = weekTotalFloat;
       });
-//      .then(function(response) {
-//        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
-//        alert($scope.dailyTotal);
-//      }
 })
-
-//  .controller("PersonalController", function($scope, $http) {
-//    $http.get('/api/personal')
-//      .then(function(response) {
-//        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
-//        alert($scope.dailyTotal);
-//      }
-//  );
-//})
-
-
 
   .controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/')

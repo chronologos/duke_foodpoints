@@ -268,8 +268,11 @@ app.get('/api/personal', function(req, res) {
     console.log("GET request to user's personal data detected.");
     //getTransactions(req.user, getPersonalStats(arr, function(info) {
     getTransactions(req.user, function(err, arr){
+        //var dayStart = new Date(new Date() - 24 * 60 * 60 * 1000) // Exactly 24 hours ago from this moment
         var dayStart = getCutoffs()['day'];
-        var weekStart = getCutoffs()['week'];
+        //var weekStart = getCutoffs()['week']; THIS COUNTS FROM THE LATEST SUNDAY, WHICH IS INCONSISTENT WITH STORING LAST 7 DAYS IN REDIS
+        var weekStart = new Date(new Date() - 7 * 24 * 60 * 60 * 1000); // Exactly 7 days ago from this moment
+        var weekStart = dayS
         var dailyTotal = 0;
         var weeklyTotal = 0;
         var info = {};
