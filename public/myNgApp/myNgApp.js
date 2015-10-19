@@ -16,9 +16,11 @@ angular.module('foodpoints', [])
   );
     $http.get('/api/personal')
       .then(function(res) {
- //       var checkDailyData = res.data;
- //       console.log("Response recieved is " + checkDailyData);
-        var tryFloat = parseFloat(res.data);
+        var checkDailyData = res.data;
+        console.log("Response recieved is " + JSON.stringify(checkDailyData));
+        var tryFloat = parseFloat(checkDailyData['day']);
+
+ //       var tryFloat = parseFloat(res.data);
         var floatVal = isNaN(tryFloat) ?  "Coming Soon!" : tryFloat.toFixed(2);
  //       console.log("Float Value of that is: " + floatVal);
         //$scope.dailyTotal = floatVal || "Coming Soon!";
