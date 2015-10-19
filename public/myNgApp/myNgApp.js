@@ -25,9 +25,9 @@ angular.module('foodpoints', [])
         $scope.dailyTotal = floatVal; //&& isNaN(floatVal) ? "Coming Soon!" : floatVal;
 
         // TEMPORARY
-        $scope.wkAvg = 7 * globalDaily;
+//        $scope.wkAvg = 7 * globalDaily;
         $scope.weeklyTotal = 7 * floatVal;
-        globalWeekly = $scope.wkAvg;
+//        globalWeekly = $scope.wkAvg;
       }
   );
     $http.get('/api/spending/weekly')
@@ -35,8 +35,10 @@ angular.module('foodpoints', [])
         var weeklyTotal = res.data;
         console.log("Response received for weekly total is " + weeklyTotal);
         var weekTotalFloat = parseFloat(weeklyTotal);
+        globalWeekly = 7 * globalDaily;
         var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
-        $scope.weeklyTotal = weekTotalFloat;
+        $scope.wkAvg = weekTotalFloat;    
+    //    $scope.weeklyTotal = weekTotalFloat;
       });
 //      .then(function(response) {
 //        $scope.dailyTotal = parseFloat(response.data).toFixed(2);
