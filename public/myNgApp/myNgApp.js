@@ -18,17 +18,23 @@ angular.module('foodpoints', [])
       .then(function(res) {
         var checkDailyData = res.data;
         console.log("Response recieved is " + JSON.stringify(checkDailyData));
-        var tryFloat = parseFloat(checkDailyData['day']);
+        var personalDaily = parseFloat(checkDailyData['day']);
+        var personalWeekly = parseFloat(checkDailyData['week']);
+
 
  //       var tryFloat = parseFloat(res.data);
-        var floatVal = isNaN(tryFloat) ?  "Coming Soon!" : tryFloat.toFixed(2);
+ //       var floatVal = isNaN(personalDaily) ?  "Coming Soon!" : personalDaily.toFixed(2);
  //       console.log("Float Value of that is: " + floatVal);
         //$scope.dailyTotal = floatVal || "Coming Soon!";
-        $scope.dailyTotal = floatVal; //&& isNaN(floatVal) ? "Coming Soon!" : floatVal;
+        $scope.dailyTotal = isNaN(personalDaily) ? "Coming Soon!" : personalDaily.toFixed(2);
+        $scope.weeklyTotal = isNaN(personalWeekly) ? "Coming Soon!" : personalWeekly.toFixed(2);
+
 
         // TEMPORARY
 //        $scope.wkAvg = 7 * globalDaily;
-        $scope.weeklyTotal = 7 * floatVal;
+
+//        $scope.weeklyTotal = 7 * floatVal;
+
 //        globalWeekly = $scope.wkAvg;
       }
   );
