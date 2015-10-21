@@ -1,7 +1,6 @@
 angular.module('foodpoints')
 .controller("MealPlanController", ['$scope',function($scope){
-
-
+  //sadly we hardcode the foodplans into an array
   $scope.mealPlans=[{
     name: "Plan H ($432, Freshmen)",
     value: 432
@@ -50,6 +49,8 @@ angular.module('foodpoints')
   }
 
   $scope.balanceFetchedFromServer={"Fetched":"No","value":""};
+
+  // watch for balance change when user loads and then fire this event.
   $scope.$on('balanceChange', function(event, args){
        console.log("balance fetched");
        $scope.balanceFetchedFromServer.Fetched="Yes";

@@ -200,19 +200,32 @@ $(document).ready(function() {
 
                 var cal = new CalHeatMap();
                 cal.init({
-                    itemSelector: "#days",
-                    start: fallstart,
-                    range: 12,
-                    domain: "month",
-                    subDomain: "day",
-                    highlight: new Date(),
-                    data: dayHeatmap,
-                    tooltip: true,
-                    itemName: ["", ""],
-                    subDomainTextFormat: function(date, value) {
-                        return value ? value.toFixed() : "";
+                  // itemSelector: "#animationDuration-a", //new
+	                // domain: "day", //new
+                  itemSelector: "#days",
+                  start: fallstart,
+                  range: 3,
+                  previousSelector: "#animationDuration-previous",
+                	nextSelector: "#animationDuration-next",
+                	itemNamespace: "animationDuration-a",
+                  domain: "month",
+                  subDomain: "day",
+                  highlight: new Date(),
+                  data: dayHeatmap,
+                  tooltip: true,
+                  itemName: ["", ""],
+                  subDomainTextFormat: function(date, value) {
+                      return value ? value.toFixed() : "";
                     },
-                    cellSize: 14
+                  legendColors: {
+                    min: "#fcffa3",
+                    max: "#510d63",
+                    empty: "white"
+                    // Will use the CSS for the missing keys
+                  },
+                  legendVerticalPosition: "center",
+                  legendOrientation: "vertical",
+                  cellSize: 16
                 });
                 var cal2 = new CalHeatMap();
                 cal2.init({
@@ -226,14 +239,20 @@ $(document).ready(function() {
                         return moment(date).format("ha"); // Use the moment library to format the Date
                     },
                     verticalOrientation: true,
-                    colLimit: 24,
+                    colLimit: 12,
                     tooltip: true,
                     data: hourHeatMap,
                     itemName: ["", ""],
                     subDomainTextFormat: function(date, value) {
                         return value ? value.toFixed() : "";
                     },
-                    cellSize: 14
+                    legendColors: {
+                      min: "#fcffa3",
+                      max: "#510d63",
+                      empty: "white"
+                      // Will use the CSS for the missing keys
+                    },
+                    cellSize: 16
                 });
             }
         });

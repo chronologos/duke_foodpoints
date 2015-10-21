@@ -17,7 +17,9 @@ var users = db.get("users");
 var balances = db.get("balances");
 var budgets = db.get("budgets");
 var passport = require('passport');
-var favicon = require('serve-favicon');
+var favicon = require('serve-favicon'); //serve favicon for site
+var munge = require('munge'); //obfuscate email
+
 console.log(__dirname + '/public/favicon.ico');
 console.log("We are in "+ process.env.NODE_ENV);
 app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -192,7 +194,8 @@ app.get('/auth/google/return', passport.authenticate('google', {
 app.get('/', function(req, res) {
     res.render('index.jade', {
         auth_link: "https://oauth.oit.duke.edu/oauth/authorize.php?response_type=code&client_id=" + process.env.API_ID + "&state=xyz&scope=food_points&redirect_uri=" + auth_url,
-        user: req.user
+        user: req.user,
+        emailContact: munge('yi.yan.tay+foodpoints@duke.edu')
     });
 });
 app.get('/home/auth', function(req, res) {
@@ -269,7 +272,7 @@ app.get('/api/personal', function(req, res) {
     //getTransactions(req.user, getPersonalStats(arr, function(info) {
     getTransactions(req.user, function(err, arr){
         //var dayStart = new Date(new Date() - 24 * 60 * 60 * 1000) Exactly 24 hours ago from this moment
-        var dayStart = getCutoffs()['day'];
+        var dayStart = getCutoffs().day;
         //var weekStart = getCutoffs()['week']; THIS COUNTS FROM THE LATEST SUNDAY, WHICH IS INCONSISTENT WITH STORING LAST 7 DAYS IN REDIS
         var weekStart = new Date(new Date() - 7 * 24 * 60 * 60 * 1000); // Exactly 7 days ago from this moment
         var dailyTotal = 0;
@@ -291,8 +294,8 @@ app.get('/api/personal', function(req, res) {
         });
         console.log("Amount spent by user today : " + dailyTotal);
         console.log("Amount spent by user this week : " + dailyTotal);
-        info['day'] = dailyTotal;
-        info['week'] = weeklyTotal;
+        info.day = dailyTotal;
+        info.week = weeklyTotal;
         res.send(info);
     });
 
@@ -304,14 +307,14 @@ app.get('/api/personal', function(req, res) {
         res.send(info);
     })
     );
-    ***/  
+    ***/
     /***
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs()['day'];
         //var dayStart = new Date(moment().startOf('day'))
         console.log("Start of the day is " + dayStart);
         var dailyTotal = 0;
-        
+
         if (arr) {
             console.log(arr.length);
             arr.forEach(function(trans) {
@@ -342,14 +345,14 @@ app.get('/api/personal', function(req, res) {
 //        console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
 //        res.send("" + info['day']);
 //    })
-//    );  
+//    );
     /***
       getTransactions(req.user, function(err, arr) {
         var dayStart = getCutoffs()['day'];
         //var dayStart = new Date(moment().startOf('day'))
         console.log("Start of the day is " + dayStart);
         var dailyTotal = 0;
-        
+
         if (arr) {
             console.log(arr.length);
             arr.forEach(function(trans) {
@@ -814,10 +817,10 @@ function getPersonalStats(arr, cb) {
 ***/
 
 function getWeeklySum(cb) {
-    var total = 0
+    var total = 0;
     client.lrange("weekly", 0, -1, function(err, rep) {
         if (err) {
-            console.log("Unable to retrieve weekly info: " + err)
+            console.log("Unable to retrieve weekly info: " + err);
             return 0;
         }
         else {

@@ -24,7 +24,15 @@
 .hidden {
     display: none;
 }
-
+.center {
+    margin: auto;
+    width: -webkit-fit-content;
+    height: -webkit-fit-content;
+    width: -moz-fit-content;
+    height: -moz-fit-content;
+    /*border:3px solid #8AC007;*/
+    padding: 5px;
+}
 // animate hiding and showing of advanced functionality https://docs.angularjs.org/api/ng/directive/ngShow
 .animate-show {
   line-height: 20px;

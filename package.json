@@ -20,6 +20,7 @@
     "lodash": "^3.10.1",
     "moment": "~2.9.0",
     "monk": "~1.0.1",
+    "munge": "^0.1.4",
     "passport": "~0.3.0",
     "passport-google-oauth": "~0.2.0",
     "redis": "^2.2.1",

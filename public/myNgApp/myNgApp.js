@@ -30,7 +30,7 @@ angular.module('foodpoints', [])
         var weekTotalFloat = parseFloat(weeklyTotal);
         globalWeekly = 7 * globalDaily;
         var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
-        $scope.wkAvg = weekTotalFloat;    
+        $scope.wkAvg = weekTotalFloat;
       });
 })
 

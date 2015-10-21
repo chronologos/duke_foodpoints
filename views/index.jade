@@ -54,15 +54,15 @@ html(lang='en' data-ng-app="foodpoints")
                     div.checkbox
                       label
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
-                        p Reveal advanced settings (only account deletion for now)
+                        p I want to delete my account and transaction data (Warning, this is permanent)
                         
-                  a.btn.btn-danger(href="/api/delete" ng-show="checked") Irreversibly(!) delete my transactions
+                  a.btn.btn-danger(href="/api/delete" ng-show="checked")  delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
     
     // top navbar
     div
       if (!user)
-        div.alert.alert-warning.alert-dismissible Sign in and link your Dukecard to use Foodpoints+. Note for new users: Many features start working only after the second day of use. 
+        div.alert.alert-warning.alert-dismissible Note for new users: Many features start working only after the second day of use. 
           button(type="button" class="close" data-dismiss="alert" aria-label="close")
             span(aria-hidden="true") &times;
                    
@@ -105,7 +105,8 @@ html(lang='en' data-ng-app="foodpoints")
           br
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
-              div.panel-heading Spending Today
+              div.panel-heading 
+                h4.panel-title Spending Today
               div.panel-body
                 table.table
                   tr
@@ -115,7 +116,8 @@ html(lang='en' data-ng-app="foodpoints")
                     td I spent:
                     td {{dailyTotal}} 
             div.panel.panel-default
-              div.panel-heading Spending This Week
+              div.panel-heading 
+                h4.panel-title Spending This Week
               div.panel-body
                 table.table
                   tr
@@ -128,9 +130,51 @@ html(lang='en' data-ng-app="foodpoints")
       .col-md-4
         div.panel.panel-default
           div.panel-heading 
-            h3.panel-title Projections
+            h4.panel-title Projections
           div.panel-body
             table#projections.table
+            //     //- .animate-show(ng-show="checked")
+        div.panel.panel-default
+          div.panel-heading 
+            h4.panel-title Spending Heatmap
+          div.panel-body
+            if user
+              //- .row
+              //-   .col-md-4 
+              //-     h3 Chart
+              //-     div#chart
+              //-   .col-md-4(data-ng-controller="BudgetController")
+              //-     h3 Budgets
+              //-     h4 Send me email when I spend more than:
+              //-     form.form-inline(name="budgetform", ng-submit="save(budget)")
+              //-       .row
+              //-         .col-xs-10
+              //-           input.form-control(required, type='number', ng-model="budget.amount")
+              //-           select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
+              //-         .col-xs-2
+              //-           button.btn.btn-success
+              //-             i.glyphicon.glyphicon-plus
+              //-     h4 My Budgets
+              //-     .row.lead(ng-repeat="b in budgets")
+              //-       .col-xs-10
+              //-         div.progress.progress-countdown
+              //-           div(class="{{b.class}}", style="width:{{b.percent}}%")
+              //-             div.lead {{b.display}}
+              //-           div.verticalLine(style="left:{{b.elapsed}}%")
+              //-       .col-xs-2
+              //-         button.btn.btn-danger(ng-click="delete(b)")
+              //-           i.glyphicon.glyphicon-remove
+                  
+            
+              h4 Days &nbsp
+                button.btn.btn-default.btn-xs#animationDuration-next.pull-right(aria-label="Left Align")
+                  span.glyphicon.glyphicon-forward(aria-hidden="true")
+                button.btn.btn-default.btn-xs#animationDuration-previous.pull-right(aria-label="Left Align")
+                  span.glyphicon.glyphicon-backward(aria-hidden="true")
+              div#days.center
+              br              
+              h4 Hours
+              div#hours.center
         
       .col-md-4
         if (user)
@@ -148,42 +192,10 @@ html(lang='en' data-ng-app="foodpoints")
                    tr
                      td.format=t.date
                      td=t.amount.toFixed(2)
-    //- div.animate-show(ng-show="checked")
-      //- if user
-      //-   .row
-      //-     .col-md-4 
-      //-       h3 Chart
-      //-       div#chart
-      //-     .col-md-4(data-ng-controller="BudgetController")
-      //-       h3 Budgets
-      //-       h4 Send me email when I spend more than:
-      //-       form.form-inline(name="budgetform", ng-submit="save(budget)")
-      //-         .row
-      //-           .col-xs-10
-      //-             input.form-control(required, type='number', ng-model="budget.amount")
-      //-             select.form-control(required, ng-model="budget.period", ng-options="p for p in periods")
-      //-           .col-xs-2
-      //-             button.btn.btn-success
-      //-               i.glyphicon.glyphicon-plus
-      //-       h4 My Budgets
-      //-       .row.lead(ng-repeat="b in budgets")
-      //-         .col-xs-10
-      //-           div.progress.progress-countdown
-      //-             div(class="{{b.class}}", style="width:{{b.percent}}%")
-      //-               div.lead {{b.display}}
-      //-             div.verticalLine(style="left:{{b.elapsed}}%")
-      //-         .col-xs-2
-      //-           button.btn.btn-danger(ng-click="delete(b)")
-      //-             i.glyphicon.glyphicon-remove
-      //-       
-      //-   .row
-      //-     .col-md-12
-      //-       h3 Days
-      //-       div#days
-      //-       h3 Hours
-      //-       div#hours
+
     hr
     footer
-      div Developed by Howard Chung, Will Shelburne, Ian Tay, Adi Raghunathan
-      a(href="http://github.com/chronologos/forkpoints") This application is open source.
+      div Developed by Howard Chung, Will Shelburne, Ian Tay, Adi Raghunathan 
+        a(href!="mailto:#{emailContact}") Contact Us
+      a(href="http://github.com/chronologos/forkpoints") This application is open source.      
     hr
