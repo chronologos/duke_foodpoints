@@ -42,19 +42,19 @@ html(lang='en' data-ng-app="foodpoints")
                   img(height=50, src=user.picture, alt=user.name)
                 .col-md-4
                   p Welcome back #{user.given_name}!
-                  p FoodPoints+ is now tracking your balances.
+                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
               .row
                 .col-md-8
                   if (user.refresh_token)
-                    p DukeCard link expires
+                    p DukeCard link expires &nbsp
                       span.format=user.refresh_token_expire
                     div
-                      p To get started, choose your starting food plan from the drop down menu.
+                      p To get started, choose your food plan from the dropdown menu.
                   form
                     div.checkbox
                       label
                         input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
-                        p I want to delete my account and transaction data (Warning, this is permanent)
+                        p I want to delete my account & transaction data (Warning, this is permanent)
 
                   a.btn.btn-danger(href="/api/delete" ng-show="checked")  delete my transactions
                   a.btn.btn-default(href="/logout") Sign Out
@@ -67,7 +67,7 @@ html(lang='en' data-ng-app="foodpoints")
             span(aria-hidden="true") &times;
 
       if (user)
-        button.btn.btn-primary.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
+        button.btn.btn-primary.btn-sm.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
           span.caret
         if (!user.refresh_token)
           p Link your DukeCard to start tracking your balances.
@@ -81,10 +81,9 @@ html(lang='en' data-ng-app="foodpoints")
     // start of various widgets
     .row
       .col-md-4
-
         div(ng-controller="MealPlanController" ng-init="init()")
           div.dropdown.pull-right
-            button.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+            button.btn-sm.btn.btn-default.dropdown-toggle#dropdownMenu1(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
               | {{selectedItemName}}
               span.caret
             ul.dropdown-menu.dropdown-menu-right(aria-labelledby="dropdownMenu1")
