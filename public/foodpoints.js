@@ -4,7 +4,7 @@ var user;
 var start;
 var end;
 var currdate = new Date();
-//var currdate=new Date("3/3/2015"); //debug date
+
 var acadyear = currdate.getMonth() > 6 ? currdate.getFullYear() : currdate.getFullYear() - 1;
 var DEFAULT_FOOD_POINTS = 2152;
 var UPDATE_INTERVAL = 200;
@@ -15,8 +15,7 @@ var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of ac
 var fallend = addDays(fallstart, FALL_LENGTH);
 var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 2 of following year
 var springend = addDays(springstart, SPRING_LENGTH);
-console.log(fallstart, fallend, springstart, springend);
-var chart;
+// console.log(fallstart, fallend, springstart, springend);
 
 $(document).ready(function() {
 
@@ -104,7 +103,7 @@ $(document).ready(function() {
                 }
             }
 
-            var cookieVal = getCookie("numfoodpoints");
+            var cookieVal = docCookies.getItem("numfoodpoints");
             numfoodpoints = parseInt(cookieVal || projectionStart || DEFAULT_FOOD_POINTS);
             $("#plan").val(numfoodpoints).change();
 
@@ -159,44 +158,6 @@ $(document).ready(function() {
                         }
                     }
                 });
-                // console.log(x, x2, ideal, bals);
-                chart = c3.generate({
-                    bindto: "#chart",
-                    data: {
-                        xs: {
-                            'Ideal': 'x',
-                            'Food Points': 'x2',
-                            'Projection': 'x'
-                        },
-                        columns: [
-                            x, x2, x, ideal, bals, proj
-                        ]
-                    },
-                    axis: {
-                        x: {
-                            type: 'timeseries',
-                            tick: {
-                                format: '%m/%d'
-                            }
-                        },
-                        y: {
-                            padding: {
-                                top: 0,
-                                bottom: 1
-                            }
-                        }
-                    },
-                    tooltip: {
-                        format: {
-                            value: function(value, ratio, id) {
-                                return value.toFixed(2);
-                            }
-                        }
-                    },
-                    zoom: {
-                        enabled: false
-                    }
-                });
 
                 var cal = new CalHeatMap();
                 cal.init({
@@ -238,6 +199,7 @@ $(document).ready(function() {
                     subDomainDateFormat: function(date) {
                         return moment(date).format("ha"); // Use the moment library to format the Date
                     },
+                    cellPadding: 5,
                     verticalOrientation: true,
                     colLimit: 12,
                     tooltip: true,
@@ -258,25 +220,6 @@ $(document).ready(function() {
         });
 });
 //functions
-
-function setCookie(c_name, value, exdays) {
-    var exdate = new Date();
-    exdate.setDate(exdate.getDate() + exdays);
-    var c_value = escape(value) + ((exdays === null) ? "" : "; expires=" + exdate.toUTCString());
-    document.cookie = c_name + "=" + c_value;
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1);
-        if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
-    }
-    return "";
-}
-
 function addDays(date, days) {
     var result = new Date(date);
     result.setDate(date.getDate() + days);
