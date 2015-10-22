@@ -1,0 +1,64 @@
+//colors
+$white: #fff;
+$black: #000;
+$red: red;
+
+.c3-tooltip {
+  color: $black;
+}
+.progress-countdown {
+  height: 39px;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+#transactions {
+  display: block;
+  height: 300px;
+  overflow-y: scroll;
+}
+.verticalLine {
+  background-color: $red;
+  width: 1px;
+  height: 100%;
+  position: relative;
+}
+.hidden {
+  display: none;
+}
+.center {
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  padding: 5px;
+}
+.animate-show {
+  &.ng-hide-add {
+    //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+    transition: all linear 0.5s;
+  }
+  &.ng-hide-remove {
+    //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+    transition: all linear 0.5s;
+  }
+  &.ng-hide {
+    line-height: 0;
+    opacity: 0;
+    padding: 0 10px;
+  }
+}
+.check-element {
+  padding: 10px;
+  border: 1px solid $black;
+  background: $white;
+}
+.vis.timeline .timeaxis .text {
+  color: $white;
+}
+// animate hiding and showing of advanced functionality https://docs.angularjs.org/api/ng/directive/ngShow
+.animate-show {
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px;
+  border: 1px solid $black;
+  background: $white;
+}
