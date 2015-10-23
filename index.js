@@ -633,7 +633,7 @@ function updateBalances() {
 //                if (hour === 3 && !saved) {
                 if (hour === 3) {
                     client.get("savedDaily", function(err, rep){
-                        if (!rep) {
+                        if (rep === "0") {
                             client.lpush(["weekly", globalAverage], function(err, resp){
                             if (err) {
                                 console.log("Error in saving today's spending into weekly data: " + err);
