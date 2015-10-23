@@ -40,7 +40,7 @@ html(lang='en' data-ng-app="foodpoints")
                   img(height=50, src=user.picture, alt=user.name)
                 .col-md-4
                   p Welcome back #{user.given_name}!
-                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database #{fav}.
+                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
               .row
                 .col-md-8
                   if (user.refresh_token)
@@ -161,7 +161,7 @@ html(lang='en' data-ng-app="foodpoints")
                    tr
                      td.format=t.date
                      td=t.amount.toFixed(2)
-          div.favorite The cost of my favorite item : #{fav}  
+          div.favorite The cost of my favorite item : "#{fav}"  
     hr
     footer
       div Developed by Howard, Will, Ian, Adi -
