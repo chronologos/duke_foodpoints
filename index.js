@@ -63,6 +63,17 @@ client.lindex("daily", -1, function(err, res){
     console.log("Item at last index of daily list: " + res);
 });
 
+client.get("savedDaily", function(err, res){
+    if (err) {
+        console.log("Error in retrieving savedDaily: " + err);
+    }
+    else {
+        console.log("Value of savedDaily: " + res);
+        console.log("Type of savedDaily: " + typeof(res));
+    }
+});
+
+
 client.lrange("weekly", 0, -1, function(err, res){
     console.log("Weekly average data so far: \n");
     console.log(res);
