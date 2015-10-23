@@ -1,5 +1,9 @@
 angular.module('foodpoints', [])
 
+  .controller("UserController", function($scope){
+    $scope.
+  })
+
   .controller("AdvancedStatsController", function($scope) {
     $scope.advanced = false;
   })
@@ -76,38 +80,3 @@ angular.module('foodpoints', [])
       });
   }
 
-// Should eventually replace server-side code for calculating a user's transactions
-// Both for sidebar display and calculation of user's total daily and weekly spending values
-// Currently used only by getFavs method
-  function getTrans(bals) {
-    var arr = [];
-    for (var i = 0; i < bals.length; i++) {
-      if (bals[i + 1]) {
-        //newer number subtract older number
-        var diff = trans[i].balance - bals[i + 1].balance;
-        arr.push({
-          amount: diff,
-          date: bals[i].date
-        });
-      }
-    }
-  }
-
-// Naive O(N) implementation
-  function getFav(trans) {
-    var freqs = {};
-    trans.forEach(function(x){
-      if (!freqs["" + x]) {
-        freqs["" + x] = 1;
-      }
-      else {
-        freqs["" + x] ++;
-      }
-    });
-
-    var fav;
-    var maxCount = 0;
-    Object.keys(freqs).forEach(function(x){if (freqs[x] > maxCount){maxCount = freqs[x]; fav = x;}});
-    console.log("Fav is " + fav);
-    return fav;
-  }

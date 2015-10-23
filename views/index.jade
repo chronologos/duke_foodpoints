@@ -40,7 +40,7 @@ html(lang='en' data-ng-app="foodpoints")
                   img(height=50, src=user.picture, alt=user.name)
                 .col-md-4
                   p Welcome back #{user.given_name}!
-                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
+                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database #{fav}.
               .row
                 .col-md-8
                   if (user.refresh_token)
