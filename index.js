@@ -55,6 +55,8 @@ client.set('framework', 'AngularJS');
     // reply is null when the key is missing
 //    console.log("Average daily spending for past week: " + reply);
 //});
+
+// Check state of saved values in Redis Server
 client.lindex("daily", 0, function(err, res){
     console.log("Item at index 0 of daily list: " + res);
 });
