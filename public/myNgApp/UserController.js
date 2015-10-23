@@ -58,11 +58,11 @@ angular.module('foodpoints')
     console.log("Type of input to getFav method: " + typeof(trans));
     var freqs = {};
     trans.forEach(function(x){
-      if (!freqs["" + x]) {
-        freqs["" + x] = 1;
+      if (!freqs["" + x.amount]) {
+        freqs["" + x.amount] = 1;
       }
       else {
-        freqs["" + x] ++;
+        freqs["" + x.amount] ++;
       }
     });
 
