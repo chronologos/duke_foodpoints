@@ -1,9 +1,5 @@
 angular.module('foodpoints', [])
 
-  .controller("UserController", function($scope){
-    $scope.
-  })
-
   .controller("AdvancedStatsController", function($scope) {
     $scope.advanced = false;
   })
