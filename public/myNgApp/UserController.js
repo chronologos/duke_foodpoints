@@ -10,6 +10,7 @@ angular.module('foodpoints')
           $scope.balance = $scope.user.balances[0].balance.toFixed(2);
           console.log("angular got a user, " + JSON.stringify($scope.user));
 
+          console.log("Length of balances is " + $scope.user.balances.length);
           var trans = getTrans($scope.user.balances);
           console.log("Number of different transactions detected for client: " + trans.length);
 
@@ -51,6 +52,8 @@ angular.module('foodpoints')
 
 // Naive O(N) implementation
   function getFav(trans) {
+    
+    console.log("Type of input to getFav method: " + typeof(trans));
     var freqs = {};
     trans.forEach(function(x){
       if (!freqs["" + x]) {
