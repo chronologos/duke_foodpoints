@@ -40,7 +40,7 @@ angular.module('foodpoints')
     for (var i = 0; i < bals.length; i++) {
       if (bals[i + 1]) {
         //newer number subtract older number
-        var diff = trans[i].balance - bals[i + 1].balance;
+        var diff = bals[i].balance - bals[i + 1].balance;
         arr.push({
           amount: diff,
           date: bals[i].date
