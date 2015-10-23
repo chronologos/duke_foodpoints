@@ -16,9 +16,9 @@ angular.module('foodpoints')
 
           var fav = getFav(trans);
 
-          $scope.user.fav = fav;
+          $scope.user.fav = parseFloat(Math.abs(fav)).toFixed(2);
 
-          console.log("Current value of favorite for user is " + $scope.user.fav);
+          console.log("User's favorite item costs " + $scope.user.fav);
       }
       else console.log("Error"+status);
     });
