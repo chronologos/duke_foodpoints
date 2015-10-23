@@ -162,7 +162,7 @@ html(lang='en' data-ng-app="foodpoints")
                      td.format=t.date
                      td=t.amount.toFixed(2)
           div.favorite(ng-show="user")
-            The cost of my favorite item : #{user.fav}  
+            span.favorite The cost of my favorite item : #{user.trans.length}  
     hr
     footer
       div Developed by Howard, Will, Ian, Adi -
