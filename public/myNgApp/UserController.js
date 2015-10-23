@@ -37,6 +37,7 @@ angular.module('foodpoints')
 // Both for sidebar display and calculation of user's total daily and weekly spending values
 // Currently used only by getFav method
   function getTrans(bals) {
+    console.log("Type of input to getTrans method: " + typeof(bals));
     var arr = [];
     for (var i = 0; i < bals.length; i++) {
       if (bals[i + 1]) {
@@ -48,6 +49,7 @@ angular.module('foodpoints')
         });
       }
     }
+    return arr;
   }
 
 // Naive O(N) implementation
