@@ -515,6 +515,7 @@ function updateBalances() {
     var year = today.getYear();
     var len = 0;
 //    var saved = false;
+    console.log("Hour is now " + hour);
 
     users.find({
         refresh_token: {
