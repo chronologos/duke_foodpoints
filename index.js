@@ -34,27 +34,15 @@ client.on('connect', function() {
     console.log('Connected to Redis');
 });
 client.set('framework', 'AngularJS');
-//client.rpush(["weekly",1,2,3,4,5,6,7],function(err, res){});
-//client.ltrim("weekly", 0, 6);
-//client.rpush(["daily"],function(err,res){
-//    if (err) {
-//        console.log("Error occurred in initializing daily list: " + err);
-//    }
-//    if (!res) {
-//        console.log("Initialized Empty List for today");
-//    }
-//    else {
-//        console.log("Length of today's list of averages: " + res);
-//    }
-//});
-//client.lpop(["weekly"],function(err, res){
-//  console.log("redis testing code \n");
-//  console.log("Average amount spent 7 days ago: " + res);
-//});
-//client.get("weekly", function(err, reply) {
-    // reply is null when the key is missing
-//    console.log("Average daily spending for past week: " + reply);
-//});
+
+client.lset("weekly", 0, 20.52, function(err, rep){
+    if (err) {
+        console.log("Error in lset: " + err);
+    }
+    else {
+        console.log("Reset latest entry of week: " + rep);
+    }
+});
 
 // Check state of saved values in Redis Server
 client.lindex("daily", 0, function(err, res){
@@ -509,13 +497,12 @@ function updateBalances() {
     //variables for counting of average $ spent per day
     var spendingAvg = 0;
     var today = new Date();
+    var minutes = today.getMinutes();
     var hour = today.getHours();
     var day = today.getDate();
     var month = today.getMonth();
     var year = today.getYear();
     var len = 0;
-//    var saved = false;
-    console.log("Hour is now " + hour);
 
     users.find({
         refresh_token: {
@@ -633,8 +620,7 @@ function updateBalances() {
                 console.log("Pushed" + globalAverage + "onto today's averages");
                 console.log("Number of average values stored for today: " + res);
                 client.ltrim("daily", 0, 0);
-//                if (hour === 3 && !saved) {
-                if (hour === 3) {
+                if (hour === 23 && minutes > 40) {
                     client.get("savedDaily", function(err, rep){
                         if (rep === "0") {
                             client.lpush(["weekly", globalAverage], function(err, resp){
@@ -642,7 +628,6 @@ function updateBalances() {
                                 console.log("Error in saving today's spending into weekly data: " + err);
                             }
                             else {
-//                            saved = true;
                                 client.ltrim("weekly", 0, 6);
                                 console.log("Saved today's spending into weekly data");
                                 client.lrange("weekly", 0, -1, function(err, response) {
@@ -664,24 +649,9 @@ function updateBalances() {
                             console.log("Already saved daily average into weekly array");
                         }
                     });
-/***
-                    client.lpush(["weekly", globalAverage], function(err, resp){
-                        if (err) {
-                            console.log("Error in saving today's spending into weekly data: " + err);
-                        }
-                        else {
-//                            saved = true;
-                            client.ltrim("weekly", 0, 7);
-                            console.log("Saved today's spending into weekly data");
-                            client.lrange("weekly", 0, -1, function(err, response) {
-                                console.log("Weekly data so far:\n");
-                                console.log(response);
-                            });
-                        }
-                    });
-***/
+
                 }
-                if (hour === 23) {
+                if (hour === 22) {
                     client.set("savedDaily", 0, function(err, rep) {
                         if (err) {
                             console.log("Unable to reset value of savedDaily: " + err);
