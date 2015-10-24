@@ -35,14 +35,6 @@ client.on('connect', function() {
 });
 client.set('framework', 'AngularJS');
 
-client.lset("weekly", 0, 20.52, function(err, rep){
-    if (err) {
-        console.log("Error in lset: " + err);
-    }
-    else {
-        console.log("Reset latest entry of week: " + rep);
-    }
-});
 
 // Check state of saved values in Redis Server
 client.lindex("daily", 0, function(err, res){
@@ -69,16 +61,6 @@ client.lrange("weekly", 0, -1, function(err, res){
     console.log(res);
 });
 
-//client.set("string key", "string val", redis.print);
-//client.hset("hash key", "hashtest 1", "some value", redis.print);
-//client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-//client.hkeys("hash key", function (err, replies) {
-//    console.log(replies.length + " replies:");
-//    replies.forEach(function (reply, i) {
-//        console.log("    " + i + ": " + reply);
-//    });
-//    client.quit();
-//});
 var globalAverage = 0;
 users.index('id', {
     unique: true
@@ -546,7 +528,6 @@ function updateBalances() {
                           while (currentIndex < bals.length && bals[currentIndex].date.getDate() == day && bals[currentIndex].date.getMonth() == month && bals[currentIndex].date.getYear() == year) {
                            if (currentIndex === 0) {
                              highest = bals[currentIndex].balance;
-//                             highest = bals[currentIndex].balance;
                            }
                            currentIndex ++;
                           }
@@ -756,8 +737,6 @@ function getTransactions(user, cb) {
                 });
             }
         }
-//        console.log("Array returned from getTransactions:\r\n");
-//        console.log(arr);
         cb(err, arr);
     });
 }
