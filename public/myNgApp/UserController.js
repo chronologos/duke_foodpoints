@@ -153,7 +153,7 @@ function getFreqs(trans) {
       firstKeys.forEach(function(y) {
         if (freqs[y] === x && topKeys.indexOf(y) === -1 && done < n) {
         //  result[y] = x;
-          topKeys.push(y);
+          topKeys.push(parseFloat(Math.abs(y)).toFixed(2));
           console.log("Added key " + y + " with value " + x);
           done ++;
         }
