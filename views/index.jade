@@ -128,7 +128,13 @@ html(lang='en' data-ng-app="foodpoints")
                     td My favourite item cost ${{user.fav}}
                   tr
                     td I love it so much that I bought it {{user.numFav}} times!
-                  
+                table.table
+                  tr
+                    th Cost
+                    th Frequency
+                  tr(ng-repeat="row in user.allFavs | flattenRows")
+                    td{{row[0]}}
+                    td{{row[1]}}
 
       .col-md-4
         div.panel.panel-default(ng-show="user")
