@@ -167,17 +167,7 @@ html(lang='en' data-ng-app="foodpoints")
                    tr
                      td.format=t.date
                      td=t.amount.toFixed(2)
-          div.panel.panel-default
-            table#hallOfFame
-              thead
-                tr
-                  th Amount
-                  th Frequency
-               each fav in user.allFavs
-                 tr
-                   each t in fav
-                    td=t 
-     hr
+               hr
     footer
       div Developed by Howard, Will, Ian, Adi -
         a(href!="mailto:#{emailContact}") &nbsp Contact Us
