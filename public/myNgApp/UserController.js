@@ -10,6 +10,7 @@ angular.module('foodpoints')
           $scope.user = data;
           $scope.user.refresh_token_expire = format($scope.user.refresh_token_expire);
           $scope.balance = $scope.user.balances[0].balance.toFixed(2);
+
           if (DEBUG) {console.log("angular got a user, " + JSON.stringify($scope.user));}
           var trans = getTrans($scope.user.balances);
           console.log(trans);
