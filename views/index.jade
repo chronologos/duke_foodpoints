@@ -11,6 +11,7 @@ html(lang='en' data-ng-app="foodpoints")
     link(rel='stylesheet', href='styles/main.min.css')
 
     script(src='//code.jquery.com/jquery-latest.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
     script(src='//code.angularjs.org/snapshot/angular.min.js')
     script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
@@ -45,7 +46,7 @@ html(lang='en' data-ng-app="foodpoints")
                 .col-md-8
                   if (user.refresh_token)
                     p DukeCard link expires &nbsp
-                      span.format=user.refresh_token_expire
+                      span{{user.refresh_token_expire}}
                     div
                       p To get started, choose your food plan from the dropdown menu.
                   form
@@ -92,18 +93,18 @@ html(lang='en' data-ng-app="foodpoints")
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-            div.lead#result(ngShouldHave) {{shouldHave}}
+            div.center#result(ngShouldHave) {{shouldHave}}
         if user
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.lead#balance(ngActuallyHave) {{balance}}
+              div.center(ngActuallyHave) {{balance}}
               // {{balance}} is from UserController
           br
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
               div.panel-heading
-                h4.panel-title Spending
+                h4.panel-title Will I go broke?
               div.panel-body
                 table.table(ng-show="user")
                   tr
@@ -121,19 +122,16 @@ html(lang='en' data-ng-app="foodpoints")
                     
             div.panel.panel-default
               div.panel-heading
-                h4.panel-title Coffee Tracker
+                h4.panel-title Gluttony Tracker
               div.panel-body
-                table.table
-                  tr
-                    td My favourite item cost ${{user.fav}}
-                  tr
-                    td I love it so much that I bought it {{user.numFav}} times!
+                span My favourite item cost ${{user.allfavListFavs[0][0]}}. 
+                span I love it so much that I bought it {{user.allfavListFavs[0][1]}} times!
                 table.table
                   tr
                     th Cost
                     th Frequency
-                  tr(ng-repeat="row in user.allFavs | flattenRows")
-                    td{{row[0]}}
+                  tr(ng-repeat="row in user.allfavListFavs")
+                    td${{row[0]}}
                     td{{row[1]}}
 
       .col-md-4
@@ -169,10 +167,9 @@ html(lang='en' data-ng-app="foodpoints")
                   tr
                     th Date
                     th Amount
-                 each t in user.trans
-                   tr
-                     td.format=t.date
-                     td=t.amount.toFixed(2)
+                   tr(ng-repeat="t in user.trans")
+                     td{{t.date}}
+                     td{{t.amount}}
                hr
     footer
       div Developed by Howard, Will, Ian, Adi -

@@ -3,9 +3,7 @@
 }
 
 .progress-countdown {
-  height: 39px;
-  margin-bottom: 0;
-  white-space: nowrap;
+  height: 34px;
 }
 
 #transactions {
@@ -15,7 +13,6 @@
 }
 
 .verticalLine {
-  background-color: red;
   width: 1px;
   height: 100%;
   position: relative;

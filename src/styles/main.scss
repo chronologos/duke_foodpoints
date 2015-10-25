@@ -1,15 +1,12 @@
 //colors
 $white: #fff;
 $black: #000;
-$red: red;
 
 .c3-tooltip {
   color: $black;
 }
 .progress-countdown {
-  height: 39px;
-  margin-bottom: 0;
-  white-space: nowrap;
+  height: 34px;
 }
 #transactions {
   display: block;
@@ -17,7 +14,6 @@ $red: red;
   overflow-y: scroll;
 }
 .verticalLine {
-  background-color: $red;
   width: 1px;
   height: 100%;
   position: relative;

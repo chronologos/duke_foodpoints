@@ -58,13 +58,7 @@ angular.module('foodpoints')
        var percent2 = Math.min($scope.balanceFetchedFromServer.value / $scope.mealPlanCost, 1);
        console.log(percent2);
        $("#progbar2").width(percent2 * 100 + "%");
-       if (user && chart) {
-           chart.load({
-               columns: [
-                   ['Ideal', $scope.mealPlanCost, 0]
-               ]
-           });
-       }
+       
    });
 
   // dynamically change progressbar size on change in food plan

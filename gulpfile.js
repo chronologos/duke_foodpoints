@@ -12,7 +12,6 @@ var gulp = require('gulp'),
   cache = require('gulp-cache'),
   rimraf = require('gulp-rimraf');
   ignore = require('gulp-ignore');
-  ts = require('gulp-typescript');
 
 
 gulp.task('styles', function() {

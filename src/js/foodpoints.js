@@ -19,11 +19,6 @@ var springend = addDays(springstart, SPRING_LENGTH);
 
 $(document).ready(function() {
 
-    // function to format dates
-    $('.format').each(function() {
-        $(this).text(format($(this).text()));
-    });
-
     //load user and generate user-specific visualizations
     $.ajax({
             url: "/api/user"
