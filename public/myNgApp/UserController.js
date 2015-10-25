@@ -12,6 +12,7 @@ angular.module('foodpoints')
 
           console.log("Length of balances is " + $scope.user.balances.length);
           var trans = getTrans($scope.user.balances);
+          $scope.user.trans = trans;
           console.log("Number of different transactions detected for client: " + trans.length);
 
           var favInfo = getFav(trans);
