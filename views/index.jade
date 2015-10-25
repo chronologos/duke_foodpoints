@@ -103,26 +103,30 @@ html(lang='en' data-ng-app="foodpoints")
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
               div.panel-heading
-                h4.panel-title Spending Today
+                h4.panel-title Spending
               div.panel-body
-                table.table
+                table.table(ng-show="user")
                   tr
-                    td The average student spent:
+                    td Average student spending today:
                     td {{average}}
                   tr
-                    td I spent:
+                    td I spent today:
                     td {{dailyTotal}}
+                  tr
+                    td Average student spending this week:
+                    td {{wkAvg}}
+                  tr
+                    td I spent this week:
+                    td {{weeklyTotal}}
+                    
             div.panel.panel-default
               div.panel-heading
-                h4.panel-title Spending This Week
+                h4.panel-title Coffee Tracker
               div.panel-body
                 table.table
                   tr
-                    td The average student spent:
-                    td {{wkAvg}}
-                  tr
-                    td I spent:
-                    td {{weeklyTotal}}
+                    td My favourite item cost ${{user.fav}}
+                  
 
       .col-md-4
         div.panel.panel-default(ng-show="user")
@@ -161,8 +165,6 @@ html(lang='en' data-ng-app="foodpoints")
                    tr
                      td.format=t.date
                      td=t.amount.toFixed(2)
-          div.favorite(ng-show="user")
-            span.favorite The cost of my favorite item : ${{user.fav}}  
     hr
     footer
       div Developed by Howard, Will, Ian, Adi -

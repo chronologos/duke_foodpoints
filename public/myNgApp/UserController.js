@@ -55,7 +55,7 @@ angular.module('foodpoints')
 
 // Naive O(N) implementation
   function getFav(trans) {
-    
+
     console.log("Type of input to getFav method: " + typeof(trans));
     var freqs = {};
     trans.forEach(function(x){
@@ -73,4 +73,3 @@ angular.module('foodpoints')
     console.log("Fav is " + fav);
     return fav;
   }
-

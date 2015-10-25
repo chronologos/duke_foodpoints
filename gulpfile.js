@@ -12,6 +12,7 @@ var gulp = require('gulp'),
   cache = require('gulp-cache'),
   rimraf = require('gulp-rimraf');
   ignore = require('gulp-ignore');
+  ts = require('gulp-typescript');
 
 
 gulp.task('styles', function() {
@@ -36,6 +37,19 @@ gulp.task('scripts', function() {
   .pipe(uglify())
   .pipe(gulp.dest('public/js'))
   .pipe(notify({ message: 'Scripts task complete' }));
+});
+
+gulp.task('typescript', function() {
+  return gulp.src(['src/js/index.ts'])
+  .pipe(ts({
+      noImplicitAny: false,
+      out: 'index.js'
+    })
+  )
+  .pipe(jshint())
+  .pipe(jshint.reporter('default'))
+  .pipe(notify({ message: 'Scripts task complete' }))
+  .pipe(gulp.dest(''));
 });
 
 //Before deploying, it’s a good idea to clean out the destination folders and
