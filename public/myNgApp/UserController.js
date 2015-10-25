@@ -96,7 +96,7 @@ function getFreqs(trans) {
 
 
 
-
+/***
 
 
 // Temporary... Tried to avoid O(N^2) but failed miserably cos Javascript objects do not preserve key order :(
@@ -164,3 +164,4 @@ function getFreqs(trans) {
       return result;
 
     };
+    ***/
