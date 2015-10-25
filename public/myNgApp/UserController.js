@@ -12,7 +12,7 @@ angular.module('foodpoints')
 
           console.log("Length of balances is " + $scope.user.balances.length);
           var trans = getTrans($scope.user.balances);
-          $scope.user.trans = trans;
+          //$scope.user.trans = trans;
           console.log("Number of different transactions detected for client: " + trans.length);
 
           var favInfo = getFav(trans);
@@ -20,7 +20,13 @@ angular.module('foodpoints')
           //$scope.user.fav = parseFloat(Math.abs(fav)).toFixed(2);
           $scope.user.fav = "" + parseFloat(Math.abs(favInfo[0])).toFixed(2);
           $scope.user.numFav = "" + favInfo[1];
-          $scope.user.allFavs = getNFavs(5, trans);
+
+          var favList = getNFavs(5, trans);
+          console.log("Printing result of favList");
+          for (index i = 0; i < favList.length; i ++) {
+            console.log(favList[i][0] + " : " + favList[i][1]);
+          }
+          //$scope.user.allFavs = getNFavs(5, trans);
 
 
           console.log("User's favorite item costs " + $scope.user.fav + " and it was bought " + $scope.user.numFav + " times");
