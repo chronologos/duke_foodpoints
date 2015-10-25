@@ -54,6 +54,7 @@ angular.module('foodpoints')
     return arr;
   }
 
+/***
 // Used by both getFav and getNFavs
 function getFreqs(trans) {
   console.log("Type of input to getFreqs method: " + typeof(trans));
@@ -68,11 +69,11 @@ function getFreqs(trans) {
   });
   return freqs;
 }
-
+***/
 // Naive O(N) implementation
   function getFav(trans) {
 
-    /***
+    
     console.log("Type of input to getFav method: " + typeof(trans));
     var freqs = {};
     trans.forEach(function(x){
@@ -83,8 +84,8 @@ function getFreqs(trans) {
         freqs["" + x.amount] ++;
       }
     });
-    ***/
-    var freqs = getFreqs(trans);
+    
+//    var freqs = getFreqs(trans);
     var fav;
     var maxCount = 0;
     Object.keys(freqs).forEach(function(x){if (freqs[x] > maxCount){maxCount = freqs[x]; fav = x;}});
