@@ -14,13 +14,13 @@ angular.module('foodpoints')
           var trans = getTrans($scope.user.balances);
           console.log("Number of different transactions detected for client: " + trans.length);
 
-          var favInfo = getFav(trans);
+      //    var favInfo = getFav(trans);
 
           //$scope.user.fav = parseFloat(Math.abs(fav)).toFixed(2);
-          $scope.user.fav = "" + parseFloat(Math.abs(favInfo[0])).toFixed(2);
-          $scope.user.numFav = "" + favInfo[1];
+      //    $scope.user.fav = "" + parseFloat(Math.abs(favInfo[0])).toFixed(2);
+      //    $scope.user.numFav = "" + favInfo[1];
 
-          console.log("User's favorite item costs " + $scope.user.fav + " and it was bought " + $scope.user.numFav + " times");
+      //    console.log("User's favorite item costs " + $scope.user.fav + " and it was bought " + $scope.user.numFav + " times");
       }
       else console.log("Error"+status);
     });
