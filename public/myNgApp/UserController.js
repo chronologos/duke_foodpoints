@@ -24,7 +24,7 @@ angular.module('foodpoints')
 
           var favList = getNFavs(5, trans);
           console.log("Printing result of favList");
-          for (index i = 0; i < favList.length; i ++) {
+          for (var i = 0; i < favList.length; i ++) {
             console.log(favList[i][0] + " : " + favList[i][1]);
           }
           //$scope.user.allFavs = getNFavs(5, trans);
