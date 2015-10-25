@@ -173,10 +173,7 @@ html(lang='en' data-ng-app="foodpoints")
                 tr
                   th Amount
                   th Frequency
-               each fav in user.allFavs
-                 tr
-                   td=fav.length
-                   td=fav.length
+                  th {{user.allFavs.length}}
      hr
     footer
       div Developed by Howard, Will, Ian, Adi -

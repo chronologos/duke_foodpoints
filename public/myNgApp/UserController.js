@@ -28,6 +28,7 @@ angular.module('foodpoints')
             console.log(favList[i][0] + " : " + favList[i][1]);
           }
           $scope.user.allFavs = favList;
+          console.log("allFavs is " + $scope.user.allFavs);
 
 
           console.log("User's favorite item costs " + $scope.user.fav + " and it was bought " + $scope.user.numFav + " times");
