@@ -16,7 +16,6 @@ angular.module('foodpoints', [])
     $http.get('/api/personal')
       .then(function(res) {
         var checkDailyData = res.data;
-        console.log("Response recieved is " + JSON.stringify(checkDailyData));
         var personalDaily = parseFloat(checkDailyData['day']);
         var personalWeekly = parseFloat(checkDailyData['week']);
         $scope.dailyTotal = isNaN(personalDaily) ? "Coming Soon!" : personalDaily.toFixed(2);
@@ -55,7 +54,6 @@ angular.module('foodpoints', [])
     $scope.delete = function(budget) {
       $http.delete('/api/budgets/' + budget._id)
         .success(function(data, status, headers, config) {
-          console.log(data);
           getBudgets($scope, $http);
         });
     };

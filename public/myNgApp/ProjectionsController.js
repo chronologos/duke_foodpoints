@@ -1,3 +1,4 @@
+var MAX_AMOUNT_BALANCEADDITION = 1500;
 angular.module('foodpoints')
 .controller("ProjectionsController", function($scope,$http,infoFactory){
   var info = infoFactory.getInfo();
@@ -17,7 +18,6 @@ angular.module('foodpoints')
        //extrapolate line to semester start/end
        var projectionStart = moment(firstBal.date).diff(info.start) * slope + firstBal.balance;
        var projectionEnd = moment(firstBal.date).diff(info.end) * slope + firstBal.balance+addedTotal;
-       console.log(firstBal);
        //compute estimated usages for day, week, month
        var day = moment.duration(1, 'day').asMilliseconds() * slope;
        var week = moment.duration(1, 'week').asMilliseconds() * slope;

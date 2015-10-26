@@ -1,13 +1,15 @@
 angular.module('foodpoints')
 .controller("HeatMapController", function($scope,$http,infoFactory){
   var info = infoFactory.getInfo();
+  var bucketSize = 5;
+  var numBuckets = 4;
+  var buckets = {};
+  var dayHeatmap = {};
+  var hourHeatMap = {};
   $scope.$on('userChange', function(event, args){
-    var bucketSize = 5;
-    var numBuckets = 4;
-    var buckets = {};
-    var dayHeatmap = {};
-    var hourHeatMap = {};
+
     var trans = getTrans($scope.user.balances);
+    console.log("dfafa"+JSON.stringify(trans));
     trans.forEach(function(exp) {
       if (exp.amount < 0) {
         var timestamp = moment(exp.date).format('X');
@@ -28,7 +30,7 @@ angular.module('foodpoints')
         }
       }
     });
-
+    console.log(JSON.stringify(dayHeatmap));
     var cal = new CalHeatMap();
     cal.init({
       // itemSelector: "#animationDuration-a", //new

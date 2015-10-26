@@ -53,15 +53,13 @@ angular.module('foodpoints')
   $scope.balanceFetchedFromServer={"Fetched":"No","value":""};
   // watch for balance change when user loads and then fire this event.
   $scope.$on('balanceChange', function(event, args){
-       console.log("balance fetched");
        $scope.balanceFetchedFromServer.Fetched="Yes";
        $scope.balanceFetchedFromServer.value=args.val;
        var percent2 = Math.min($scope.balanceFetchedFromServer.value / $scope.mealPlanCost, 1);
-       console.log(percent2);
        $("#progbar2").width(percent2 * 100 + "%");
 
    });
-   
+
   // dynamically change progressbar size on change in food plan
   $scope.dropboxitemselected = function (thisItem) {
       $scope.selectedItemName = thisItem.name;

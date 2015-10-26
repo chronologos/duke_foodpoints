@@ -1,4 +1,4 @@
-var DEBUG = true;
+var DEBUG = false;
 // Top Level Controller that fetches User json from server.
 angular.module('foodpoints')
 .controller("UserController", function($scope,$http,$interval,infoFactory){
@@ -18,7 +18,6 @@ angular.module('foodpoints')
       if (DEBUG) {console.log("angular got a user, " + JSON.stringify($scope.user));}
       var trans = getTrans($scope.user.balances);
       $scope.user.trans = trans;
-      console.log(trans);
       var favList = getFav(5,trans);
       $scope.user.allfavListFavs = favList;
 
@@ -54,14 +53,14 @@ angular.module('foodpoints')
 // Should eventually replace server-side code for calculating a user's transactions
 // Both for sidebar display and calculation of user's total daily and weekly spending values
 // Currently used only by getFav method
-function getTrans(bals) {
+function getTrans(bals,format) {
   var arr = [];
   for (var i = 0; i < bals.length; i++) {
     if (bals[i + 1]) {
       var diff = bals[i].balance - bals[i + 1].balance; //newer number subtract older number
       arr.push({
-        amount: diff.toFixed(2)*-1, // duke api gives large number of decimal points
-        date: format(bals[i].date)
+        amount: diff.toFixed(2), // duke api gives large number of decimal points
+        date: bals[i].date
       });
     }
   }
