@@ -1,2 +1,4 @@
-Venues
-loading of progressbars
+seperate auth and login in passportjs
+http://passportjs.org/docs/authenticate
+
+track # of logins per user.

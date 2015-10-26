@@ -4,7 +4,7 @@
   "description": "App for tracking food points.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "jasmine",
     "start": "node index.js"
   },
   "license": "ISC",
@@ -39,6 +39,6 @@
     "gulp-rimraf": "^0.2.0",
     "gulp-ruby-sass": "^2.0.5",
     "gulp-uglify": "^1.4.2",
-    "mocha": "~2.1.0"
+    "jasmine": "^2.3.2"
   }
 }

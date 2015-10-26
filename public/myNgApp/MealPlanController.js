@@ -1,5 +1,7 @@
+var UPDATE_INTERVAL = 500;
 angular.module('foodpoints')
-.controller("MealPlanController", ['$scope',function($scope){
+.controller("MealPlanController", function($scope,$interval,infoFactory){
+  var info = infoFactory.getInfo();
   //sadly we hardcode the foodplans into an array
   $scope.mealPlans=[{
     name: "Plan H ($432, Freshmen)",
@@ -49,7 +51,6 @@ angular.module('foodpoints')
   }
 
   $scope.balanceFetchedFromServer={"Fetched":"No","value":""};
-
   // watch for balance change when user loads and then fire this event.
   $scope.$on('balanceChange', function(event, args){
        console.log("balance fetched");
@@ -58,9 +59,9 @@ angular.module('foodpoints')
        var percent2 = Math.min($scope.balanceFetchedFromServer.value / $scope.mealPlanCost, 1);
        console.log(percent2);
        $("#progbar2").width(percent2 * 100 + "%");
-       
-   });
 
+   });
+   
   // dynamically change progressbar size on change in food plan
   $scope.dropboxitemselected = function (thisItem) {
       $scope.selectedItemName = thisItem.name;
@@ -74,13 +75,6 @@ angular.module('foodpoints')
       docCookies.setItem("numfoodpoints", $scope.mealPlanCost, 31536e3);
       docCookies.setItem("foodplan", $scope.selectedItemName, 31536e3);
 
-      if (user && chart) {
-          chart.load({
-              columns: [
-                  ['Ideal', $scope.mealPlanCost, 0]
-              ]
-          });
-      }
       numfoodpoints = $scope.mealPlanCost; //necessary cos foodpoints.js does updates progress bar text with this
   };
-}]);
+});

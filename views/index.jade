@@ -22,6 +22,8 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='myNgApp/myNgApp.js')
     script(src='myNgApp/UserController.js')
     script(src='myNgApp/MealPlanController.js')
+    script(src='myNgApp/ProjectionsController.js')
+    script(src='myNgApp/HeatMapController.js')
 
   body.container-fluid(ng-controller="UserController")
 
@@ -93,12 +95,12 @@ html(lang='en' data-ng-app="foodpoints")
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-            div.center#result(ngShouldHave) {{shouldHave}}
+            div.center {{remaining}}
         if user
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.center(ngActuallyHave) {{balance}}
+              div.center{{balance}}
               // {{balance}} is from UserController
           br
           div(data-ng-controller="AverageSpendingController")
@@ -135,7 +137,7 @@ html(lang='en' data-ng-app="foodpoints")
                     td{{row[1]}}
 
       .col-md-4
-        div.panel.panel-default(ng-show="user")
+        div.panel.panel-default(ng-show="user" ng-controller="HeatMapController")
           div.panel-heading
             h4.panel-title Spending Heatmap
           div.panel-body
@@ -149,11 +151,14 @@ html(lang='en' data-ng-app="foodpoints")
             h4 Hours
             div#hours.center
 
-        div.panel.panel-default(ng-show="user")
+        div.panel.panel-default(ng-controller="ProjectionsController" ng-show="user")
           div.panel-heading
             h4.panel-title Projections
           div.panel-body
-            table#projections.table
+            table.table
+              tr(ng-repeat="item in projections")
+                td {{item.time}}
+                td {{item.amount.toFixed(2)}}
 
       .col-md-4
         if (user)

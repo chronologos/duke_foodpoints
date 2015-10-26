@@ -1,34 +1,54 @@
 var DEBUG = true;
 // Top Level Controller that fetches User json from server.
 angular.module('foodpoints')
-.controller("UserController", function($scope,$http){
+.controller("UserController", function($scope,$http,$interval,infoFactory){
+  var info = infoFactory.getInfo();
 
   // a globally accessible $scope.user with several fields:
   $http.get('/api/user')
-    .success(function(data, status, headers, config) {
-      if (status === 200) {
-          $scope.user = data;
-          $scope.user.refresh_token_expire = format($scope.user.refresh_token_expire);
-          $scope.balance = $scope.user.balances[0].balance.toFixed(2);
+  .success(function(data, status, headers, config) {
+    if (status === 200) {
+      $scope.user = data;
+      $scope.user.refresh_token_expire = format($scope.user.refresh_token_expire);
+      $scope.balance = $scope.user.balances[0].balance.toFixed(2);
+      // filter out balances from previous semesters
+      $scope.user.balances = $scope.user.balances.filter(function(b) {
+        return new Date(b.date) > info.start && new Date(b.date) < info.end;
+      });
+      if (DEBUG) {console.log("angular got a user, " + JSON.stringify($scope.user));}
+      var trans = getTrans($scope.user.balances);
+      $scope.user.trans = trans;
+      console.log(trans);
+      var favList = getFav(5,trans);
+      $scope.user.allfavListFavs = favList;
 
-          if (DEBUG) {console.log("angular got a user, " + JSON.stringify($scope.user));}
-          var trans = getTrans($scope.user.balances);
-          console.log(trans);
-          $scope.user.trans = trans;
-          var favList = getFav(5,trans);
-          $scope.user.allfavListFavs = favList;
-          if (DEBUG) {console.log("User's favorite item costs " + $scope.user.fav + " and it was bought " + $scope.user.numFav + " times");}
-      }
-      else console.log("Error: " + status);
-    });
+    }
+    else console.log("Error: " + status);
+  });
 
-    $scope.$watch('balance', function(newVal, oldVal){
-      // fetching user from server takes a while, so we want to watch this for change and broadcast on change
-        if(newVal!=oldVal)
-            $scope.$broadcast('balanceChange',{"val":newVal});
-    });
+  $scope.$watch('balance', function(newVal, oldVal){
+    // fetching user from server takes a while, so we want to watch this for change and broadcast on change
+    if(newVal!=oldVal)
+    $scope.$broadcast('balanceChange',{"val":newVal});
+  });
 
-
+  $scope.$watch('user', function(newVal, oldVal){
+    // fetching user from server takes a while, so we want to watch this for change and broadcast on change
+    if(newVal!=oldVal)
+    $scope.$broadcast('userChange',{"val":newVal});
+  });
+  if (!info.fall && !info.spring) {
+    $scope.result = 0.00;
+  }
+  else {
+    var a = $interval(function() {
+      var currtime = new Date();
+      var percent = (1 - (currtime - info.start) / (info.end - info.start));
+      var foodpointsLeft = ($scope.user.balances[0].balance * percent).toFixed(4);
+      $scope.remaining = foodpointsLeft;
+      $("#progbar").width(percent * 100 + "%");
+    }, UPDATE_INTERVAL);
+  }
 });
 
 // Should eventually replace server-side code for calculating a user's transactions
@@ -79,6 +99,6 @@ function getFav(n,trans) {
 }
 
 function format(input) {
-    var formatted = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
-    return formatted;
+  var formatted = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
+  return formatted;
 }

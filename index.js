@@ -160,9 +160,7 @@ app.listen(process.env.PORT || 3000, function() {
     console.log("Node app is running");
 });
 
-// Redirect the user to Google for authentication.  When complete, Google
-// will redirect the user back to the application at
-//     /auth/google/return
+// Redirect the user to Google for authentication. req.user is set to authenticated user
 app.get('/auth/google', passport.authenticate('google', {
     scope: 'openid email'
 }));
@@ -209,9 +207,9 @@ app.get('/home/auth', function(req, res) {
 });
 
 app.get('/logout', function(req, res) {
-    req.logout();
-    req.session = null;
-    res.redirect('/');
+  req.session = null;
+  req.logout();
+  res.redirect('/');
 });
 //get user
 app.get('/api/user', function(req, res) {

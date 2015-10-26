@@ -59,8 +59,40 @@ angular.module('foodpoints', [])
           getBudgets($scope, $http);
         });
     };
-  });
+  })
+  .factory('infoFactory', function(){
+    var service = {};
+    var currdate = new Date();
+    var acadyear = currdate.getMonth() > 6 ? currdate.getFullYear() : currdate.getFullYear() - 1;
+    var DEFAULT_FOOD_POINTS = 2152;
+    var UPDATE_INTERVAL = 200;
+    var FALL_LENGTH = 16 * 7;
+    var SPRING_LENGTH = 16 * 7 + 4;
+    var MAX_AMOUNT_BALANCEADDITION = 1500;
+    var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of acad year
+    var fallend = addDays(fallstart, FALL_LENGTH);
+    var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 2 of following year
+    var springend = addDays(springstart, SPRING_LENGTH);
+    var fall = currdate > fallstart && currdate < fallend;
+    var spring = currdate > springstart && currdate < springend;
+    var start = spring ? springstart : fallstart;
+    var end = spring ? springend : fallend;
 
+    service.getInfo = function(){
+      return {
+        "spring": spring,
+        "fall" : fall,
+        "start": start,
+        "end": end,
+        "fallstart" : fallstart,
+        "fallend": fallend,
+        "springstart": springstart,
+        "springend": springend
+      };
+    };
+    return service;
+  }
+);
   function getBudgets($scope, $http) {
       $http.get('/api/budgets/').
       success(function(data, status, headers, config) {
@@ -75,4 +107,22 @@ angular.module('foodpoints', [])
           $scope.budgets = data;
       });
   }
+  addDays =function addDays(date, days) {
+          var result = new Date(date);
+          result.setDate(date.getDate() + days);
+          return result;
+      };
 
+  getFirstWeekday = function(dayOfWeek, day, month, year) {
+      //gets the first specified weekday following the given month, year, day
+      var myDate = new Date();
+      myDate.setHours(0, 0, 0, 0);
+      myDate.setYear(year);
+      myDate.setDate(day);
+      myDate.setMonth(month);
+      // Find day of week.
+      while (myDate.getDay() !== dayOfWeek) {
+          myDate.setDate(myDate.getDate() + 1);
+      }
+      return myDate;
+  };
