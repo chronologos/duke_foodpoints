@@ -16,10 +16,10 @@ var db = require('monk')(process.env.MONGOHQ_URL || "mongodb://localhost/foodpoi
 var users = db.get("users");
 var balances = db.get("balances");
 var budgets = db.get("budgets");
-var passport = require('passport');
+var passport = require('passport'); // for oauth login
 var favicon = require('serve-favicon'); //serve favicon for site
 var munge = require('munge'); //obfuscate email
-var compression = require('compression');
+var compression = require('compression'); //compress html to decrease page load time
 
 console.log(__dirname + '/public/favicon.ico');
 console.log("We are in "+ process.env.NODE_ENV);
