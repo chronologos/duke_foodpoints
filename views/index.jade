@@ -16,7 +16,7 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='//code.angularjs.org/snapshot/angular.min.js')
     script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
     script(src='//cdn.jsdelivr.net/d3js/latest/d3.min.js')
-    script(src='//cdn.jsdelivr.net/cal-heatmap/latest/cal-heatmap.js')
+    script(src='//cdn.jsdelivr.net/cal-heatmap/3.5.2/cal-heatmap.min.js')
     script(src='//cdn.rawgit.com/masayuki0812/c3/0.4.9/c3.min.js')
     script(src='js/main.min.js')
     script(src='js/ngAll.min.js')
@@ -31,17 +31,17 @@ html(lang='en' data-ng-app="foodpoints")
     // modal for extra info
     if (user)
       div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
-        div.modal-dialog.modal-lg(role="document")
+        div.modal-dialog.modal-md(role="document")
           div.modal-content
             div.modal-body
               .row
-                .col-md-1
-                  img(height=50, src=user.picture, alt=user.name)
-                .col-md-4
+                .col-md-3
+                  img(height=90, src=user.picture, alt=user.name)
+                .col-md-9
                   p Welcome back #{user.given_name}!
                   p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
               .row
-                .col-md-8
+                .col-md-12
                   if (user.refresh_token)
                     p DukeCard link expires &nbsp
                       span{{user.refresh_token_expire}}
@@ -137,10 +137,12 @@ html(lang='en' data-ng-app="foodpoints")
             h4.panel-title Spending Heatmap
           div.panel-body
             h4 Days &nbsp
-              button.btn.btn-default.btn-xs#animationDuration-next.pull-right(aria-label="Left Align")
+              button.btn.btn-default.btn-sm#animationDuration-next.pull-right(aria-label="Left Align")
                 span.glyphicon.glyphicon-forward(aria-hidden="true")
-              button.btn.btn-default.btn-xs#animationDuration-previous.pull-right(aria-label="Left Align")
+              button.btn.btn-default.btn-sm#animationDuration-previous.pull-right(aria-label="Left Align")
                 span.glyphicon.glyphicon-backward(aria-hidden="true")
+              br
+              br
             div#days.center
             br
             h4 Hours

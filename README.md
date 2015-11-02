@@ -4,7 +4,7 @@ FoodPoints+
 
 About
 ====
-An application for tracking food points of Duke University students.  
+An application for tracking food points of Duke University students. Client side angular.js. Server side express / node.
 
 Dependencies
 ====

@@ -5,3 +5,4 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-69578858-1', 'auto');
 ga('send', 'pageview');
+// ga('set', '&uid', {{USER_ID}}); // Set the user ID using signed-in user_id.
