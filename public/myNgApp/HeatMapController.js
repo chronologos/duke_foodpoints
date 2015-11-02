@@ -1,13 +1,28 @@
 angular.module('foodpoints')
-.controller("HeatMapController", function($scope,$http,infoFactory){
+.controller("HeatMapController", function($scope,$http,infoFactory,UserService){
   var info = infoFactory.getInfo();
   var bucketSize = 5;
   var numBuckets = 4;
   var buckets = {};
   var dayHeatmap = {};
   var hourHeatMap = {};
-  $scope.$on('userChange', function(event, args){
-
+  var info = infoFactory.getInfo();
+  $scope.fetchUser = function() {
+    UserService.User.then(function(results){
+      $scope.user = results;
+    }
+  );
+  };
+  $scope.fetchUser();
+  $scope.user = {};
+  $scope.$watch('user', function(newVal, oldVal){
+  // fetching user from server takes a while, so we want to watch this for change and broadcast on change
+    if(newVal!=oldVal){
+      $scope.$broadcast('balanceChange',{"val":newVal});
+      runBody();
+    }
+  });
+  function runBody(){
     var trans = getTrans($scope.user.balances);
     console.log("dfafa"+JSON.stringify(trans));
     trans.forEach(function(exp) {
@@ -88,5 +103,9 @@ angular.module('foodpoints')
       },
       cellSize: 16
     });
-  });
+
+
+  }
+
+
 });

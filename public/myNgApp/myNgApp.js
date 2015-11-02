@@ -16,8 +16,8 @@ angular.module('foodpoints', [])
     $http.get('/api/personal')
       .then(function(res) {
         var checkDailyData = res.data;
-        var personalDaily = parseFloat(checkDailyData['day']);
-        var personalWeekly = parseFloat(checkDailyData['week']);
+        var personalDaily = parseFloat(checkDailyData.day);
+        var personalWeekly = parseFloat(checkDailyData.week);
         $scope.dailyTotal = isNaN(personalDaily) ? "Coming Soon!" : personalDaily.toFixed(2);
         $scope.weeklyTotal = isNaN(personalWeekly) ? "Coming Soon!" : personalWeekly.toFixed(2);
       }
@@ -79,6 +79,7 @@ angular.module('foodpoints', [])
     service.getInfo = function(){
       return {
         "spring": spring,
+        "UPDATE_INTERVAL": UPDATE_INTERVAL,
         "fall" : fall,
         "start": start,
         "end": end,
@@ -89,8 +90,30 @@ angular.module('foodpoints', [])
       };
     };
     return service;
-  }
-);
+  })
+
+  .service('UserService', function($rootScope,$http,$q,infoFactory) {
+    var info = infoFactory.getInfo();
+    this.User = $http.get('/api/user')
+    .then(function(res) {
+      console.log("data fetched using UserService Factory");
+      // console.log(res.data);
+      return res.data;
+    })
+    .then(function(res){
+      res.refresh_token_expire = format(res.refresh_token_expire);
+      res.balance = res.balances[0].balance.toFixed(2);
+      //filter out balances from previous semesters
+      res.balances = res.balances.filter(function(b) {
+        return new Date(b.date) > info.start && new Date(b.date) < info.end;
+      });
+      // console.log(res);
+      return res;
+
+    });
+
+  });
+
   function getBudgets($scope, $http) {
       $http.get('/api/budgets/').
       success(function(data, status, headers, config) {

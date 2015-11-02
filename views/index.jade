@@ -95,13 +95,12 @@ html(lang='en' data-ng-app="foodpoints")
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-            div.center {{remaining}}
+            div.center {{shouldHave}}
         if user
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.center{{balance}}
-              // {{balance}} is from UserController
+              div.center{{user.balance}}
           br
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
@@ -133,7 +132,7 @@ html(lang='en' data-ng-app="foodpoints")
                     th Cost
                     th Frequency
                   tr(ng-repeat="row in user.allfavListFavs")
-                    td${{row[0]}}
+                    td{{row[0]}}
                     td{{row[1]}}
 
       .col-md-4
