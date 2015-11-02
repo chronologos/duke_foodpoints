@@ -1,6 +1,6 @@
 var MAX_AMOUNT_BALANCEADDITION = 1500;
 angular.module('foodpoints')
-.controller("ProjectionsController", ['$scope','$http','infoFactory','UserService',function($scope,$http,infoFactory,UserService){
+.controller("ProjectionsController", function($scope,$http,infoFactory,UserService){
   var info = infoFactory.getInfo();
 // set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
@@ -55,7 +55,7 @@ angular.module('foodpoints')
         amount: month
     }];
   }
-}]);
+});
 
 //get amount of $ added to account
 function getDeposits(trans){

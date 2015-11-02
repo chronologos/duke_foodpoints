@@ -12,6 +12,7 @@ var gulp = require('gulp'),
   cache = require('gulp-cache'),
   rimraf = require('gulp-rimraf');
   ignore = require('gulp-ignore');
+  ngAnnotate = require('gulp-ng-annotate');
 
 
 gulp.task('styles', function() {
@@ -38,17 +39,20 @@ gulp.task('scripts', function() {
   .pipe(notify({ message: 'Scripts task complete' }));
 });
 
-gulp.task('typescript', function() {
-  return gulp.src(['src/js/index.ts'])
-  .pipe(ts({
-      noImplicitAny: false,
-      out: 'index.js'
-    })
-  )
+gulp.task('ngscripts', function() {
+  return gulp.src(['src/myNgApp/myNgApp.js','src/myNgApp/**/*.js','src/myNgApp/*.js'])
   .pipe(jshint())
   .pipe(jshint.reporter('default'))
-  .pipe(notify({ message: 'Scripts task complete' }))
-  .pipe(gulp.dest(''));
+  .pipe(ngAnnotate({
+    remove: true,
+    add: true,
+    single_quotes: true
+    }))
+  .pipe(concat('ngAll.js'))
+  .pipe(uglify())
+  .pipe(rename({suffix: '.min'}))
+  .pipe(gulp.dest('public/js'))
+  .pipe(notify({ message: 'ngscripts task complete' }));
 });
 
 //Before deploying, it’s a good idea to clean out the destination folders and
@@ -72,5 +76,5 @@ gulp.task('watch', function() {
 
 //We can create a default task, ran by using $ gulp, to run all three tasks we have created:
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'scripts');
+    gulp.start('styles', 'scripts', 'ngscripts');
 });

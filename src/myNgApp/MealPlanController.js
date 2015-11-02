@@ -1,6 +1,6 @@
 var UPDATE_INTERVAL = 500;
 angular.module('foodpoints')
-.controller("MealPlanController", ['$scope','$interval','infoFactory','UserService',function($scope,$interval,infoFactory,UserService){
+.controller("MealPlanController", function($scope,$interval,infoFactory,UserService){
   var info = infoFactory.getInfo();
   // set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
@@ -79,4 +79,4 @@ angular.module('foodpoints')
     }
   ];
 
-}]);
+});

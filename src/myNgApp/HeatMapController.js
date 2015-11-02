@@ -1,5 +1,5 @@
 angular.module('foodpoints')
-.controller("HeatMapController", ['$scope','$http','infoFactory','UserService',function($scope,$http,infoFactory,UserService){
+.controller("HeatMapController", function($scope,$http,infoFactory,UserService){
   var bucketSize = 5;
   var numBuckets = 4;
   var buckets = {};
@@ -107,4 +107,4 @@ angular.module('foodpoints')
   }
 
 
-}]);
+});

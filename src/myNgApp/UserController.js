@@ -1,5 +1,5 @@
 angular.module('foodpoints')
-.controller("UserController", ['$scope','$interval','infoFactory','$http','UserService',function($scope,$http,$interval,UserService,infoFactory){
+.controller("UserController", function($scope,$rootScope,$http,$interval,UserService,infoFactory){
   var info = infoFactory.getInfo();
   // set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
@@ -34,4 +34,4 @@ angular.module('foodpoints')
       }, info.UPDATE_INTERVAL);
     }
   }
-}]);
+});

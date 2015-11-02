@@ -1,6 +1,6 @@
 angular.module('foodpoints', [])
 
-  .controller("AverageSpendingController", ['$scope','$http',function($scope, $http) {
+  .controller("AverageSpendingController", function($scope, $http) {
     var globalDaily;
     var globalWeekly;
     $http.get('/api/spending')
@@ -27,9 +27,9 @@ angular.module('foodpoints', [])
         var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
         $scope.wkAvg = weekTotalFloat;
       });
-}])
+})
 
-  .controller("BudgetController", ['$scope','$http',function($scope, $http) {
+  .controller("BudgetController", function($scope, $http) {
     $http.get('/api/cutoffs/')
       .success(function(data, status, headers, config) {
         $scope.periods = Object.keys(data);
@@ -53,7 +53,7 @@ angular.module('foodpoints', [])
           getBudgets($scope, $http);
         });
     };
-  }])
+  })
 
   // a factory with getter function to return commonly used constants
   .factory('infoFactory', function(){
@@ -90,7 +90,7 @@ angular.module('foodpoints', [])
   })
 
   // service to return user and change user if necessary
-  .service('UserService', ['$http','infoFactory','$scope','UserService',function($http,$scope,infoFactory) {
+  .service('UserService', function($rootScope,$http,$q,infoFactory) {
     var info = infoFactory.getInfo();
     this.User = $http.get('/api/user')
     .then(function(res) {
@@ -115,7 +115,7 @@ angular.module('foodpoints', [])
       this.User = newUserObj;
     };
 
-  }]);
+  });
 
 // HELPER FUNCTIONS
 // ----------------
