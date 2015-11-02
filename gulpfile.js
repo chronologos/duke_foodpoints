@@ -40,6 +40,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('ngscripts', function() {
+  // include myNgApp.js explicitly because we want it to be first in concat file
   return gulp.src(['src/myNgApp/myNgApp.js','src/myNgApp/**/*.js','src/myNgApp/*.js'])
   .pipe(jshint())
   .pipe(jshint.reporter('default'))
