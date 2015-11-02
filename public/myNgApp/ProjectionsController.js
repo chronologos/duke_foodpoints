@@ -2,18 +2,20 @@ var MAX_AMOUNT_BALANCEADDITION = 1500;
 angular.module('foodpoints')
 .controller("ProjectionsController", function($scope,$http,infoFactory,UserService){
   var info = infoFactory.getInfo();
+// set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
     UserService.User.then(function(results){
       $scope.user = results;
-    }
-  );
+    });
   };
   $scope.fetchUser();
   $scope.user = {};
+  // wait for promise to resolve
   $scope.$watch('user', function(newVal, oldVal){
   // fetching user from server takes a while, so we want to watch this for change and broadcast on change
     if(newVal!=oldVal){
-      $scope.$broadcast('balanceChange',{"val":newVal});
+      $scope.$broadcast('userChange',{"val":newVal});
+      console.log(newVal);
       runBody();
     }
   });

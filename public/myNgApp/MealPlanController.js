@@ -2,30 +2,30 @@ var UPDATE_INTERVAL = 500;
 angular.module('foodpoints')
 .controller("MealPlanController", function($scope,$interval,infoFactory,UserService){
   var info = infoFactory.getInfo();
+  // set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
     UserService.User.then(function(results){
       $scope.user = results;
-    }
-  );
+    });
   };
   $scope.fetchUser();
   $scope.user = {};
+  // wait for promise to resolve
   $scope.$watch('user', function(newVal, oldVal){
   // fetching user from server takes a while, so we want to watch this for change and broadcast on change
     if(newVal!=oldVal){
-      $scope.$broadcast('balanceChange',{"val":newVal});
+      $scope.$broadcast('userChange',{"val":newVal});
+      console.log(newVal);
       runBody();
     }
   });
-
+  // update "actually have" progress bar when meal plan changes
   function runBody(){
     var a = $interval(function() {
       $scope.mealPlanCost = docCookies.getItem("mealPlanCost") || 2152;
       $scope.selectedItemName = docCookies.getItem("mealPlan") || "Choose meal plan";
-      console.log($scope.mealPlanCost);
       var percent2 = Math.min($scope.user.balance / $scope.mealPlanCost, 1);
       $("#progbar2").width(percent2 * 100 + "%");
-      console.log($scope.user.balance);
     }, info.UPDATE_INTERVAL);
   }
 

@@ -1,31 +1,30 @@
 angular.module('foodpoints')
 .controller("HeatMapController", function($scope,$http,infoFactory,UserService){
-  var info = infoFactory.getInfo();
   var bucketSize = 5;
   var numBuckets = 4;
   var buckets = {};
   var dayHeatmap = {};
   var hourHeatMap = {};
   var info = infoFactory.getInfo();
+  // set $scope.user to resolve the promise returned by UserService.User
   $scope.fetchUser = function() {
     UserService.User.then(function(results){
       $scope.user = results;
-    }
-  );
+    });
   };
   $scope.fetchUser();
   $scope.user = {};
+  // wait for promise to resolve
   $scope.$watch('user', function(newVal, oldVal){
   // fetching user from server takes a while, so we want to watch this for change and broadcast on change
     if(newVal!=oldVal){
-      $scope.$broadcast('balanceChange',{"val":newVal});
+      $scope.$broadcast('userChange',{"val":newVal});
+      console.log(newVal);
       runBody();
     }
   });
   function runBody(){
-    var trans = getTrans($scope.user.balances);
-    console.log("dfafa"+JSON.stringify(trans));
-    trans.forEach(function(exp) {
+    $scope.user.trans.forEach(function(exp) {
       if (exp.amount < 0) {
         var timestamp = moment(exp.date).format('X');
         var timestamp2 = moment().startOf('day').hours(moment(exp.date).hours()).format('X');

@@ -95,12 +95,12 @@ html(lang='en' data-ng-app="foodpoints")
         div I should have:
         div.progress.progress-countdown
           div#progbar.progress-bar.progress-bar-default.progress-bar-striped.active
-            div.center {{shouldHave}}
+            div.center {{shouldHave | currency}}
         if user
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.center{{user.balance}}
+              div.center{{user.balance | currency}}
           br
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
@@ -110,29 +110,29 @@ html(lang='en' data-ng-app="foodpoints")
                 table.table(ng-show="user")
                   tr
                     td Average student spending today:
-                    td {{average}}
+                    td {{average | currency}}
                   tr
                     td I spent today:
-                    td {{dailyTotal}}
+                    td {{dailyTotal | currency}}
                   tr
                     td Average student spending this week:
-                    td {{wkAvg}}
+                    td {{wkAvg | currency}}
                   tr
                     td I spent this week:
-                    td {{weeklyTotal}}
+                    td {{weeklyTotal | currency}}
                     
             div.panel.panel-default
               div.panel-heading
                 h4.panel-title Gluttony Tracker
               div.panel-body
-                span My favourite item cost ${{user.allfavListFavs[0][0]}}. 
-                span I love it so much that I bought it {{user.allfavListFavs[0][1]}} times!
+                span My favourite item cost ${{user.favList[0][0]}}. 
+                span I love it so much that I bought it {{user.favList[0][1]}} times!
                 table.table
                   tr
                     th Cost
                     th Frequency
-                  tr(ng-repeat="row in user.allfavListFavs")
-                    td{{row[0]}}
+                  tr(ng-repeat="row in user.favList")
+                    td{{row[0] * -1 | currency}}
                     td{{row[1]}}
 
       .col-md-4
@@ -157,7 +157,7 @@ html(lang='en' data-ng-app="foodpoints")
             table.table
               tr(ng-repeat="item in projections")
                 td {{item.time}}
-                td {{item.amount.toFixed(2)}}
+                td {{item.amount | currency}}
 
       .col-md-4
         if (user)
@@ -172,8 +172,8 @@ html(lang='en' data-ng-app="foodpoints")
                     th Date
                     th Amount
                    tr(ng-repeat="t in user.trans")
-                     td{{t.date}}
-                     td{{t.amount}}
+                     td{{t.date | date:'medium'}}
+                     td{{t.amount * -1 | currency}}
                hr
     footer
       div Developed by Howard, Will, Ian, Adi -

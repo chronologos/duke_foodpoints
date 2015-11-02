@@ -1,9 +1,5 @@
 angular.module('foodpoints', [])
 
-  .controller("AdvancedStatsController", function($scope) {
-    $scope.advanced = false;
-  })
-
   .controller("AverageSpendingController", function($scope, $http) {
     var globalDaily;
     var globalWeekly;
@@ -58,31 +54,32 @@ angular.module('foodpoints', [])
         });
     };
   })
+
+  // a factory with getter function to return commonly used constants
   .factory('infoFactory', function(){
     var service = {};
     var currdate = new Date();
     var acadyear = currdate.getMonth() > 6 ? currdate.getFullYear() : currdate.getFullYear() - 1;
-    var DEFAULT_FOOD_POINTS = 2152;
-    var UPDATE_INTERVAL = 200;
     var FALL_LENGTH = 16 * 7;
     var SPRING_LENGTH = 16 * 7 + 4;
-    var MAX_AMOUNT_BALANCEADDITION = 1500;
     var fallstart = getFirstWeekday(1, 19, 7, acadyear); //monday after aug 19 of acad year
     var fallend = addDays(fallstart, FALL_LENGTH);
     var springstart = getFirstWeekday(3, 2, 0, acadyear + 1); //wednesday after jan 2 of following year
     var springend = addDays(springstart, SPRING_LENGTH);
     var fall = currdate > fallstart && currdate < fallend;
     var spring = currdate > springstart && currdate < springend;
-    var start = spring ? springstart : fallstart;
-    var end = spring ? springend : fallend;
+    var semStart = spring ? springstart : fallstart;
+    var semEnd = spring ? springend : fallend;
 
     service.getInfo = function(){
       return {
-        "spring": spring,
-        "UPDATE_INTERVAL": UPDATE_INTERVAL,
+        "UPDATE_INTERVAL": 200,
+        "DEFAULT_FOOD_POINTS": 2152,
+        "MAX_AMOUNT_BALANCEADDITION": 1500,
         "fall" : fall,
-        "start": start,
-        "end": end,
+        "spring": spring,
+        "start": semStart,
+        "end": semEnd,
         "fallstart" : fallstart,
         "fallend": fallend,
         "springstart": springstart,
@@ -92,12 +89,12 @@ angular.module('foodpoints', [])
     return service;
   })
 
+  // service to return user and change user if necessary
   .service('UserService', function($rootScope,$http,$q,infoFactory) {
     var info = infoFactory.getInfo();
     this.User = $http.get('/api/user')
     .then(function(res) {
-      console.log("data fetched using UserService Factory");
-      // console.log(res.data);
+      console.log("Data fetched using UserService Factory");
       return res.data;
     })
     .then(function(res){
@@ -107,43 +104,102 @@ angular.module('foodpoints', [])
       res.balances = res.balances.filter(function(b) {
         return new Date(b.date) > info.start && new Date(b.date) < info.end;
       });
-      // console.log(res);
+      // parse balance list into list of transactions and favourites
+      res.trans = getTrans(res.balances);
+      res.favList = getFav(5,res.trans);
       return res;
 
     });
 
+    this.UserChange = function(newUserObj){
+      this.User = newUserObj;
+    };
+
   });
 
-  function getBudgets($scope, $http) {
-      $http.get('/api/budgets/').
-      success(function(data, status, headers, config) {
-          data.forEach(function(b) {
-              b.percent = Math.min(b.spent / b.amount * 100, 100);
-              b.elapsed = moment().diff(b.cutoff) / moment.duration(1, b.period).asMilliseconds() * 100;
-              var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"];
-              classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0];
-              b.class = classes.join(" ");
-              b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period;
-          });
-          $scope.budgets = data;
-      });
-  }
-  addDays =function addDays(date, days) {
-          var result = new Date(date);
-          result.setDate(date.getDate() + days);
-          return result;
-      };
+// HELPER FUNCTIONS
+// ----------------
+function getBudgets($scope, $http) {
+    $http.get('/api/budgets/').
+    success(function(data, status, headers, config) {
+        data.forEach(function(b) {
+            b.percent = Math.min(b.spent / b.amount * 100, 100);
+            b.elapsed = moment().diff(b.cutoff) / moment.duration(1, b.period).asMilliseconds() * 100;
+            var classes = ["progress-bar-success", "progress-bar", "progress-bar-striped", "active"];
+            classes[0] = b.percent > b.elapsed ? "progress-bar-warning" : classes[0];
+            b.class = classes.join(" ");
+            b.display = b.spent.toFixed() + " of " + b.amount + " this " + b.period;
+        });
+        $scope.budgets = data;
+    });
+}
+addDays =function addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(date.getDate() + days);
+        return result;
+    };
 
-  getFirstWeekday = function(dayOfWeek, day, month, year) {
-      //gets the first specified weekday following the given month, year, day
-      var myDate = new Date();
-      myDate.setHours(0, 0, 0, 0);
-      myDate.setYear(year);
-      myDate.setDate(day);
-      myDate.setMonth(month);
-      // Find day of week.
-      while (myDate.getDay() !== dayOfWeek) {
-          myDate.setDate(myDate.getDate() + 1);
+getFirstWeekday = function(dayOfWeek, day, month, year) {
+    //gets the first specified weekday following the given month, year, day
+    var myDate = new Date();
+    myDate.setHours(0, 0, 0, 0);
+    myDate.setYear(year);
+    myDate.setDate(day);
+    myDate.setMonth(month);
+    // Find day of week.
+    while (myDate.getDay() !== dayOfWeek) {
+        myDate.setDate(myDate.getDate() + 1);
+    }
+    return myDate;
+};
+
+// Should eventually replace server-side code for calculating a user's transactions
+// Both for sidebar display and calculation of user's total daily and weekly spending values
+// Currently used only by getFav method
+function getTrans(bals,format) {
+  var arr = [];
+  for (var i = 0; i < bals.length; i++) {
+    if (bals[i + 1]) {
+      var diff = bals[i].balance - bals[i + 1].balance; //newer number subtract older number
+      arr.push({
+        amount: diff.toFixed(2), // duke api gives large number of decimal points
+        date: bals[i].date
+      });
+    }
+  }
+  return arr;
+}
+
+// return array of arrays [[cost,freq],[cost2,freq2],...]
+function getFreqs(trans) {
+  var freqs = [[0,0]];
+  // get frequency of each amount spent in trans
+  // trans comes in the form [{"amount":"-12.29","date":"2015-10-25T15:01:32.272Z"},{"amount":"-11.60","date":"2015-10-24T18:39:16.613Z"}]
+  trans.forEach(function(x){
+    var found = false;
+    for (var i = 0; i<freqs.length; i++){
+      if (freqs[i][0] === x.amount){
+        freqs[i][1]++;
+        found = true;
       }
-      return myDate;
-  };
+    }
+    if (!found) freqs.push([x.amount,1]);
+  });
+  return freqs;
+}
+
+// sort array of arrays [[costA,freqhighest],[costB,freqnexthighest],...] and return top n
+function getFav(n,trans) {
+  var freqs = getFreqs(trans);
+  freqs.sort(function(a,b){
+    return b[1] - a[1];
+  });
+  return _.filter(freqs.slice(0,n),function(x){
+    return x[1] > 1; // we don't want frequencies of 0 and 1 in the top items.
+  });
+}
+
+function format(input) {
+  var formatted = moment(new Date(input)).format("MMMM Do YYYY, h:mm:ss a");
+  return formatted;
+}
