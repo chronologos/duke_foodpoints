@@ -19,11 +19,12 @@ var budgets = db.get("budgets");
 var passport = require('passport');
 var favicon = require('serve-favicon'); //serve favicon for site
 var munge = require('munge'); //obfuscate email
+var compression = require('compression')
 
 console.log(__dirname + '/public/favicon.ico');
 console.log("We are in "+ process.env.NODE_ENV);
 app.use(favicon(__dirname + '/public/favicon.ico'));
-
+app.use(compress()); 
 //redis for storing weekly and monthly stats
 var redis = require('redis'),
   client = redis.createClient(process.env.REDIS_URL);
