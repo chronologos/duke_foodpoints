@@ -132,6 +132,17 @@ app.use(function(req, res, next) {
     next();
   }
 });
+
+if (process.env.NODE_ENV == 'production') {
+  var host = process.env.HOST;
+} else {
+  var host = 'localhost';
+}
+var port = (process.env.PORT || 3000);
+app.listen(port, function() {
+  console.log("Node app is running, server started on " + host + ":" + port);
+});
+
 app.use("/api", function(req, res, next) {
   if (req.user) {
     next();
@@ -266,15 +277,7 @@ app.get('/api/personal', function(req, res) {
     res.send(info);
   });
 
-  if (process.env.NODE_ENV == 'production') {
-    var host = process.env.HOST;
-  } else {
-    var host = 'localhost';
-  }
-  var port = (process.env.PORT || 3000);
-  app.listen(port, function() {
-    console.log("Node app is running, server started on " + host + ":" + port);
-  });
+
 
   /***
   getTransactions(req.user, getPersonalStats(function(info) {
