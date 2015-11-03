@@ -150,8 +150,10 @@ app.use(function(req, res, next) {
   }
 });
 
-app.listen(process.env.PORT || 3000, function() {
-  console.log("Node app is running, server started on " + (process.env.PORT || 3000));
+var server = app.listen(80, function() {
+  var host = process.env.HOST;
+  var port = (process.env.PORT || 3000);
+  console.log("Node app is running, server started on " + HOST + (process.env.PORT || 3000));
 });
 
 // Redirect the user to Google for authentication. req.user is set to authenticated user
