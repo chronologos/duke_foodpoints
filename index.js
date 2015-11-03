@@ -156,10 +156,10 @@ if (process.env.NODE_ENV == 'production') {
   var host = 'localhost';
 }
 var port = (process.env.PORT || 3000);
-app.listen(port, function() {
-  console.log("Node app is running, server started on " + host + ":" + port);
-});
-
+// app.listen(port, function() {
+//   console.log("Node app is running, server started on " + host + ":" + port);
+// });
+app.listen(8080);
 // Redirect the user to Google for authentication. req.user is set to authenticated user
 app.get('/auth/google', passport.authenticate('google', {
   scope: 'openid email'
