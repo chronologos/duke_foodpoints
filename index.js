@@ -67,7 +67,7 @@ users.index('id', {
 app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
-if (process.env.NODE_ENV == "dev") {
+if (process.env.NODE_ENV == "development") {
   app.use(session({
     name: 'devsession',
     keys: ['key1', 'key2']
@@ -150,9 +150,13 @@ app.use(function(req, res, next) {
   }
 });
 
-var server = app.listen(80, function() {
-  var host = process.env.HOST;
-  var port = (process.env.PORT || 3000);
+if (process.env.NODE_ENV == 'production') {
+  var host = '0.0.0.0';
+} else {
+  var host = 'localhost';
+}
+var port = (process.env.PORT || 3000);
+var server = app.listen((process.env.PORT || 3000), host, function() {
   console.log("Node app is running, server started on " + host + port);
 });
 
