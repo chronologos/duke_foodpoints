@@ -13,13 +13,13 @@ html(lang='en' data-ng-app="foodpoints")
     script(src='//code.jquery.com/jquery-latest.min.js')
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js')
     script(src='js/ngAll.min.js')
-    script(async src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
+    script(src='//cdn.jsdelivr.net/d3js/latest/d3.min.js')
+    script(src='//cdn.rawgit.com/masayuki0812/c3/0.4.9/c3.min.js')
+    script(src='//cdn.jsdelivr.net/cal-heatmap/3.5.2/cal-heatmap.min.js')
+    script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
     script(async src='js/main.min.js')
     script(async src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js')
     script(async src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
-    script(async src='//cdn.jsdelivr.net/d3js/latest/d3.min.js')
-    script(async src='//cdn.jsdelivr.net/cal-heatmap/3.5.2/cal-heatmap.min.js')
-    script(async src='//cdn.rawgit.com/masayuki0812/c3/0.4.9/c3.min.js')
 
 
   body.container-fluid(ng-controller="UserController")
@@ -45,7 +45,7 @@ html(lang='en' data-ng-app="foodpoints")
                 .col-md-12
                   if (user.refresh_token)
                     p DukeCard link expires &nbsp
-                      span{{user.refresh_token_expire}}
+                      span {{user.refresh_token_expire}}
                     div
                       p To get started, choose your food plan from the dropdown menu.
                   form
@@ -97,7 +97,7 @@ html(lang='en' data-ng-app="foodpoints")
           div I actually have:
           div.progress.progress-countdown
             div#progbar2.progress-bar.progress-bar-success.progress-bar-striped.active
-              div.center{{user.balance | currency}}
+              div.center {{user.balance | currency}}
           br
           div(data-ng-controller="AverageSpendingController")
             div.panel.panel-default
@@ -122,15 +122,15 @@ html(lang='en' data-ng-app="foodpoints")
               div.panel-heading
                 h4.panel-title Gluttony Tracker
               div.panel-body
-                span My favourite item cost ${{user.favList[0][0]}}. 
+                span My favourite item cost {{user.favList[0][0] * -1 | currency}}. 
                 span I love it so much that I bought it {{user.favList[0][1]}} times!
                 table.table
                   tr
                     th Cost
                     th Frequency
                   tr(ng-repeat="row in user.favList")
-                    td{{row[0] * -1 | currency}}
-                    td{{row[1]}}
+                    td {{row[0] * -1 | currency}}
+                    td {{row[1]}}
 
       .col-md-4
         div.panel.panel-default(ng-show="user" ng-controller="HeatMapController")
@@ -171,8 +171,8 @@ html(lang='en' data-ng-app="foodpoints")
                     th Date
                     th Amount
                    tr(ng-repeat="t in user.trans")
-                     td{{t.date | date:'medium'}}
-                     td{{t.amount * -1 | currency}}
+                     td {{t.date | date:'medium'}}
+                     td {{t.amount * -1 | currency}}
                hr
     footer
       div Developed by Howard, Will, Ian, Adi -
