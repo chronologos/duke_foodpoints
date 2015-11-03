@@ -20,9 +20,8 @@ var passport = require('passport'); // for oauth login
 var favicon = require('serve-favicon'); //serve favicon for site
 var munge = require('munge'); //obfuscate email
 var compression = require('compression'); //compress html to decrease page load time
-
-console.log(__dirname + '/public/favicon.ico');
 console.log("We are in " + process.env.NODE_ENV);
+console.log(__dirname + '/public/favicon.ico');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(compression());
 //redis for storing weekly and monthly stats
@@ -152,7 +151,7 @@ app.use(function(req, res, next) {
 });
 
 app.listen(process.env.PORT || 3000, function() {
-  console.log("Node app is running");
+  console.log("Node app is running, server started on " + (process.env.PORT || 3000));
 });
 
 // Redirect the user to Google for authentication. req.user is set to authenticated user
