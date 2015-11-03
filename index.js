@@ -156,8 +156,12 @@ if (process.env.NODE_ENV == 'production') {
   var host = 'localhost';
 }
 var port = (process.env.PORT || 3000);
-var server = app.listen((process.env.PORT || 3000), host, function() {
-  console.log("Node app is running, server started on " + host + port);
+// var server = app.listen(port, host, function() {
+//   console.log("Node app is running, server started on " + host + ":" + port);
+// });
+
+http.createServer(app).listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
 });
 
 // Redirect the user to Google for authentication. req.user is set to authenticated user
