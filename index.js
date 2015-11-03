@@ -151,7 +151,7 @@ app.use(function(req, res, next) {
 });
 
 if (process.env.NODE_ENV == 'production') {
-  var host = '0.0.0.0';
+  var host = process.env.HOST;
 } else {
   var host = 'localhost';
 }
