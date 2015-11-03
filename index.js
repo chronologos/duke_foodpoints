@@ -150,16 +150,6 @@ app.use(function(req, res, next) {
   }
 });
 
-if (process.env.NODE_ENV == 'production') {
-  var host = process.env.HOST;
-} else {
-  var host = 'localhost';
-}
-var port = (process.env.PORT || 3000);
-// app.listen(port, function() {
-//   console.log("Node app is running, server started on " + host + ":" + port);
-// });
-app.listen(8080);
 // Redirect the user to Google for authentication. req.user is set to authenticated user
 app.get('/auth/google', passport.authenticate('google', {
   scope: 'openid email'
@@ -276,6 +266,15 @@ app.get('/api/personal', function(req, res) {
     res.send(info);
   });
 
+  if (process.env.NODE_ENV == 'production') {
+    var host = process.env.HOST;
+  } else {
+    var host = 'localhost';
+  }
+  var port = (process.env.PORT || 3000);
+  app.listen(port, function() {
+    console.log("Node app is running, server started on " + host + ":" + port);
+  });
 
   /***
   getTransactions(req.user, getPersonalStats(function(info) {
