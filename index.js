@@ -24,7 +24,9 @@ console.log("We are in " + process.env.NODE_ENV);
 console.log(__dirname + '/public/favicon.ico');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(compression());
-//redis for storing weekly and monthly stats
+
+// redis for storing weekly and monthly stats
+// ------------------------------------------
 var redis = require('redis'),
   client = redis.createClient(process.env.REDIS_URL);
 client.on("error", function(err) {
@@ -34,7 +36,6 @@ client.on('connect', function() {
   console.log('Connected to Redis');
 });
 client.set('framework', 'AngularJS');
-
 
 // Check state of saved values in Redis Server
 client.lindex("daily", 0, function(err, res) {
@@ -53,8 +54,6 @@ client.get("savedDaily", function(err, res) {
     console.log("Type of savedDaily: " + typeof(res));
   }
 });
-
-
 client.lrange("weekly", 0, -1, function(err, res) {
   console.log("Weekly average data so far: \n");
   console.log(res);
@@ -276,86 +275,7 @@ app.get('/api/personal', function(req, res) {
     info.week = weeklyTotal;
     res.send(info);
   });
-
-
-
-  /***
-  getTransactions(req.user, getPersonalStats(function(info) {
-      console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
-      //res.send("" + info['day']);
-      res.send(info);
-  })
-  );
-  ***/
-  /***
-      getTransactions(req.user, function(err, arr) {
-        var dayStart = getCutoffs()['day'];
-        //var dayStart = new Date(moment().startOf('day'))
-        console.log("Start of the day is " + dayStart);
-        var dailyTotal = 0;
-
-        if (arr) {
-            console.log(arr.length);
-            arr.forEach(function(trans) {
-            if (trans.date > dayStart) {
-            //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-            //dailyTotal += dayStart;
-                dailyTotal += Math.abs(trans.amount);
-            }
-            else {
-                return;
-            }
-            });
-        }
-        else {
-            console.log("Unable to retrieve array of spending data for user");
-        }
-        console.log("Amount spent today : " + dailyTotal);
-        res.send("" + dailyTotal);
 });
-***/
-});
-
-// User's weekly total spending
-//app.get('/api/personal', function(req, res) {
-//    res.set("text/plain");
-//    console.log("GET request to user's personal data detected.");
-//    getTransactions(req.user, getPersonalStats(err, arr, function(info) {
-//        console.log("Info retrieved from getPersonalStats method: " + JSON.stringify(info));
-//        res.send("" + info['day']);
-//    })
-//    );
-/***
-      getTransactions(req.user, function(err, arr) {
-        var dayStart = getCutoffs()['day'];
-        //var dayStart = new Date(moment().startOf('day'))
-        console.log("Start of the day is " + dayStart);
-        var dailyTotal = 0;
-
-        if (arr) {
-            console.log(arr.length);
-            arr.forEach(function(trans) {
-            if (trans.date > dayStart) {
-            //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-            //dailyTotal += dayStart;
-                dailyTotal += Math.abs(trans.amount);
-            }
-            else {
-                return;
-            }
-            });
-        }
-        else {
-            console.log("Unable to retrieve array of spending data for user");
-        }
-        console.log("Amount spent today : " + dailyTotal);
-        res.send("" + dailyTotal);
-});
-***/
-//});
-
-
-
 
 // Aggregate weekly spending data
 app.get('/api/spending/weekly', function(req, res) {
@@ -369,7 +289,6 @@ app.get('/api/spending/weekly', function(req, res) {
     res.send("" + total);
   });
 });
-
 
 //create
 app.post('/api/budgets', function(req, res) {
@@ -735,39 +654,6 @@ function parseLodash(str) {
   return _.attempt(JSON.parse.bind(null, str));
 }
 
-// Uses array arr retrieved from getTransactions
-// Called by invoking getTransactions(user, getPersonalStats)
-
-/***
-function getPersonalStats(arr, cb) {
-    var dayStart = getCutoffs()['day'];
-    var weekStart = getCutoffs()['week'];
-    var dailyTotal = 0;
-    var weeklyTotal = 0;
-    var info = {};
-    arr.forEach(function(trans) {
-        if (trans.date > dayStart) {
-        //dailyTotal += trans.date > dayStart ? Math.abs(trans.amount) : 0;
-            var val = Math.abs(trans.amount);
-            dailyTotal += val;
-            weeklyTotal += val;
-        }
-        else if (trans.date > weekStart) {
-            weeklyTotal += Math.abs(trans.amount);
-        }
-        else {
-            return;
-        }
-    });
-    console.log("Amount spent by user today : " + dailyTotal);
-    console.log("Amount spent by user this week : " + dailyTotal);
-    info['day'] = dailyTotal;
-    info['week'] = weeklyTotal;
-    cb(info);
-//    return dailyTotal;
-}
-***/
-
 function getWeeklySum(cb) {
   var total = 0;
   client.lrange("weekly", 0, -1, function(err, rep) {
@@ -781,6 +667,4 @@ function getWeeklySum(cb) {
     }
     cb(total);
   });
-  //    cb(total);
-  //    return total;
 }
