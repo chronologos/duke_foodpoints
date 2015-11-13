@@ -1,0 +1,33 @@
+doctype
+html(lang='en')
+  head
+    title FoodPoints+
+    meta(charset='utf-8')
+    meta(name="viewport", content="initial-scale=1")
+
+    link(rel="stylesheet", href='//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/lumen/bootstrap.min.css')
+    link(rel='stylesheet', href='styles/main.min.css')
+
+    script(async src='js/main.min.js')
+    script(async src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+
+
+  body.container-fluid
+    div
+      if (!user)
+        div.alert.alert-warning.alert-dismissible Note for new users: Many features start working only after the second day of use.
+          button(type="button" class="close" data-dismiss="alert" aria-label="close")
+            span(aria-hidden="true") &times;
+    div.center
+      div.center
+        h2 FoodPoints+
+        a.btn.btn-default(href="/auth/google") Sign In with Google 
+        br
+        br
+      div.jumbotron
+        p FoodPoints+ is an joint project between Duke Students and the Duke Innovation Colab to provide a useful interface for Duke students to track and visualize their usage of foodpoints over time. If this is your first time using Foodpoints+, you will have to 1) Sign in using Google, 2) Link your DukeCard, 3) Wait for ~1 hour for the server to process your registration.
+    footer
+      div Developed by Howard, Will, Ian, Adi -
+        a(href!="mailto:#{emailContact}") &nbsp Contact Us
+      a(href="http://github.com/chronologos/forkpoints") This application is open source.
+    hr

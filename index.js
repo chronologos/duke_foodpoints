@@ -96,6 +96,27 @@ passport.use(new GoogleStrategy({
   done(null, profile);
 }));
 
+// Redirect the user to Google for authentication. req.user is set to authenticated user
+app.get('/login', function(req, res) {
+  res.render('login.jade', {
+    emailContact: munge('yi.yan.tay+foodpoints@duke.edu')
+
+  });
+});
+
+// Redirect the user to Google for authentication. req.user is set to authenticated user
+app.get('/auth/google', passport.authenticate('google', {
+  scope: 'openid email'
+}));
+
+// Google will redirect the user to this URL after authentication.  Finish
+// the process by verifying the assertion.  If valid, the user will be
+// logged in.  Otherwise, authentication has failed.
+app.get('/auth/google/return', passport.authenticate('google', {
+  successRedirect: '/',
+  failureRedirect: '/login'
+}));
+
 // a middleware with no mount path; gets executed for every request to the app
 app.use(function(req, res, next) {
   if (req.user) {
@@ -128,7 +149,8 @@ app.use(function(req, res, next) {
       });
     });
   } else {
-    next();
+    console.log("no user detected")
+    res.redirect('/login');
   }
 });
 
@@ -160,17 +182,7 @@ app.use(function(req, res, next) {
   }
 });
 
-// Redirect the user to Google for authentication. req.user is set to authenticated user
-app.get('/auth/google', passport.authenticate('google', {
-  scope: 'openid email'
-}));
-// Google will redirect the user to this URL after authentication.  Finish
-// the process by verifying the assertion.  If valid, the user will be
-// logged in.  Otherwise, authentication has failed.
-app.get('/auth/google/return', passport.authenticate('google', {
-  successRedirect: '/',
-  failureRedirect: '/'
-}));
+
 
 app.get('/', function(req, res) {
   res.render('index.jade', {

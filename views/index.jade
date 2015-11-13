@@ -30,48 +30,39 @@ html(lang='en' data-ng-app="foodpoints")
         p This seems like your first time using Foodpoints+. Please link your DukeCard. We will track your balance after your next purchase.
 
     // modal for extra info
-    if (user)
-      div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
-        div.modal-dialog.modal-md(role="document")
-          div.modal-content
-            div.modal-body
-              .row
-                .col-md-3
-                  img(height=90, src=user.picture, alt=user.name)
-                .col-md-9
-                  p Welcome back #{user.given_name}!
-                  p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
-              .row
-                .col-md-12
-                  if (user.refresh_token)
-                    p DukeCard link expires &nbsp
-                      span {{user.refresh_token_expire}}
-                    div
-                      p To get started, choose your food plan from the dropdown menu.
-                  form
-                    div.checkbox
-                      label
-                        input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
-                        p I want to delete my account & transaction data (Warning, this is permanent)
+    div#infoModal.modal.fade(role="dialog" tabindex="-1" aria-labelledby="#infoModalLabel" aria-hidden="true")
+      div.modal-dialog.modal-md(role="document")
+        div.modal-content
+          div.modal-body
+            .row
+              .col-md-3
+                img(height=90, src=user.picture, alt=user.name)
+              .col-md-9
+                p Welcome back #{user.given_name}!
+                p FoodPoints+ tracks your transactions and balances by  continually polling the Duke server for your current balance. Your anonymised transactions are then stored on a MongoDB database.
+            .row
+              .col-md-12
+                if (user.refresh_token)
+                  p DukeCard link expires &nbsp
+                    span {{user.refresh_token_expire}}
+                  div
+                    p To get started, choose your food plan from the dropdown menu.
+                form
+                  div.checkbox
+                    label
+                      input(type="checkbox" ng-model="checked" aria-label="Toggle ngHide")
+                      p I want to delete my account & transaction data (Warning, this is permanent)
 
-                  a.btn.btn-danger(href="/api/delete" ng-show="checked")  delete my transactions
-                  a.btn.btn-default(href="/logout") Sign Out
+                a.btn.btn-danger(href="/api/delete" ng-show="checked")  delete my transactions
+                a.btn.btn-default(href="/logout") Sign Out
 
-    // top navbar
     div
-      if (!user)
-        div.alert.alert-warning.alert-dismissible Note for new users: Many features start working only after the second day of use.
-          button(type="button" class="close" data-dismiss="alert" aria-label="close")
-            span(aria-hidden="true") &times;
-
-      if (user)
-        button.btn.btn-primary.btn-sm.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
-          span.caret
-        if (!user.refresh_token)
-          p Link your DukeCard to start tracking your balances.
-          a.btn.btn-primary(href=auth_link) Link DukeCard
-      else
-        a.btn.btn-default.pull-right(href="/auth/google") Sign In with Google
+      // top navbar
+      button.btn.btn-primary.btn-sm.pull-right(type = "button" data-toggle="modal" data-target="#infoModal") #{user.given_name}
+        span.caret
+      if (!user.refresh_token)
+        p Link your DukeCard to start tracking your balances.
+        a.btn.btn-primary(href=auth_link) Link DukeCard
       h2 FoodPoints+
 
     hr
@@ -159,23 +150,22 @@ html(lang='en' data-ng-app="foodpoints")
                 td {{item.amount | currency}}
 
       .col-md-4
-        if (user)
-          div.panel.panel-default
-            div.panel-heading
-              span.badge.pull-right #{user.trans.length}
-              h3.panel-title The times I bought grub
-            div.panel-body
-              table.table#transactions
-                thead
-                  tr
-                    th Date
-                    th Amount
-                   tr(ng-repeat="t in user.trans")
-                     td {{t.date | date:'medium'}}
-                     td {{t.amount * -1 | currency}}
-               hr
+        div.panel.panel-default
+          div.panel-heading
+            span.badge.pull-right #{user.trans.length}
+            h3.panel-title The times I bought grub
+          div.panel-body
+            table.table#transactions
+              thead
+                tr
+                  th Date
+                  th Amount
+                 tr(ng-repeat="t in user.trans")
+                   td {{t.date | date:'medium'}}
+                   td {{t.amount * -1 | currency}}
+             
     footer
       div Developed by Howard, Will, Ian, Adi -
-        a(href!="mailto:#{emailContact}") &nbsp Contact Us
+        a(href!="mailto:#{emailContact}")
       a(href="http://github.com/chronologos/forkpoints") This application is open source.
     hr
