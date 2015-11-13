@@ -16,7 +16,7 @@ angular.module('foodpoints')
         $scope.$broadcast('userChange', {
           "val": newVal
         });
-        console.log(newVal);
+        // console.log(newVal);
         runBody();
       }
     });

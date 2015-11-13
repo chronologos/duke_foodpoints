@@ -2,6 +2,10 @@
   color: #000;
 }
 
+h2 {
+  font-weight: 600;
+}
+
 .progress-countdown {
   height: 34px;
 }

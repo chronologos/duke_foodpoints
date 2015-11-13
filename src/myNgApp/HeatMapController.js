@@ -21,7 +21,6 @@ angular.module('foodpoints')
         $scope.$broadcast('userChange', {
           "val": newVal
         });
-        console.log(newVal);
         runBody();
       }
     });
@@ -38,16 +37,13 @@ angular.module('foodpoints')
           }
           hourHeatMap[timestamp2] += ~~amt;
           for (var i = 0; i <= numBuckets; i++) {
-            //console.log(amt, i*bucketSize, (i+1)*bucketSize)
             if (i >= numBuckets || (amt > i * bucketSize && amt <= (i + 1) * bucketSize)) {
-              //console.log(i, amt)
               buckets[i * bucketSize] ? buckets[i * bucketSize] += amt : buckets[i * bucketSize] = amt;
               break;
             }
           }
         }
       });
-      console.log(JSON.stringify(dayHeatmap));
       var cal = new CalHeatMap();
       cal.init({
         // itemSelector: "#animationDuration-a", //new

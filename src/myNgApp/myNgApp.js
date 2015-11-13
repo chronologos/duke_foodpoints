@@ -19,7 +19,7 @@ angular.module('foodpoints', [])
   $http.get('/api/spending/weekly')
     .then(function(res) {
       var weeklyTotal = res.data;
-      console.log("Response received for weekly total is " + weeklyTotal);
+      // console.log("Response received for weekly total is " + weeklyTotal);
       var weekTotalFloat = parseFloat(weeklyTotal);
       globalWeekly = 7 * globalDaily;
       var weekTotalFloat = isNaN(weekTotalFloat) ? globalWeekly : weekTotalFloat.toFixed(2);
@@ -38,10 +38,10 @@ angular.module('foodpoints', [])
     });
   getBudgets($scope, $http);
   $scope.save = function(budget) {
-    console.log(budget);
+    // console.log(budget);
     $http.post('/api/budgets/', budget)
       .success(function(data, status, headers, config) {
-        console.log(data);
+        // console.log(data);
         getBudgets($scope, $http);
       });
   };
