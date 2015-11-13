@@ -64,7 +64,7 @@ function getDeposits(trans) {
   var deposits = [];
   trans.forEach(function(exp) {
     // exp.amount < 0 means money was added.
-    if ((exp.amount < 0) && (exp.amount < MAX_AMOUNT_BALANCEADDITION)) {
+    if ((exp.amount > 0) && (exp.amount < MAX_AMOUNT_BALANCEADDITION)) {
       deposits.push(exp.amount);
     }
   });

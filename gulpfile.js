@@ -11,58 +11,74 @@ var gulp = require('gulp'),
   notify = require('gulp-notify'),
   cache = require('gulp-cache'),
   rimraf = require('gulp-rimraf');
-  ignore = require('gulp-ignore');
-  ngAnnotate = require('gulp-ng-annotate');
+ignore = require('gulp-ignore');
+ngAnnotate = require('gulp-ng-annotate');
 
 
 gulp.task('styles', function() {
-  return sass('src/styles/main.scss', { style: 'expanded' })
-  .pipe(autoprefixer('last 2 version'))
-  .pipe(gulp.dest('src/styles'))
-  .pipe(rename({suffix: '.min'}))
-  .pipe(minifycss())
-  .pipe(gulp.dest('public/styles'))
-  .pipe(notify({ message: 'Styles task complete' }));
+  return sass('src/styles/main.scss', {
+      style: 'expanded'
+    })
+    .pipe(autoprefixer('last 2 version'))
+    .pipe(gulp.dest('src/styles'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(minifycss())
+    .pipe(gulp.dest('public/styles'))
+    .pipe(notify({
+      message: 'Styles task complete'
+    }));
 });
 
 gulp.task('scripts', function() {
-  return gulp.src(['src/js/**/*.js','src/js/*.js'])
-  .pipe(ignore('main.js'))
-  // .pipe(jshint('.jshintrc'))
-  .pipe(jshint())
-  .pipe(jshint.reporter('default'))
-  .pipe(concat('main.js'))
-  .pipe(gulp.dest('src/js'))
-  .pipe(rename({suffix: '.min'}))
-  .pipe(uglify())
-  .pipe(gulp.dest('public/js'))
-  .pipe(notify({ message: 'Scripts task complete' }));
+  return gulp.src(['src/js/**/*.js', 'src/js/*.js'])
+    .pipe(ignore('main.js'))
+    // .pipe(jshint('.jshintrc'))
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))
+    .pipe(concat('main.js'))
+    .pipe(gulp.dest('src/js'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(uglify())
+    .pipe(gulp.dest('public/js'))
+    .pipe(notify({
+      message: 'Scripts task complete'
+    }));
 });
 
 gulp.task('ngscripts', function() {
   // include myNgApp.js explicitly because we want it to be first in concat file
-  return gulp.src(['src/myNgApp/myNgApp.js','src/myNgApp/**/*.js','src/myNgApp/*.js'])
-  .pipe(jshint())
-  .pipe(jshint.reporter('default'))
-  .pipe(ngAnnotate({
-    remove: true,
-    add: true,
-    single_quotes: true
+  return gulp.src(['src/myNgApp/myNgApp.js', 'src/myNgApp/**/*.js', 'src/myNgApp/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))
+    .pipe(ngAnnotate({
+      remove: true,
+      add: true,
+      single_quotes: true
     }))
-  .pipe(concat('ngAll.js'))
-  .pipe(uglify())
-  .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('public/js'))
-  .pipe(notify({ message: 'ngscripts task complete' }));
+    .pipe(concat('ngAll.js'))
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('public/js'))
+    .pipe(notify({
+      message: 'ngscripts task complete'
+    }));
 });
 
 //Before deploying, it’s a good idea to clean out the destination folders and
 // rebuild the files—just in case any have been removed from the source and are
 // left hanging out in the destination folder:
 gulp.task('clean', function(cb) {
-  return gulp.src(['public/js/*.js','public/styles/*.css'], { read: false }) // much faster
-  // .pipe(ignore('node_modules/**'))
-  .pipe(rimraf());
+  return gulp.src(['public/js/*.js', 'public/styles/*.css'], {
+      read: false
+    }) // much faster
+    // .pipe(ignore('node_modules/**'))
+    .pipe(rimraf());
 });
 
 //To watch our files and perform the necessary task when they change,
@@ -73,9 +89,13 @@ gulp.task('watch', function() {
 
   // Watch .js files
   gulp.watch('src/js/*.js', ['scripts']);
+
+  // Watch angular files
+  gulp.watch('src/myNgApp/*.js', ['ngscripts']);
+
 });
 
 //We can create a default task, ran by using $ gulp, to run all three tasks we have created:
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'scripts', 'ngscripts');
+  gulp.start('styles', 'scripts', 'ngscripts');
 });
