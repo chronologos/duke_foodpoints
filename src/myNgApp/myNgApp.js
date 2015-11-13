@@ -92,10 +92,12 @@ angular.module('foodpoints', [])
   var info = infoFactory.getInfo();
   this.User = $http.get('/api/user')
     .then(function(res) {
-      console.log("Data fetched using UserService Factory");
+      // console.log("Data fetched using UserService Factory");
       return res.data;
     })
     .then(function(res) {
+      // console.log(res);
+      ga('set', '&uid', res.email); // Set the user ID using signed-in user_id.
       res.refresh_token_expire = format(res.refresh_token_expire);
       res.balance = res.balances[0].balance.toFixed(2);
       //filter out balances from previous semesters
